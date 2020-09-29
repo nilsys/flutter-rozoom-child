@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\rozoomauth\\lib\\api"
+		},
+		{
+			"path": "..\\rozoomauth\\lib\\Login"
+		}
+	],
+	"settings": {}
+}

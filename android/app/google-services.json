@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "232673355310",
+    "firebase_url": "https://rozoom.firebaseio.com",
+    "project_id": "rozoom",
+    "storage_bucket": "rozoom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232673355310:android:360fee25ea80f92cb7e1bf",
+        "android_client_info": {
+          "package_name": "ua.com.child.rozoom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "232673355310-18ac1o824425j9mlcqvf8ckf0j0jke04.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ua.com.child.rozoom",
+            "certificate_hash": "c2f237a2cee547a95ff2430e8b4309494bc1b7e2"
+          }
+        },
+        {
+          "client_id": "232673355310-n1q90ckr2mvrrhomaij7e53d0qmd5hlu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOtgbSGkqNUGykOo91R6VfJ2weInUGLA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "232673355310-n1q90ckr2mvrrhomaij7e53d0qmd5hlu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
