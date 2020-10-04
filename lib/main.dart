@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/models/Provider.dart';
-import 'package:rozoom_app/screens/auth_screen.dart';
 import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/home_screen.dart';
 import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
-import 'package:rozoom_app/screens/home_test_screen.dart';
-import 'package:rozoom_app/screens/webview_screen.dart';
+import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
+import 'package:rozoom_app/screens/test_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,18 +37,19 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        home: MainPage(),
+        title: 'Rozoom',
+        home: DisciplinesOverviewScreen(),
         theme: ThemeData(
           // primaryColor: Color(0xFFf06388),
           // primaryColor: Colors.red,
           primaryColor: Color(0xFF74bec9),
-          accentColor: Color(0XFFFEF9EB),
+          accentColor: Color(0xFFf06388),
+          // accentColor: Color(0XFFFEF9EB),
         ),
         debugShowCheckedModeBanner: false,
         routes: {
+          ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),
           '/home': (context) => HomeChild(),
-          '/auth': (context) => Auth(),
-
           // '/messenger': (context) => Messenger(),
           // '/chat': (context) => Chat(),
         },
@@ -68,7 +69,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AuthScreen(),
+      body: BottomNavBar(),
     );
   }
 }

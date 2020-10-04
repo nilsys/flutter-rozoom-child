@@ -70,95 +70,114 @@ class _HomeChildState extends State<HomeChild> {
       var response = res.body;
       print('response-------------------> $response');
     });
+
     fbm.getToken();
     fbm.subscribeToTopic('conf');
     fbm.configure(
       onMessage: (Map<String, dynamic> msg) async {
-        print('onMessage: $msg');
-        showDialog(
-          context: context,
-          builder: (context) =>
-              // ConferenceAlert('roomName', 'username'),
-              AlertDialog(
-            backgroundColor: Colors.blue,
-            content: ListTile(
-              title: Text('${msg['notification']['body']}',
-                  style: TextStyle(color: Colors.white)),
-              subtitle: Text('${msg['data']['conference_room']}',
-                  style: TextStyle(color: Colors.white)),
+        void _showErrorDialog(String message) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('Приєднатися до нового відеочату?'),
+              content: Text(message),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ні'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Так'),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ConferenceAlert(
+                            msg['data']['conference_room'],
+                            msg['data']['friend_name']),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ConferenceAlert('000', '000'),
-                //   ),
-                // ),
-                child: Text('Ок', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        );
+          );
+        }
+
+        print('onMessage: $msg');
+        _showErrorDialog('${msg['notification']['body']}');
       },
       onLaunch: (Map<String, dynamic> msg) async {
-        print('onLaunch: $msg');
-        showDialog(
-          context: context,
-          builder: (context) =>
-              // ConferenceAlert('roomName', 'username'),
-              AlertDialog(
-            backgroundColor: Colors.blue,
-            content: ListTile(
-              title: Text('${msg['notification']['body']}',
-                  style: TextStyle(color: Colors.white)),
-              subtitle: Text('${msg['data']['conference_room']}',
-                  style: TextStyle(color: Colors.white)),
+        void _showErrorDialog(String message) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('Приєднатися до нового відеочату?'),
+              content: Text(message),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ні'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Так'),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ConferenceAlert(
+                            msg['data']['conference_room'],
+                            msg['data']['friend_name']),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ConferenceAlert('000', '000'),
-                //   ),
-                // ),
-                child: Text('Ок', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        );
+          );
+        }
+
+        print('onLaunch: $msg');
+        _showErrorDialog('');
       },
       onResume: (Map<String, dynamic> msg) async {
-        print('onResume: $msg');
-        showDialog(
-          context: context,
-          builder: (context) =>
-              // ConferenceAlert('roomName', msg['']),
-              AlertDialog(
-            backgroundColor: Colors.blue,
-            content: ListTile(
-              title: Text('${msg['notification']['body']}',
-                  style: TextStyle(color: Colors.white)),
-              subtitle: Text('${msg['data']['conference_room']}',
-                  style: TextStyle(color: Colors.white)),
+        void _showErrorDialog(String message) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('Приєднатися до нового відеочату?'),
+              content: Text(message),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ні'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                ),
+                FlatButton(
+                  child: Text('Так'),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ConferenceAlert(
+                            msg['data']['conference_room'],
+                            msg['data']['friend_name']),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ConferenceAlert('000', '000'),
-                //   ),
-                // ),
-                child: Text('Ок', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-        );
+          );
+        }
+
+        print('onResume: $msg');
+        _showErrorDialog('');
       },
     );
   }

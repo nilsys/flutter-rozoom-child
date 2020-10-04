@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:laravel_echo/laravel_echo.dart';
 import 'package:rozoom_app/providers/friend_provider.dart';
-import 'package:rozoom_app/widgets/chat/messages.dart';
 
 class Pusher with ChangeNotifier {
   String authToken;
@@ -149,7 +148,7 @@ class Pusher with ChangeNotifier {
       pusherToken = responseData['csrf'];
       totalUnreadMessages = responseData['unread'];
       myId = responseData['me']['id'].toString();
-      // print('api data ---------------------------------> $_apiMessagesData');
+      print('api data ---------------------------------> $_apiMessagesData');
     } catch (error) {
       print('getApiData error: $error');
     }

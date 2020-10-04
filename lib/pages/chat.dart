@@ -1,17 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_pusher_client/flutter_pusher.dart';
-import 'package:laravel_echo/laravel_echo.dart';
 import 'package:rozoom_app/api/api.dart';
 import 'package:rozoom_app/models/Provider.dart';
-import 'package:rozoom_app/models/messenger/Messenger.dart';
 import 'package:rozoom_app/pages/conference_alert.dart';
 import 'package:rozoom_app/providers/friend_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
-import 'package:rozoom_app/widgets/chat/messages.dart';
-import 'package:rozoom_app/widgets/chat/new_message.dart';
+
 import 'package:provider/provider.dart';
 
 class Chat extends StatefulWidget {

@@ -13,13 +13,21 @@ class VideoChat extends ChangeNotifier {
   String get videoChatName => _videoChatName;
 
   Future<void> getVideoChatName() async {
-    final url = 'https://rozoom.co.ua/api/me/conference?api_token=$authToken';
+    final url = 'https://rozoom.com.ua/api/me/conference?api_token=$authToken';
+    print('url-------------------------> $url');
 
     try {
-      final response = await http.post(url);
+      final response = await http.get(url);
+      print('response-------------------------> $response');
+      // print('response-------------------------> ${response['conference']}');
+      final responseDataEncode = json.encode(response.body);
+      print('video chat get name responseDataEncode: $responseDataEncode');
+      final responseDataDecode = json.decode(responseDataEncode);
+      print('video chat get name responseDataDecode: $responseDataDecode');
       final responseData = json.decode(response.body);
       print('video chat get name response data: $responseData');
       _videoChatName = responseData['conference'];
+      print('-------------------------name vchat ->$_videoChatName');
       notifyListeners();
     } catch (error) {
       print('video chat get name error: $error');

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +6,7 @@ import 'package:rozoom_app/models/Provider.dart';
 import 'package:rozoom_app/models/http_exception.dart';
 import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
+import 'package:rozoom_app/providers/video_chat_provider.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -106,7 +106,6 @@ class _AuthCardState extends State<AuthCard>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }
@@ -214,6 +213,7 @@ class _AuthCardState extends State<AuthCard>
     final _apiData = json.decode(response.body) as Map<String, dynamic>;
     print('01 --- ApiData --------------> $_apiData');
     final _token = _apiData['api_token'];
+
     Provider.of<TokenData>(context, listen: false).changeTokenData(_token);
     print(
         '02 - TokenData -----------------> ${Provider.of<TokenData>(context, listen: false).getTokenData}');
@@ -223,6 +223,8 @@ class _AuthCardState extends State<AuthCard>
     Provider.of<Pusher>(context, listen: false).changeRozoomToken(_token);
     print(
         '04 - PusherToken -----------------> ${Provider.of<Pusher>(context, listen: false).getRozoomToken}');
+
+    // Provider.of<VideoChat>(context, listen: false).setAuthToken(_token);
 
     var errorMessage = '';
     print('${_apiData['result']}');
@@ -317,10 +319,10 @@ class _AuthCardState extends State<AuthCard>
       elevation: 8.0,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 400),
-        curve: Curves.easeIn,
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        curve: Curves.linear,
+        height: _authMode == AuthMode.Signup ? 380 : 260,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 380 : 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -332,21 +334,28 @@ class _AuthCardState extends State<AuthCard>
                   decoration: InputDecoration(labelText: 'Логін'),
                   // keyboardType: TextInputType.emailAddress,
                   controller: _loginController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      // if (value.isEmpty || !value.contains('@')) {
-                      return 'Введіть логін!';
-                    }
+                  validator: _authMode == AuthMode.Signup
+                      ? (value) {
+                          if (value.isEmpty) {
+                            // if (value.isEmpty || !value.contains('@')) {
+                            return 'Введіть логін!';
+                          }
 
-                    if (!value.contains('@') && !isNumeric(value)) {
-                      print(!value.contains('@'));
-                      print(!isNumeric(value));
-                      print(value);
-                      print(value.runtimeType);
-                      // if (value.isEmpty || !value.contains('@')) {
-                      return 'Логін має бути  email або телефон!';
-                    }
-                  },
+                          if (!value.contains('@') && !isNumeric(value)) {
+                            print(!value.contains('@'));
+                            print(!isNumeric(value));
+                            print(value);
+                            print(value.runtimeType);
+                            // if (value.isEmpty || !value.contains('@')) {
+                            return 'Логін має бути  email або телефон!';
+                          }
+                        }
+                      : (value) {
+                          if (value.isEmpty) {
+                            // if (value.isEmpty || !value.contains('@')) {
+                            return 'Введіть логін!';
+                          }
+                        },
                   onSaved: (value) {
                     _authData['email'] = value;
                   },
@@ -408,13 +417,13 @@ class _AuthCardState extends State<AuthCard>
                         decoration: InputDecoration(labelText: "Ваше ім'я"),
                         controller: _usernameController,
                         // obscureText: true,
-                        validator: _authMode == AuthMode.Signup
-                            ? (value) {
-                                if (value.isEmpty) {
-                                  return "Введіть ім'я!";
-                                }
-                              }
-                            : null,
+                        // validator: _authMode == AuthMode.Signup
+                        //     ? (value) {
+                        //         if (value.isEmpty) {
+                        //           return "Введіть ім'я!";
+                        //         }
+                        //       }
+                        //     : null,
                         onSaved: (value) {
                           _authData['username'] = value;
                         },

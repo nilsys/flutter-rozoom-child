@@ -1,7 +1,4 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jitsi_meet/jitsi_meet.dart';
@@ -21,8 +18,7 @@ class ConferenceAlert extends StatefulWidget {
 class _ConferenceAlertState extends State<ConferenceAlert> {
   // static String _roomText;
   // var room = Right(room);
-  final serverText =
-      TextEditingController(text: 'https://rozoom.com.ua/conference/');
+  final serverText = TextEditingController(text: 'https://conf.rozoom.CO.ua/');
   // final roomText = TextEditingController();
   final subjectText = TextEditingController(text: "");
   final nameText = TextEditingController(text: "");
@@ -226,43 +222,43 @@ class _ConferenceAlertState extends State<ConferenceAlert> {
     );
   }
 
-  _sendToFirestore() async {
-    var _user = await FirebaseAuth.instance.currentUser();
-    var _usernameData =
-        await Firestore.instance.collection('users').document(_user.uid).get();
-    await Firestore.instance
-        .collection('confs')
-        .document(_user.uid + Timestamp.now().toString())
-        .setData({
-      'email': _user.email,
-      'displayName': _user.displayName,
-      'username': _usernameData['name'],
-      'id': _user.uid,
-      'roomName': widget.roomName,
-    });
-    print('**********************ok***********************');
-  }
+  // _sendToFirestore() async {
+  //   var _user = await FirebaseAuth.instance.currentUser();
+  //   var _usernameData =
+  //       await Firestore.instance.collection('users').document(_user.uid).get();
+  //   await Firestore.instance
+  //       .collection('confs')
+  //       .document(_user.uid + Timestamp.now().toString())
+  //       .setData({
+  //     'email': _user.email,
+  //     'displayName': _user.displayName,
+  //     'username': _usernameData['name'],
+  //     'id': _user.uid,
+  //     'roomName': widget.roomName,
+  //   });
+  //   print('**********************ok***********************');
+  // }
 
-  _onAudioOnlyChanged(bool value) {
-    setState(() {
-      isAudioOnly = value;
-    });
-  }
+  // _onAudioOnlyChanged(bool value) {
+  //   setState(() {
+  //     isAudioOnly = value;
+  //   });
+  // }
 
-  _onAudioMutedChanged(bool value) {
-    setState(() {
-      isAudioMuted = value;
-    });
-  }
+  // _onAudioMutedChanged(bool value) {
+  //   setState(() {
+  //     isAudioMuted = value;
+  //   });
+  // }
 
-  _onVideoMutedChanged(bool value) {
-    setState(() {
-      isVideoMuted = value;
-    });
-  }
+  // _onVideoMutedChanged(bool value) {
+  //   setState(() {
+  //     isVideoMuted = value;
+  //   });
+  // }
 
   _joinMeeting() async {
-    String serverUrl = 'https://rozoom.com.ua/conference/';
+    String serverUrl = 'https://conf.rozoom.CO.ua/';
 
     try {
       // Enable or disable any feature flag here

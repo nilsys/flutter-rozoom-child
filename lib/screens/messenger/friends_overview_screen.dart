@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rozoom_app/pages/video_screen.dart';
 
 import 'package:rozoom_app/widgets/messenger/friends_list.dart';
-import 'package:rozoom_app/widgets/messenger/friends_overview_navbar.dart';
 
 class FriendsOverviewScreen extends StatelessWidget {
   @override
