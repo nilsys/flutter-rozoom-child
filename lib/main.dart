@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/models/Provider.dart';
+import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/home_screen.dart';
 import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/themes_overview_screen2.dart';
 import 'package:rozoom_app/screens/test_screen.dart';
 
 void main() => runApp(MyApp());
@@ -16,6 +19,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        //
+        ChangeNotifierProvider<Disciplines>(create: (context) => Disciplines()),
+        ChangeNotifierProvider<Themes>(create: (context) => Themes()),
+        //
         ChangeNotifierProvider<TokenData>(create: (context) => TokenData()),
         ChangeNotifierProvider<ChatTokenData>(
             create: (context) => ChatTokenData()),
@@ -38,7 +45,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Rozoom',
-        home: DisciplinesOverviewScreen(),
+        home: HomeChild(),
         theme: ThemeData(
           // primaryColor: Color(0xFFf06388),
           // primaryColor: Colors.red,
@@ -48,7 +55,12 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         routes: {
+          DisciplinesOverviewScreen.routeName: (context) =>
+              DisciplinesOverviewScreen(),
           ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),
+          ThemesOverviewScreen2.routeName: (context) => ThemesOverviewScreen2(),
+          TaskOverviewScreen.routeName: (context) => TaskOverviewScreen(),
+
           '/home': (context) => HomeChild(),
           // '/messenger': (context) => Messenger(),
           // '/chat': (context) => Chat(),

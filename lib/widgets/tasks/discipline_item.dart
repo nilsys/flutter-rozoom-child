@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/themes_overview_screen2.dart';
 
 class DisciplineItem extends StatelessWidget {
   final int id;
@@ -13,8 +13,8 @@ class DisciplineItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context)
-            .pushNamed(ThemesOverviewScreen.routeName, arguments: titleUa);
+        Navigator.of(context).pushNamed(ThemesOverviewScreen2.routeName,
+            arguments: {'disciplineId': id, 'disciplineTitleUa': titleUa});
       },
       child: Card(
         shape: RoundedRectangleBorder(
@@ -22,20 +22,15 @@ class DisciplineItem extends StatelessWidget {
             Radius.circular(8),
           ),
         ),
-        elevation: 1,
+        elevation: 1.5,
         child: Column(
           children: <Widget>[
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 2),
-                child: SvgPicture.network(
-                  imageUrl,
-                  placeholderBuilder: (BuildContext context) => Container(
-                      padding: const EdgeInsets.all(30.0),
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 1,
-                      )),
-                ),
+                child: SvgPicture.network(imageUrl,
+                    placeholderBuilder: (BuildContext context) =>
+                        Image.asset('assets/images/brand.png')),
               ),
             ),
             Padding(

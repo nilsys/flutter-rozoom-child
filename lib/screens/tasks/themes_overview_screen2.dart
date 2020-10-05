@@ -4,15 +4,16 @@ import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
 import 'package:rozoom_app/widgets/tasks/theme_item.dart';
+import 'package:rozoom_app/widgets/tasks/theme_item2.dart';
 
-class ThemesOverviewScreen extends StatefulWidget {
-  static const routeName = '/themes-overview';
+class ThemesOverviewScreen2 extends StatefulWidget {
+  static const routeName = '/themes-overview2';
 
   @override
-  _ThemesOverviewScreenState createState() => _ThemesOverviewScreenState();
+  _ThemesOverviewScreen2State createState() => _ThemesOverviewScreen2State();
 }
 
-class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
+class _ThemesOverviewScreen2State extends State<ThemesOverviewScreen2> {
   @override
   void initState() {
     Future.delayed(Duration.zero).then((_) {
@@ -40,7 +41,7 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.black,
+              color: Colors.grey,
             ),
             onPressed: () {
               Provider.of<Themes>(context, listen: false).nullThemeImages();
@@ -76,7 +77,7 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
                   width: 5,
                 ),
                 Text(
-                  '364.60',
+                  '366.60',
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
                 SizedBox(
@@ -90,7 +91,7 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
                   width: 5,
                 ),
                 Text(
-                  '9',
+                  '111',
                   style: TextStyle(color: Colors.black, fontSize: 16),
                 ),
               ],
@@ -98,21 +99,17 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
           ],
         ),
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
+      body: ListView.builder(
+        itemBuilder: (ctx, i) {
+          return ThemeItem2(
+            themes[i].id,
+            themes[i].name,
+            themes[i].imageUrl,
+            themes[i].klass,
+            themes[i].tasksCount,
+          );
+        },
         itemCount: themes.length,
-        itemBuilder: (ctx, i) => ThemeItem(
-          themes[i].id,
-          themes[i].name,
-          themes[i].imageUrl,
-          themes[i].klass,
-          themes[i].tasksCount,
-        ),
       ),
     );
   }

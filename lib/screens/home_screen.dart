@@ -8,6 +8,7 @@ import 'package:rozoom_app/api/api.dart';
 import 'package:rozoom_app/pages/conference_alert.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/screens/messenger/friends_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
 import 'package:rozoom_app/screens/webview_screen.dart';
 import 'package:rozoom_app/widgets/chat/badge_icon.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -297,8 +298,10 @@ class _HomeChildState extends State<HomeChild> {
       body: IndexedStack(
         index: _selectedIndex,
         children: <Widget>[
-          FriendsOverviewScreen(),
-          WebViewWebPage(),
+          DisciplinesOverviewScreen(),
+          DisciplinesOverviewScreen(),
+          // FriendsOverviewScreen(),
+          // WebViewWebPage(),
           // Right(rnd.toString()),
         ],
       ),
