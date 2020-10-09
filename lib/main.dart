@@ -9,6 +9,7 @@ import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen2.dart';
 import 'package:rozoom_app/screens/test_screen.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         //
         ChangeNotifierProvider<Disciplines>(create: (context) => Disciplines()),
         ChangeNotifierProvider<Themes>(create: (context) => Themes()),
+        ChangeNotifierProvider<Tasks>(create: (context) => Tasks()),
         //
         ChangeNotifierProvider<TokenData>(create: (context) => TokenData()),
         ChangeNotifierProvider<ChatTokenData>(
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
           ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),
           ThemesOverviewScreen2.routeName: (context) => ThemesOverviewScreen2(),
           TaskOverviewScreen.routeName: (context) => TaskOverviewScreen(),
+          TaskResultScreen.routeName: (context) => TaskResultScreen(),
 
           '/home': (context) => HomeChild(),
           // '/messenger': (context) => Messenger(),

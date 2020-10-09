@@ -1,127 +1,238 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rozoom_app/providers/task_provider.dart';
+import 'package:rozoom_app/widgets/tasks/green_icon.dart';
+import 'package:rozoom_app/widgets/tasks/red_icon.dart';
+import 'package:rozoom_app/widgets/tasks/right_answer.dart';
+import 'package:rozoom_app/widgets/tasks/wrong_answer.dart';
 
-class TaskItem extends StatelessWidget {
-  final int id;
-  final String name;
-  final String imageUrl;
-  final String klass;
-  final String tasksCount;
-  TaskItem(this.id, this.name, this.imageUrl, this.klass, this.tasksCount);
+class TaskItem extends StatefulWidget {
+  const TaskItem({
+    Key key,
+    @required this.themeName,
+  }) : super(key: key);
+
+  final String themeName;
+
+  @override
+  _TaskItemState createState() => _TaskItemState();
+}
+
+class _TaskItemState extends State<TaskItem> {
+  final GlobalKey<GreenAnimatedIconState> animatedStateKeyGreen =
+      GlobalKey<GreenAnimatedIconState>();
+
+  final GlobalKey<RedAnimatedIconState> animatedStateKeyRed =
+      GlobalKey<RedAnimatedIconState>();
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        // Navigator.of(context).pushNamed(ThemesOverviewScreen.routeName,
-        //     arguments: DisciplineItem(id, titleUa, imageUrl));
-      },
-      child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
-          ),
-          elevation: 4,
-          margin: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
-                    child: FadeInImage(
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.fill,
-                      image: NetworkImage(imageUrl),
-                      // fadeInDuration: Duration(seconds: 3),
-
-                      // fadeOutDuration: Duration(seconds: 1),
-                      placeholder: AssetImage('assets/images/brand.png'),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    right: 0,
-                    child: Container(
-                      width: 300,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                      color: Colors.black54,
-                      child: Text(
-                        name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                        ),
-                        overflow: TextOverflow.fade,
-                        softWrap: true,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
+    return SafeArea(
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            child: Card(
+              elevation: 3,
+              child: Padding(
+                padding: EdgeInsets.all(10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Icon(
-                          Icons.school,
-                          color: Color(0xFF74bec9),
-                        ),
+                        GreenAnimatedIcon(key: animatedStateKeyGreen),
                         SizedBox(
-                          width: 5,
+                          width: 6,
                         ),
                         Text(
-                          'клас: $klass      ',
-                          style: TextStyle(
-                            color: Color(0xFFf06388),
-                          ),
+                          Provider.of<Tasks>(context).getRightCount,
+                          style:
+                              TextStyle(color: Color(0xFFf06388), fontSize: 18),
                         ),
                       ],
                     ),
-                    RaisedButton(
-                      onPressed: () {},
-                      elevation: 2.0,
-                      highlightColor: Color(0xFF74bec9),
-                      highlightElevation: 5.0,
-                      child: Text(
-                        'Розпочати',
-                        style: TextStyle(color: Color(0xFF74bec9)),
-                      ),
-                      color: Colors.white,
-                      // padding: EdgeInsets.all(15.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          side: BorderSide(color: Color(0xFF74bec9), width: 1)),
+                    Row(
+                      children: <Widget>[
+                        RedAnimatedIcon(key: animatedStateKeyRed),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          Provider.of<Tasks>(context).getWrongCount,
+                          style:
+                              TextStyle(color: Color(0xFFf06388), fontSize: 18),
+                        )
+                      ],
                     ),
                     Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Icon(
+                          Icons.attach_money,
+                          color: Colors.black54,
+                          size: 30,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          Provider.of<Tasks>(context).getReward,
+                          style:
+                              TextStyle(color: Color(0xFFf06388), fontSize: 18),
+                        )
+                      ],
+                    ),
+                    Row(
                       children: <Widget>[
                         Text(
-                          'завдань: $tasksCount',
+                          '?',
                           style: TextStyle(
-                            color: Color(0xFFf06388),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
                           ),
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 6,
                         ),
-                        Icon(Icons.school, color: Color(0xFF74bec9)),
+                        Text(
+                          '${Provider.of<Tasks>(context).getcurrentCount}/${Provider.of<Tasks>(context).getTotalCount}',
+                          style:
+                              TextStyle(color: Color(0xFFf06388), fontSize: 18),
+                        )
                       ],
                     ),
                   ],
                 ),
               ),
-            ],
-          )),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            width: double.infinity,
+            // height: 200,
+            child: Card(
+              elevation: 3,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    child: ClipRRect(
+                      // borderRadius: BorderRadius.all(
+                      //   Radius.circular(30),
+                      // ),
+                      child: FadeInImage(
+                        width: double.infinity,
+                        height: 220,
+                        fit: BoxFit.contain,
+                        image: NetworkImage(
+                            Provider.of<Tasks>(context).getImageUrl),
+                        // fadeInDuration: Duration(seconds: 3),
+
+                        // fadeOutDuration: Duration(seconds: 1),
+                        placeholder: AssetImage('assets/images/brand.png'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, bottom: 10, right: 20, left: 20),
+                    child: Container(
+                      // height: 30,
+                      child: Center(
+                        child: Text(
+                          Provider.of<Tasks>(context).getQuestion,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Flexible(
+            child: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
+              child: ListView.builder(
+                  itemCount: Provider.of<Tasks>(context).getAnswers.length,
+                  itemBuilder: (ctx, i) {
+                    return Container(
+                      margin: EdgeInsets.only(top: 5),
+                      child: ButtonTheme(
+                        minWidth: 150,
+                        height: 45,
+                        // shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(50.0),
+                        //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
+                        child: RaisedButton(
+                          onPressed: () {
+                            Provider.of<Tasks>(context, listen: false)
+                                .answerTask(
+                                    Provider.of<Tasks>(context, listen: false)
+                                        .getAnswerId,
+                                    i);
+                            print(
+                                'right answer --------------> ${Provider.of<Tasks>(context, listen: false).rightAnswerValue}');
+                            i.toString() ==
+                                    Provider.of<Tasks>(context, listen: false)
+                                        .getRightAnswer
+                                        .toString()
+                                ? animatedStateKeyGreen.currentState
+                                    .getAnimationFromChild()
+                                : animatedStateKeyRed.currentState
+                                    .getAnimationFromChild();
+                            i.toString() ==
+                                    Provider.of<Tasks>(context, listen: false)
+                                        .getRightAnswer
+                                        .toString()
+                                ? _showOyboyRightAnswerDialog(i)
+                                : _showOyboyWrongAnswerDialog(i);
+                          },
+                          elevation: 3.0,
+                          highlightColor: Color(0xFF74bec9),
+                          highlightElevation: 5.0,
+                          child: Text(
+                            Provider.of<Tasks>(context).getAnswers[i] != null
+                                ? Provider.of<Tasks>(context).getAnswers[i]
+                                : '',
+                            style: TextStyle(
+                                color: Color(0xFF74bec9),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(
+                                  color: Color(0xFF74bec9), width: 2)),
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showOyboyRightAnswerDialog(i) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AnimatedRightAnswerDialog(answerIndex: i),
+    );
+  }
+
+  void _showOyboyWrongAnswerDialog(i) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AnimatedWrongAnswerDialog(answerIndex: i),
     );
   }
 }

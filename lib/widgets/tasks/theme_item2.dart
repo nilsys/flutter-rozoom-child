@@ -96,9 +96,10 @@ class ThemeItem2 extends StatelessWidget {
                       ),
                       RaisedButton(
                         onPressed: () {
+                          print(id);
                           Navigator.of(context).pushNamed(
                               TaskOverviewScreen.routeName,
-                              arguments: {'taskId': id, 'themeName': name});
+                              arguments: {'themeId': id, 'themeName': name});
                         },
                         elevation: 2.0,
                         highlightColor: Color(0xFF74bec9),
