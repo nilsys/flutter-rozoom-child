@@ -128,6 +128,8 @@ class Tasks with ChangeNotifier {
   List answers;
   var rightAnswer;
   var rightAnswerValue;
+  String points;
+  String answerType;
 
   Tasks(
       {this.result,
@@ -141,7 +143,9 @@ class Tasks with ChangeNotifier {
       this.answerId,
       this.answers,
       this.rightAnswer,
-      this.rightAnswerValue});
+      this.rightAnswerValue,
+      this.points,
+      this.answerType});
 
   Future<void> nullTaskData() async {
     result = false;
@@ -175,6 +179,8 @@ class Tasks with ChangeNotifier {
 
   get getRightAnswer => rightAnswer;
   get getRightAnswerValue => rightAnswerValue;
+  get getPoints => points;
+  get getAnswerType => answerType;
 
   Future<void> startTask(themeId) async {
     final token =
@@ -191,48 +197,51 @@ class Tasks with ChangeNotifier {
       result = extractedData['result'];
 
       rightCount = extractedData['session']['rights'];
-      print(
-          'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
-      print('rightAnswer $rightAnswer');
+      // print(
+      //     'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
+      // print('rightAnswer $rightAnswer');
       wrongCount = (int.tryParse(extractedData['session']['completed']) -
               int.tryParse(extractedData['session']['rights']))
           .toString();
-      print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
-      print('wrongCount $wrongCount');
+      // print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
+      // print('wrongCount $wrongCount');
       reward = extractedData['session']['reward'];
-      print('reward type ${extractedData['session']['reward'].runtimeType}');
-      print('reward $reward');
+      // print('reward type ${extractedData['session']['reward'].runtimeType}');
+      // print('reward $reward');
 
       currentCount =
           (int.tryParse(extractedData['session']['completed']) + 1).toString();
-      print(
-          'currentCount type ${extractedData['session']['completed'].runtimeType}');
-      print('currentCount $currentCount');
+      // print(
+      //     'currentCount type ${extractedData['session']['completed'].runtimeType}');
+      // print('currentCount $currentCount');
       totalCount = extractedData['session']['limit'];
-      print('totalCount type ${extractedData['session']['limit'].runtimeType}');
-      print('totalCount $totalCount');
+      // print('totalCount type ${extractedData['session']['limit'].runtimeType}');
+      // print('totalCount $totalCount');
       imageUrl =
           'https://rozoom.com.ua/uploads/' + extractedData['task']['image'];
-      print('imageUrl type ${extractedData['task']['image'].runtimeType}');
+      // print('imageUrl type ${extractedData['task']['image'].runtimeType}');
       print('imageUrl $imageUrl');
       question = extractedData['task']['question'];
-      print('question type ${extractedData['task']['question'].runtimeType}');
-      print('question $question');
+      // print('question type ${extractedData['task']['question'].runtimeType}');
+      // print('question $question');
       //
       answerId = extractedData['answer']['id'];
-      print('answerId type ${extractedData['answer']['id'].runtimeType}');
-      print('answerId $answerId');
+      // print('answerId type ${extractedData['answer']['id'].runtimeType}');
+      // print('answerId $answerId');
       answers = extractedData['answer']['variants'];
-      print('answers type ${extractedData['answer']['variants'].runtimeType}');
-      print(
-          'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
-      print('answers $answers');
+      // print('answers type ${extractedData['answer']['variants'].runtimeType}');
+      // print(
+      //     'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
+      // print('answers $answers');
       rightAnswer = extractedData['answer']['right_idx'];
-      print(
-          'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
-      print('rightAnswer $rightAnswer');
+      // print(
+      //     'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
+      // print('rightAnswer $rightAnswer');
       rightAnswerValue = extractedData['task']['answer'];
-      print('rightAnswerValue $rightAnswerValue');
+      // print('rightAnswerValue $rightAnswerValue');
+      answerType = extractedData['task']['type_id'];
+      print('answerType type ${extractedData['task']['type_id'].runtimeType}');
+      print('answerType $answerType');
 
       notifyListeners();
     } catch (error) {
@@ -256,17 +265,17 @@ class Tasks with ChangeNotifier {
 
       //
       rightCount = extractedData['session']['rights'];
-      print(
-          'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
-      print('rightAnswer $rightAnswer');
+      // print(
+      //     'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
+      // print('rightAnswer $rightAnswer');
       wrongCount = (int.tryParse(extractedData['session']['completed']) -
               int.tryParse(extractedData['session']['rights']))
           .toString();
-      print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
-      print('---------------->wrongCount $wrongCount');
+      // print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
+      // print('---------------->wrongCount $wrongCount');
       reward = extractedData['session']['reward'];
-      print('reward type ${extractedData['session']['reward'].runtimeType}');
-      print('reward $reward');
+      // print('reward type ${extractedData['session']['reward'].runtimeType}');
+      // print('reward $reward');
 
       if (extractedData['result'] == false) {
         final sessionId = extractedData['session']['id'];
@@ -279,34 +288,37 @@ class Tasks with ChangeNotifier {
 
       currentCount =
           (int.tryParse(extractedData['session']['completed']) + 1).toString();
-      print(
-          'currentCount type ${extractedData['session']['completed'].runtimeType}');
-      print('currentCount $currentCount');
+      // print(
+      //     'currentCount type ${extractedData['session']['completed'].runtimeType}');
+      // print('currentCount $currentCount');
       totalCount = extractedData['session']['limit'];
-      print('totalCount type ${extractedData['session']['limit'].runtimeType}');
-      print('totalCount $totalCount');
+      // print('totalCount type ${extractedData['session']['limit'].runtimeType}');
+      // print('totalCount $totalCount');
       imageUrl =
           'https://rozoom.com.ua/uploads/' + extractedData['task']['image'];
-      print('imageUrl type ${extractedData['task']['image'].runtimeType}');
+      // print('imageUrl type ${extractedData['task']['image'].runtimeType}');
       print('imageUrl $imageUrl');
       question = extractedData['task']['question'];
-      print('question type ${extractedData['task']['question'].runtimeType}');
-      print('question $question');
+      // print('question type ${extractedData['task']['question'].runtimeType}');
+      // print('question $question');
       //
       answerId = extractedData['answer']['id'];
-      print('answerId type ${extractedData['answer']['id'].runtimeType}');
-      print('answerId $answerId');
+      // print('answerId type ${extractedData['answer']['id'].runtimeType}');
+      // print('answerId $answerId');
       answers = extractedData['answer']['variants'];
-      print('answers type ${extractedData['answer']['variants'].runtimeType}');
-      print(
-          'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
-      print('answers $answers');
+      // print('answers type ${extractedData['answer']['variants'].runtimeType}');
+      // print(
+      //     'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
+      // print('answers $answers');
       rightAnswer = extractedData['answer']['right_idx'];
-      print(
-          'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
-      print('rightAnswer $rightAnswer');
+      // print(
+      //     'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
+      // print('rightAnswer $rightAnswer');
       rightAnswerValue = extractedData['task']['answer'];
-      print('rightAnswerValue $rightAnswerValue');
+      // print('rightAnswerValue $rightAnswerValue');
+      answerType = extractedData['task']['type_id'];
+      print('answerType type ${extractedData['task']['type_id'].runtimeType}');
+      print('answerType $answerType');
 
       notifyListeners();
     } catch (error) {
@@ -325,8 +337,10 @@ class Tasks with ChangeNotifier {
       print(response);
       var extractedData = json.decode(response.body);
       print(extractedData);
-      print('--points----------------------------${extractedData['points']}');
+      points = extractedData['points'];
+      print('--points----------------------------$points');
       print('-------------------> result: $result');
+
       // //
       // rightCount = extractedData['session']['rights'];
       // print(

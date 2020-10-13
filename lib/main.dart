@@ -8,6 +8,7 @@ import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
+import 'package:rozoom_app/screens/tasks/profile_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';

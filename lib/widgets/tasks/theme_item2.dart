@@ -17,125 +17,144 @@ class ThemeItem2 extends StatelessWidget {
       //       .pushNamed(TaskOverviewScreen.routeName, arguments: id);
       // },
       child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
           ),
-          elevation: 4,
-          margin: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15)),
-                    child: FadeInImage(
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.cover,
-                      image: NetworkImage(imageUrl),
-                      // fadeInDuration: Duration(seconds: 3),
+        ),
+        elevation: 4,
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15)),
+                  child: FadeInImage(
+                    width: double.infinity,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    image: NetworkImage(imageUrl),
+                    // fadeInDuration: Duration(seconds: 3),
 
-                      // fadeOutDuration: Duration(seconds: 1),
-                      placeholder: AssetImage('assets/images/brand.png'),
+                    // fadeOutDuration: Duration(seconds: 1),
+                    placeholder: AssetImage('assets/images/brand.png'),
+                  ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  right: 0,
+                  child: Container(
+                    width: 300,
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    color: Colors.lightBlue.withOpacity(0.4),
+                    child: Text(
+                      name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.white,
+                      ),
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
                     ),
                   ),
-                  Positioned(
-                    bottom: 20,
-                    right: 0,
-                    child: Container(
-                      width: 300,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                      color: Colors.black54,
-                      child: Text(
-                        name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
+                ),
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 0.3),
+                ),
+              ),
+              child: Column(
+                children: <Widget>[
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 20, bottom: 0),
+                  //   child: Container(
+                  //     // height: 30,
+                  //     child: Center(
+                  //       child: Text(
+                  //         name,
+                  //         textAlign: TextAlign.center,
+                  //         style: TextStyle(
+                  //           fontSize: 18,
+                  //           color: Colors.black87,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Icon(
+                              Icons.school,
+                              color: Color(0xFF74bec9),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              'клас: $klass      ',
+                              style: TextStyle(
+                                color: Color(0xFFf06388),
+                              ),
+                            ),
+                          ],
                         ),
-                        overflow: TextOverflow.fade,
-                        softWrap: true,
-                      ),
+                        RaisedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                                TaskOverviewScreen.routeName,
+                                arguments: {'themeId': id, 'themeName': name});
+                          },
+                          elevation: 2.0,
+                          highlightColor: Color(0xFF74bec9),
+                          highlightElevation: 5.0,
+                          child: Text(
+                            'Розпочати',
+                            style: TextStyle(color: Color(0xFF74bec9)),
+                          ),
+                          color: Colors.white,
+                          // padding: EdgeInsets.all(15.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(
+                                  color: Color(0xFF74bec9), width: 1)),
+                        ),
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              'завдань: $tasksCount',
+                              style: TextStyle(
+                                color: Color(0xFFf06388),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.school, color: Color(0xFF74bec9)),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(width: 0.3),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Icon(
-                            Icons.school,
-                            color: Color(0xFF74bec9),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            'клас: $klass      ',
-                            style: TextStyle(
-                              color: Color(0xFFf06388),
-                            ),
-                          ),
-                        ],
-                      ),
-                      RaisedButton(
-                        onPressed: () {
-                          print(id);
-                          Navigator.of(context).pushNamed(
-                              TaskOverviewScreen.routeName,
-                              arguments: {'themeId': id, 'themeName': name});
-                        },
-                        elevation: 2.0,
-                        highlightColor: Color(0xFF74bec9),
-                        highlightElevation: 5.0,
-                        child: Text(
-                          'Розпочати',
-                          style: TextStyle(color: Color(0xFF74bec9)),
-                        ),
-                        color: Colors.white,
-                        // padding: EdgeInsets.all(15.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            side:
-                                BorderSide(color: Color(0xFF74bec9), width: 1)),
-                      ),
-                      Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            'завдань: $tasksCount',
-                            style: TextStyle(
-                              color: Color(0xFFf06388),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Icon(Icons.school, color: Color(0xFF74bec9)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

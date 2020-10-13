@@ -24,14 +24,14 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
     final disciplines = Provider.of<Disciplines>(context).disciplineItems;
     return Scaffold(
       // backgroundColor: Colors.blue.withOpacity(0.2),
-      backgroundColor: Color(0XFFFEF9EB),
+      // backgroundColor: Color(0XFFFEF9EB),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.white,
+            color: Colors.grey,
           ),
           onPressed: null,
         ),
@@ -47,12 +47,12 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
           ),
         ],
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(
-              'Дісципліни',
-              style: TextStyle(fontSize: 16),
-            ),
+            // Text(
+            //   'Дісципліни',
+            //   style: TextStyle(fontSize: 16),
+            // ),
             SizedBox(
               width: 35,
             ),
@@ -84,19 +84,53 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
           ],
         ),
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
-        itemCount: disciplines.length,
-        itemBuilder: (ctx, i) => DisciplineItem(
-          disciplines[i].id,
-          disciplines[i].titleUa,
-          disciplines[i].imageUrl,
-        ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0, left: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      color: Color(0xFF74bec9),
+                    ),
+                    onPressed: () {
+                      // Navigator.pop(context);
+                    },
+                  ),
+                  Text(
+                    '/ ',
+                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+                  ),
+                  Text(
+                    ' Оберіть дисципліну',
+                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(10),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10),
+              itemCount: disciplines.length,
+              itemBuilder: (ctx, i) => DisciplineItem(
+                disciplines[i].id,
+                disciplines[i].titleUa,
+                disciplines[i].imageUrl,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

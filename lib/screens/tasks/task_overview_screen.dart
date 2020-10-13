@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
@@ -19,6 +18,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   @override
   void initState() {
     super.initState();
+    // Provider.of<Tasks>(context).getAnswerType;
     // Future.delayed(Duration(seconds: 1)).then((_) {
     //   var args =
     //       ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
@@ -102,7 +102,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
     // Provider.of<Tasks>(context, listen: false).startTask(themeId);
     // final themes = Provider.of<Themes>(context).themeItems;
     return Scaffold(
-        backgroundColor: Color(0XFFFEF9EB),
+        // backgroundColor: Color(0XFFFEF9EB),
         appBar: AppBar(
           elevation: 1,
           backgroundColor: Colors.white,

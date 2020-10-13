@@ -19,6 +19,20 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Future.delayed(Duration(seconds: 1)).then((_) {
+    //   var args =
+    //       ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+    //   final int themeId = args['themeId'];
+    //   print(themeId);
+
+    //   Provider.of<Tasks>(context, listen: false).startTask(themeId);
+    // });
+  }
+
   final GlobalKey<GreenAnimatedIconState> animatedStateKeyGreen =
       GlobalKey<GreenAnimatedIconState>();
 
@@ -27,6 +41,8 @@ class _TaskItemState extends State<TaskItem> {
 
   @override
   Widget build(BuildContext context) {
+    var answerType = Provider.of<Tasks>(context, listen: false).getAnswerType;
+    print('get answer type -------------------------> $answerType');
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -158,61 +174,67 @@ class _TaskItemState extends State<TaskItem> {
           Flexible(
             child: Container(
               margin: EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
-              child: ListView.builder(
-                  itemCount: Provider.of<Tasks>(context).getAnswers.length,
-                  itemBuilder: (ctx, i) {
-                    return Container(
-                      margin: EdgeInsets.only(top: 5),
-                      child: ButtonTheme(
-                        minWidth: 150,
-                        height: 45,
-                        // shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(50.0),
-                        //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
-                        child: RaisedButton(
-                          onPressed: () {
-                            Provider.of<Tasks>(context, listen: false)
-                                .answerTask(
-                                    Provider.of<Tasks>(context, listen: false)
-                                        .getAnswerId,
-                                    i);
-                            print(
-                                'right answer --------------> ${Provider.of<Tasks>(context, listen: false).rightAnswerValue}');
-                            i.toString() ==
-                                    Provider.of<Tasks>(context, listen: false)
-                                        .getRightAnswer
-                                        .toString()
-                                ? animatedStateKeyGreen.currentState
-                                    .getAnimationFromChild()
-                                : animatedStateKeyRed.currentState
-                                    .getAnimationFromChild();
-                            i.toString() ==
-                                    Provider.of<Tasks>(context, listen: false)
-                                        .getRightAnswer
-                                        .toString()
-                                ? _showOyboyRightAnswerDialog(i)
-                                : _showOyboyWrongAnswerDialog(i);
-                          },
-                          elevation: 3.0,
-                          highlightColor: Color(0xFF74bec9),
-                          highlightElevation: 5.0,
-                          child: Text(
-                            Provider.of<Tasks>(context).getAnswers[i] != null
-                                ? Provider.of<Tasks>(context).getAnswers[i]
-                                : '',
-                            style: TextStyle(
-                                color: Color(0xFF74bec9),
-                                fontWeight: FontWeight.bold),
+              child: Provider.of<Tasks>(context).getAnswerType == '1'
+                  ? ListView.builder(
+                      itemCount: Provider.of<Tasks>(context).getAnswers.length,
+                      itemBuilder: (ctx, i) {
+                        return Container(
+                          margin: EdgeInsets.only(top: 5),
+                          child: ButtonTheme(
+                            minWidth: 150,
+                            height: 45,
+                            // shape: RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.circular(50.0),
+                            //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                Provider.of<Tasks>(context, listen: false)
+                                    .answerTask(
+                                        Provider.of<Tasks>(context,
+                                                listen: false)
+                                            .getAnswerId,
+                                        i);
+                                print(
+                                    'right answer --------------> ${Provider.of<Tasks>(context, listen: false).rightAnswerValue}');
+                                i.toString() ==
+                                        Provider.of<Tasks>(context,
+                                                listen: false)
+                                            .getRightAnswer
+                                            .toString()
+                                    ? animatedStateKeyGreen.currentState
+                                        .getAnimationFromChild()
+                                    : animatedStateKeyRed.currentState
+                                        .getAnimationFromChild();
+                                i.toString() ==
+                                        Provider.of<Tasks>(context,
+                                                listen: false)
+                                            .getRightAnswer
+                                            .toString()
+                                    ? _showOyboyRightAnswerDialog(i)
+                                    : _showOyboyWrongAnswerDialog(i);
+                              },
+                              elevation: 3.0,
+                              highlightColor: Color(0xFF74bec9),
+                              highlightElevation: 5.0,
+                              child: Text(
+                                Provider.of<Tasks>(context).getAnswers[i] !=
+                                        null
+                                    ? Provider.of<Tasks>(context).getAnswers[i]
+                                    : '',
+                                style: TextStyle(
+                                    color: Color(0xFF74bec9),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  side: BorderSide(
+                                      color: Color(0xFF74bec9), width: 2)),
+                            ),
                           ),
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(
-                                  color: Color(0xFF74bec9), width: 2)),
-                        ),
-                      ),
-                    );
-                  }),
+                        );
+                      })
+                  : Text('Image or smth...'),
             ),
           ),
         ],

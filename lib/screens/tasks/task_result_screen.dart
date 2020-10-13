@@ -35,7 +35,7 @@ class TaskResultScreen extends StatelessWidget {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          '6',
+                          Provider.of<Tasks>(context).getPoints,
                           style: TextStyle(
                               fontSize: 34,
                               fontWeight: FontWeight.bold,
@@ -252,7 +252,7 @@ class TaskResultScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    ' 6',
+                                    ' ${Provider.of<Tasks>(context).getPoints}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       // fontWeight: FontWeight.bold,

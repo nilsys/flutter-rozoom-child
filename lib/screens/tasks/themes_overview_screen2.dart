@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
-import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
-import 'package:rozoom_app/widgets/tasks/theme_item.dart';
 import 'package:rozoom_app/widgets/tasks/theme_item2.dart';
 
 class ThemesOverviewScreen2 extends StatefulWidget {
@@ -33,7 +31,7 @@ class _ThemesOverviewScreen2State extends State<ThemesOverviewScreen2> {
     final String disciplineTitleUa = args['disciplineTitleUa'];
     final themes = Provider.of<Themes>(context).themeItems;
     return Scaffold(
-      backgroundColor: Color(0XFFFEF9EB),
+      // backgroundColor: Color(0XFFFEF9EB),
       // backgroundColor: Color(0Xf8f9fa),
       appBar: AppBar(
         elevation: 1,
@@ -59,14 +57,14 @@ class _ThemesOverviewScreen2State extends State<ThemesOverviewScreen2> {
           ),
         ],
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text(
-              disciplineTitleUa.length > 10
-                  ? '${disciplineTitleUa.replaceRange(10, disciplineTitleUa.length, '...')}'
-                  : '$disciplineTitleUa',
-              style: TextStyle(fontSize: 16),
-            ),
+            // Text(
+            //   disciplineTitleUa.length > 10
+            //       ? '${disciplineTitleUa.replaceRange(10, disciplineTitleUa.length, '...')}'
+            //       : '$disciplineTitleUa',
+            //   style: TextStyle(fontSize: 16),
+            // ),
             Row(
               children: <Widget>[
                 SvgPicture.asset(
@@ -99,17 +97,59 @@ class _ThemesOverviewScreen2State extends State<ThemesOverviewScreen2> {
           ],
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (ctx, i) {
-          return ThemeItem2(
-            themes[i].id,
-            themes[i].name,
-            themes[i].imageUrl,
-            themes[i].klass,
-            themes[i].tasksCount,
-          );
-        },
-        itemCount: themes.length,
+      body: Column(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0, left: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.home,
+                      color: Color(0xFF74bec9),
+                    ),
+                    onPressed: () {
+                      // Navigator.pop(context);
+                    },
+                  ),
+                  Text(
+                    '/ ',
+                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+                  ),
+                  Text(
+                    disciplineTitleUa,
+                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+                  ),
+                  Text(
+                    ' / ',
+                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+                  ),
+                  Text(
+                    'Оберіть тему',
+                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (ctx, i) {
+                return ThemeItem2(
+                  themes[i].id,
+                  themes[i].name,
+                  themes[i].imageUrl,
+                  themes[i].klass,
+                  themes[i].tasksCount,
+                );
+              },
+              itemCount: themes.length,
+            ),
+          ),
+        ],
       ),
     );
   }

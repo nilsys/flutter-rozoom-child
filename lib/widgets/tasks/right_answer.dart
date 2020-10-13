@@ -97,10 +97,9 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                             'result ----------------------> ${Provider.of<Tasks>(context, listen: false).getResult}');
                         setState(() {
                           Provider.of<Tasks>(context, listen: false).getResult
-                              ? Future.delayed(Duration.zero).then((_) {
-                                  onOk();
-                                  Navigator.pop(context);
-                                })
+                              ?
+                              // onOk();
+                              Navigator.pop(context)
                               : Navigator.of(context).pushNamed(
                                   TaskResultScreen.routeName,
                                 );

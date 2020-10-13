@@ -104,7 +104,8 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                       children: <Widget>[
                         Flexible(
                           child: Text(
-                            Provider.of<Tasks>(context).rightAnswerValue,
+                            Provider.of<Tasks>(context, listen: false)
+                                .rightAnswerValue,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -129,22 +130,21 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                         //     widget.answerIndex);
                         print(
                             'result ----------------------> ${Provider.of<Tasks>(context, listen: false).getResult}');
-                        setState(() {
-                          Provider.of<Tasks>(context, listen: false).getResult
-                              ? Future.delayed(Duration.zero).then((_) {
-                                  onOk();
-                                  Navigator.pop(context);
-                                })
-                              : Navigator.of(context).pushNamed(
-                                  TaskResultScreen.routeName,
-                                );
-                        });
+                        // setState(() {
+                        Provider.of<Tasks>(context, listen: false).getResult
+                            ?
+                            // onOk();
+                            Navigator.pop(context)
+                            : Navigator.of(context).pushNamed(
+                                TaskResultScreen.routeName,
+                              );
+                        // });
                       },
                       // elevation: 3.0,
                       // highlightColor: Color(0xFF74bec9),
                       highlightElevation: 5.0,
                       child: Text(
-                        'Йдемо далі',
+                        'Я зрозумів',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       color: Colors.green,

@@ -77,19 +77,19 @@ flutter:
     - assets/images/icon_parents.svg
     - assets/images/icon_teacher.svg
     - assets/images/icon_kids.svg
-    - assets/images/portfolio/brand.svg
-    - assets/images/portfolio/logo.png
-    - assets/images/portfolio/01.png
-    - assets/images/portfolio/02.png
-    - assets/images/portfolio/03.png
-    - assets/images/portfolio/04.png
-    - assets/images/portfolio/11.png
-    - assets/images/portfolio/12.png
-    - assets/images/portfolio/13.png
-    - assets/images/portfolio/31.png
-    - assets/images/portfolio/32.png
-    - assets/images/portfolio/33.png
-    - assets/images/portfolio/34.png
+    - assets/images/profile/brand.svg
+    - assets/images/profile/logo.png
+    - assets/images/profile/01.png
+    - assets/images/profile/02.png
+    - assets/images/profile/03.png
+    - assets/images/profile/04.png
+    - assets/images/profile/11.png
+    - assets/images/profile/12.png
+    - assets/images/profile/13.png
+    - assets/images/profile/31.png
+    - assets/images/profile/32.png
+    - assets/images/profile/33.png
+    - assets/images/profile/34.png
     - assets/images/coin.svg
     - assets/images/uah.svg
     - assets/images/bottom-icons/battles.svg
