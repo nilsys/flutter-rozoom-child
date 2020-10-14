@@ -8,6 +8,7 @@ class TaskResultScreen extends StatelessWidget {
   static const routeName = '/task-result';
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<Task>(context).taskItems;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -35,7 +36,7 @@ class TaskResultScreen extends StatelessWidget {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(
-                          Provider.of<Tasks>(context).getPoints,
+                          task[0].resultPoints,
                           style: TextStyle(
                               fontSize: 34,
                               fontWeight: FontWeight.bold,
@@ -77,7 +78,7 @@ class TaskResultScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    ' ${Provider.of<Tasks>(context).getRightCount}',
+                                    ' ${task[0].rightAnswersCount}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       // fontWeight: FontWeight.bold,
@@ -139,7 +140,7 @@ class TaskResultScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    ' ${Provider.of<Tasks>(context).getWrongCount}',
+                                    ' ${task[0].wrongAnswersCount}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       // fontWeight: FontWeight.bold,
@@ -201,7 +202,7 @@ class TaskResultScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    ' ${Provider.of<Tasks>(context).getReward} ',
+                                    ' ${task[0].rewardAmount} ',
                                     style: TextStyle(
                                       fontSize: 20,
                                       // fontWeight: FontWeight.bold,
@@ -252,7 +253,7 @@ class TaskResultScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    ' ${Provider.of<Tasks>(context).getPoints}',
+                                    ' ${task[0].resultPoints}',
                                     style: TextStyle(
                                       fontSize: 20,
                                       // fontWeight: FontWeight.bold,
@@ -281,7 +282,7 @@ class TaskResultScreen extends StatelessWidget {
                         Navigator.of(context).pushNamed(
                           DisciplinesOverviewScreen.routeName,
                         );
-                        Provider.of<Tasks>(context, listen: false)
+                        Provider.of<Task>(context, listen: false)
                             .nullTaskData();
                         Provider.of<Themes>(context, listen: false)
                             .nullThemeImages();

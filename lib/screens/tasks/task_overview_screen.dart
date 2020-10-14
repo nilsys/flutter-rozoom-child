@@ -15,22 +15,22 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
   var _isInit = true;
   var _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    // Provider.of<Tasks>(context).getAnswerType;
-    // Future.delayed(Duration(seconds: 1)).then((_) {
-    //   var args =
-    //       ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
-    //   final int themeId = args['themeId'];
-    //   print(themeId);
+  // @override
+  // void initState() {
+  //   Future.delayed(Duration(seconds: 1)).then((_) {
+  //     var args =
+  //         ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+  //     final int themeId = args['themeId'];
+  //     print('init state provider------------------------');
 
-    //   Provider.of<Tasks>(context, listen: false).startTask(themeId);
-    // });
-  }
+  //     Provider.of<Task>(context, listen: false).startTask(themeId);
+  //   });
+  //   super.initState();
+  // }
 
   @override
   void didChangeDependencies() {
+    print('did depencies start');
     if (_isInit) {
       setState(() {
         _isLoading = true;
@@ -38,15 +38,14 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
       var args =
           ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
       final int themeId = args['themeId'];
-      print(themeId);
-
-      Provider.of<Tasks>(context, listen: false).startTask(themeId).then((_) {
+      Provider.of<Task>(context, listen: false).startTask(themeId).then((_) {
         setState(() {
           _isLoading = false;
         });
       });
     }
     _isInit = false;
+    print('did depencies end');
     super.didChangeDependencies();
   }
 
@@ -76,7 +75,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
               Navigator.of(context)
                   .pushNamed(DisciplinesOverviewScreen.routeName);
               Provider.of<Themes>(context, listen: false).nullThemeImages();
-              Provider.of<Tasks>(context, listen: false).nullTaskData();
+              Provider.of<Task>(context, listen: false).nullTaskData();
             },
           ),
           FlatButton(
@@ -95,12 +94,26 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final task = Provider.of<Task>(context).taskItems;
     var args =
         ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
     final String themeName = args['themeName'];
-    // final int themeId = args['themeId'];
-    // Provider.of<Tasks>(context, listen: false).startTask(themeId);
-    // final themes = Provider.of<Themes>(context).themeItems;
+
+    // print(task[0].answerIdForApi);
+    // print(task[0].answerType);
+    // print(task[0].answerVariants);
+    // print(task[0].continueOrFinish);
+    // print(task[0].currentQuestionNumber);
+    // print(task[0].imageUrl);
+    // print(task[0].question);
+    // print(task[0].resultPoints);
+    // print(task[0].rewardAmount);
+    // print(task[0].rightAnswerListElementNumber);
+    // print(task[0].rightAnswerStringValue);
+    // print(task[0].rightAnswersCount);
+    // print(task[0].totalQuestionCount);
+    // print(task[0].wrongAnswersCount);
+
     return Scaffold(
         // backgroundColor: Color(0XFFFEF9EB),
         appBar: AppBar(

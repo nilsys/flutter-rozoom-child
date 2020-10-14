@@ -55,6 +55,9 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<Task>(context, listen: false).taskItems;
+    // final taskListen = Provider.of<Task>(context).taskItems;
+    // var resultTrue = taskListen[0].continueOrFinish;
     return SlideTransition(
       position: _offsetAnimation,
       child: Dialog(
@@ -93,17 +96,19 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                         //     Provider.of<Tasks>(context, listen: false)
                         //         .getAnswerId,
                         //     widget.answerIndex);
+
+                        // setState(() {
                         print(
-                            'result ----------------------> ${Provider.of<Tasks>(context, listen: false).getResult}');
-                        setState(() {
-                          Provider.of<Tasks>(context, listen: false).getResult
-                              ?
-                              // onOk();
-                              Navigator.pop(context)
-                              : Navigator.of(context).pushNamed(
-                                  TaskResultScreen.routeName,
-                                );
-                        });
+                            'result no listen? --------> ${task[0].continueOrFinish}');
+                        // print('result ? --------> ${resultTrue}');
+                        task[0].continueOrFinish
+                            ?
+                            // onOk();
+                            Navigator.pop(context)
+                            : Navigator.of(context).pushNamed(
+                                TaskResultScreen.routeName,
+                              );
+                        // });
                       },
                       // elevation: 3.0,
                       // highlightColor: Color(0xFF74bec9),

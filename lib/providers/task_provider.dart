@@ -102,9 +102,12 @@ class Themes with ChangeNotifier {
         loadedTasks.add(Theme(
             id: extractedData[i]['id'],
             name: extractedData[i]['name'],
-            imageUrl:
-                'https://rozoom.com.ua/uploads/' + extractedData[i]['image'],
-            klass: extractedData[i]['class'],
+            imageUrl: extractedData[i]['image'] != null
+                ? 'https://rozoom.com.ua/uploads/' + extractedData[i]['image']
+                : 'https://rozoom.com.ua/images/design/brand.svg',
+            klass: extractedData[i]['class'] != null
+                ? extractedData[i]['class']
+                : 'ထ',
             tasksCount: extractedData[i]['tasks_count']));
       }
       _themeItems = loadedTasks;
@@ -115,72 +118,53 @@ class Themes with ChangeNotifier {
   }
 }
 
-class Tasks with ChangeNotifier {
-  bool result;
-  var rightCount;
-  var wrongCount;
-  var reward;
-  var currentCount;
-  var totalCount;
-  var imageUrl;
-  var question;
-  var answerId;
-  List answers;
-  var rightAnswer;
-  var rightAnswerValue;
-  String points;
+class TaskModel {
+  bool continueOrFinish;
+  String rightAnswersCount;
+  String wrongAnswersCount;
+  String rewardAmount;
+  String currentQuestionNumber;
+  String totalQuestionCount;
+  String imageUrl;
+  String question;
+  String answerIdForApi;
+  List answerVariants;
+  String rightAnswerListElementNumber;
+  String rightAnswerStringValue;
   String answerType;
+  String resultPoints;
 
-  Tasks(
-      {this.result,
-      this.rightCount,
-      this.wrongCount,
-      this.reward,
-      this.currentCount,
-      this.totalCount,
-      this.imageUrl,
-      this.question,
-      this.answerId,
-      this.answers,
-      this.rightAnswer,
-      this.rightAnswerValue,
-      this.points,
-      this.answerType});
+  TaskModel({
+    this.continueOrFinish,
+    this.rightAnswersCount,
+    this.wrongAnswersCount,
+    this.rewardAmount,
+    this.currentQuestionNumber,
+    this.totalQuestionCount,
+    this.imageUrl,
+    this.question,
+    this.answerIdForApi,
+    this.answerVariants,
+    this.rightAnswerListElementNumber,
+    this.rightAnswerStringValue,
+    this.answerType,
+    this.resultPoints,
+  });
+}
+
+class Task with ChangeNotifier {
+  List<TaskModel> _taskItems = [];
+
+  List<TaskModel> get taskItems {
+    return [..._taskItems];
+  }
 
   Future<void> nullTaskData() async {
-    result = false;
-    rightCount = '';
-    wrongCount = '';
-    reward = '';
-    currentCount = '';
-    totalCount = '';
-    print('-------> image url: $imageUrl');
-    imageUrl = '';
-    question = '';
-    answerId = '';
-    answers = [];
-    rightAnswer = '';
-    rightAnswerValue = '';
-    print('ooooooook -------> image url: $imageUrl');
+    print(_taskItems);
+    _taskItems = [];
+    print(_taskItems);
+    return _taskItems;
   }
-
-  get getResult => result;
-  get getRightCount => rightCount;
-  get getWrongCount => wrongCount;
-  get getReward => reward;
-  get getcurrentCount => currentCount;
-  get getTotalCount => totalCount;
-  get getImageUrl => imageUrl;
-  get getQuestion => question;
-  get getAnswerId => answerId;
-  List get getAnswers {
-    return [...answers];
-  }
-
-  get getRightAnswer => rightAnswer;
-  get getRightAnswerValue => rightAnswerValue;
-  get getPoints => points;
-  get getAnswerType => answerType;
 
   Future<void> startTask(themeId) async {
     final token =
@@ -190,137 +174,131 @@ class Tasks with ChangeNotifier {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + token, headers: headers);
       print(url + token);
-      print(response);
-
-      var extractedData = json.decode(response.body);
+      // print(response);
+      final extractedData = json.decode(response.body);
       print(extractedData);
-      result = extractedData['result'];
+      if (extractedData == null) {
+        return;
+      }
 
-      rightCount = extractedData['session']['rights'];
-      // print(
-      //     'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
-      // print('rightAnswer $rightAnswer');
-      wrongCount = (int.tryParse(extractedData['session']['completed']) -
-              int.tryParse(extractedData['session']['rights']))
-          .toString();
-      // print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
-      // print('wrongCount $wrongCount');
-      reward = extractedData['session']['reward'];
-      // print('reward type ${extractedData['session']['reward'].runtimeType}');
-      // print('reward $reward');
-
-      currentCount =
-          (int.tryParse(extractedData['session']['completed']) + 1).toString();
-      // print(
-      //     'currentCount type ${extractedData['session']['completed'].runtimeType}');
-      // print('currentCount $currentCount');
-      totalCount = extractedData['session']['limit'];
-      // print('totalCount type ${extractedData['session']['limit'].runtimeType}');
-      // print('totalCount $totalCount');
-      imageUrl =
-          'https://rozoom.com.ua/uploads/' + extractedData['task']['image'];
-      // print('imageUrl type ${extractedData['task']['image'].runtimeType}');
-      print('imageUrl $imageUrl');
-      question = extractedData['task']['question'];
-      // print('question type ${extractedData['task']['question'].runtimeType}');
-      // print('question $question');
-      //
-      answerId = extractedData['answer']['id'];
-      // print('answerId type ${extractedData['answer']['id'].runtimeType}');
-      // print('answerId $answerId');
-      answers = extractedData['answer']['variants'];
-      // print('answers type ${extractedData['answer']['variants'].runtimeType}');
-      // print(
-      //     'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
-      // print('answers $answers');
-      rightAnswer = extractedData['answer']['right_idx'];
-      // print(
-      //     'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
-      // print('rightAnswer $rightAnswer');
-      rightAnswerValue = extractedData['task']['answer'];
-      // print('rightAnswerValue $rightAnswerValue');
-      answerType = extractedData['task']['type_id'];
-      print('answerType type ${extractedData['task']['type_id'].runtimeType}');
-      print('answerType $answerType');
-
+      final List<TaskModel> loadedTaskList = [];
+      loadedTaskList.add(TaskModel(
+        continueOrFinish: extractedData['result'],
+        rightAnswersCount: extractedData['session']['rights'].toString(),
+        wrongAnswersCount:
+            (int.tryParse(extractedData['session']['completed']) -
+                    int.tryParse(extractedData['session']['rights']))
+                .toString(),
+        rewardAmount: extractedData['session']['reward'].toString(),
+        currentQuestionNumber:
+            (int.tryParse(extractedData['session']['completed']) + 1)
+                .toString(),
+        totalQuestionCount: extractedData['session']['limit'].toString(),
+        imageUrl: 'https://rozoom.com.ua/uploads/' +
+            extractedData['task']['image'].toString(),
+        question: extractedData['task']['question'].toString(),
+        answerIdForApi: extractedData['answer']['id'].toString(),
+        answerVariants: extractedData['answer']['variants'],
+        rightAnswerListElementNumber:
+            extractedData['answer']['right_idx'].toString(),
+        rightAnswerStringValue: extractedData['task']['answer'].toString(),
+        answerType: extractedData['task']['type_id'].toString(),
+        resultPoints: 'no points',
+      ));
+      _taskItems = loadedTaskList;
       notifyListeners();
     } catch (error) {
       throw error;
     }
   }
 
-  Future<void> answerTask(answerIdReq, answerPosition) async {
-    print('answer task okkkkkkkkkkkkkkkkkkkkkkkkkkkkk!');
+  Future<void> answerTask(answerIdForApi, answerListElementNumber) async {
     final token =
         'ZTXaUwNQp46vnzEEejS2KLE38KZNZsBMVjG3ZLMGBum8t8Y5ehmwBxakxnJFR0lG8bDKoc3Pc0F1HCcH';
     final url =
-        'https://rozoom.com.ua/task/answer/$answerId/$answerPosition?api_token=';
+        'https://rozoom.com.ua/task/answer/$answerIdForApi/$answerListElementNumber?api_token=';
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + token, headers: headers);
       print(url + token);
-      print(response);
+      // print(response);
       var extractedData = json.decode(response.body);
       print(extractedData);
-
-      //
-      rightCount = extractedData['session']['rights'];
-      // print(
-      //     'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
-      // print('rightAnswer $rightAnswer');
-      wrongCount = (int.tryParse(extractedData['session']['completed']) -
-              int.tryParse(extractedData['session']['rights']))
-          .toString();
-      // print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
-      // print('---------------->wrongCount $wrongCount');
-      reward = extractedData['session']['reward'];
-      // print('reward type ${extractedData['session']['reward'].runtimeType}');
-      // print('reward $reward');
-
+      if (extractedData == null) {
+        return;
+      }
+      final sessionId = extractedData['session']['id'];
+      final List<TaskModel> loadedTaskList = [];
       if (extractedData['result'] == false) {
-        final sessionId = extractedData['session']['id'];
-        result = false;
-        print('-----------result: $result');
-        resultTask(sessionId);
+        print('result false -------------------------------------------------');
+
+        final url = 'https://rozoom.com.ua/task/result/$sessionId?api_token=';
+        final headers = {'Accept': 'text/json'};
+        final response = await http.get(url + token, headers: headers);
+        print(url + token);
+        var extractedData = json.decode(response.body);
+        // print(extractedData);
+        final List<TaskModel> loadedTaskList = [];
+        loadedTaskList.add(TaskModel(
+          continueOrFinish: false,
+          rightAnswersCount: extractedData['session']['rights'].toString(),
+          wrongAnswersCount:
+              (int.tryParse(extractedData['session']['completed']) -
+                      int.tryParse(extractedData['session']['rights']))
+                  .toString(),
+          rewardAmount: extractedData['session']['reward'].toString(),
+          resultPoints: extractedData['points'].toString(),
+          imageUrl: extractedData['task']['image'] != null
+              ? 'https://rozoom.com.ua/uploads/' +
+                  extractedData['task']['image']
+              : 'https://rozoom.com.ua/images/design/brand.svg',
+        ));
+        _taskItems = loadedTaskList;
+        print(
+            'rrrrrrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeee ${_taskItems[0].continueOrFinish}');
+        notifyListeners();
+        // loadedTaskList.add(TaskModel(
+        //   continueOrFinish: false,
+        //   rightAnswersCount: extractedData['session']['rights'].toString(),
+        //   wrongAnswersCount:
+        //       (int.tryParse(extractedData['session']['completed']) -
+        //               int.tryParse(extractedData['session']['rights']))
+        //           .toString(),
+        //   rewardAmount: extractedData['session']['reward'].toString(),
+        // ));
+        // final sessionId = extractedData['session']['id'];
+        // _taskItems = loadedTaskList;
+        // resultTask(sessionId);
+        // notifyListeners();
+        return;
+      } else {
+        loadedTaskList.add(TaskModel(
+          continueOrFinish: extractedData['result'],
+          rightAnswersCount: extractedData['session']['rights'].toString(),
+          wrongAnswersCount:
+              (int.tryParse(extractedData['session']['completed']) -
+                      int.tryParse(extractedData['session']['rights']))
+                  .toString(),
+          rewardAmount: extractedData['session']['reward'].toString(),
+          currentQuestionNumber:
+              (int.tryParse(extractedData['session']['completed']) + 1)
+                  .toString(),
+          totalQuestionCount: extractedData['session']['limit'].toString(),
+          imageUrl: 'https://rozoom.com.ua/uploads/' +
+              extractedData['task']['image'].toString(),
+          question: extractedData['task']['question'].toString(),
+          answerIdForApi: extractedData['answer']['id'].toString(),
+          answerVariants: extractedData['answer']['variants'],
+          rightAnswerListElementNumber:
+              extractedData['answer']['right_idx'].toString(),
+          rightAnswerStringValue: extractedData['task']['answer'].toString(),
+          answerType: extractedData['task']['type_id'].toString(),
+          resultPoints: 'no points',
+        ));
+        _taskItems = loadedTaskList;
         notifyListeners();
         return;
       }
-
-      currentCount =
-          (int.tryParse(extractedData['session']['completed']) + 1).toString();
-      // print(
-      //     'currentCount type ${extractedData['session']['completed'].runtimeType}');
-      // print('currentCount $currentCount');
-      totalCount = extractedData['session']['limit'];
-      // print('totalCount type ${extractedData['session']['limit'].runtimeType}');
-      // print('totalCount $totalCount');
-      imageUrl =
-          'https://rozoom.com.ua/uploads/' + extractedData['task']['image'];
-      // print('imageUrl type ${extractedData['task']['image'].runtimeType}');
-      print('imageUrl $imageUrl');
-      question = extractedData['task']['question'];
-      // print('question type ${extractedData['task']['question'].runtimeType}');
-      // print('question $question');
-      //
-      answerId = extractedData['answer']['id'];
-      // print('answerId type ${extractedData['answer']['id'].runtimeType}');
-      // print('answerId $answerId');
-      answers = extractedData['answer']['variants'];
-      // print('answers type ${extractedData['answer']['variants'].runtimeType}');
-      // print(
-      //     'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
-      // print('answers $answers');
-      rightAnswer = extractedData['answer']['right_idx'];
-      // print(
-      //     'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
-      // print('rightAnswer $rightAnswer');
-      rightAnswerValue = extractedData['task']['answer'];
-      // print('rightAnswerValue $rightAnswerValue');
-      answerType = extractedData['task']['type_id'];
-      print('answerType type ${extractedData['task']['type_id'].runtimeType}');
-      print('answerType $answerType');
-
-      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -334,54 +312,25 @@ class Tasks with ChangeNotifier {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + token, headers: headers);
       print(url + token);
-      print(response);
       var extractedData = json.decode(response.body);
-      print(extractedData);
-      points = extractedData['points'];
-      print('--points----------------------------$points');
-      print('-------------------> result: $result');
-
-      // //
-      // rightCount = extractedData['session']['rights'];
-      // print(
-      //     'rightAnswer type ${extractedData['session']['rights'].runtimeType}');
-      // print('rightAnswer $rightAnswer');
-      // wrongCount = extractedData['session']['fix'];
-      // print('wrongCount type ${extractedData['session']['fix'].runtimeType}');
-      // print('wrongCount $wrongCount');
-      // reward = extractedData['session']['reward'];
-      // print('reward type ${extractedData['session']['reward'].runtimeType}');
-      // print('reward $reward');
-
-      // currentCount =
-      //     (int.tryParse(extractedData['session']['completed']) + 1).toString();
-      // print(
-      //     'currentCount type ${extractedData['session']['completed'].runtimeType}');
-      // print('currentCount $currentCount');
-      // totalCount = extractedData['session']['limit'];
-      // print('totalCount type ${extractedData['session']['limit'].runtimeType}');
-      // print('totalCount $totalCount');
-      // imageUrl =
-      //     'https://rozoom.com.ua/uploads/' + extractedData['task']['image'];
-      // print('imageUrl type ${extractedData['task']['image'].runtimeType}');
-      // print('imageUrl $imageUrl');
-      // question = extractedData['task']['question'];
-      // print('question type ${extractedData['task']['question'].runtimeType}');
-      // print('question $question');
-      // //
-      // answerId = extractedData['answer']['id'];
-      // print('answerId type ${extractedData['answer']['id'].runtimeType}');
-      // print('answerId $answerId');
-      // answers = extractedData['answer']['variants'];
-      // print('answers type ${extractedData['answer']['variants'].runtimeType}');
-      // print(
-      //     'answers element type ${extractedData['answer']['variants'][0].runtimeType}');
-      // print('answers $answers');
-      // rightAnswer = extractedData['answer']['right_idx'];
-      // print(
-      //     'rightAnswer type ${extractedData['answer']['right_idx'].runtimeType}');
-      // print('rightAnswer $rightAnswer');
-
+      // print(extractedData);
+      final List<TaskModel> loadedTaskList = [];
+      loadedTaskList.add(TaskModel(
+        continueOrFinish: false,
+        rightAnswersCount: extractedData['session']['rights'].toString(),
+        wrongAnswersCount:
+            (int.tryParse(extractedData['session']['completed']) -
+                    int.tryParse(extractedData['session']['rights']))
+                .toString(),
+        rewardAmount: extractedData['session']['reward'].toString(),
+        resultPoints: extractedData['points'].toString(),
+        imageUrl: extractedData['task']['image'] != null
+            ? 'https://rozoom.com.ua/uploads/' + extractedData['task']['image']
+            : 'https://rozoom.com.ua/images/design/brand.svg',
+      ));
+      _taskItems = loadedTaskList;
+      print(
+          'rrrrrrrrrrrrrrrrrrrreeeeeeeeeeeeeeeeeeeeeee ${_taskItems[0].continueOrFinish}');
       notifyListeners();
     } catch (error) {
       throw error;

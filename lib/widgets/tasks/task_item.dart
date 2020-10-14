@@ -19,20 +19,6 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Future.delayed(Duration(seconds: 1)).then((_) {
-    //   var args =
-    //       ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
-    //   final int themeId = args['themeId'];
-    //   print(themeId);
-
-    //   Provider.of<Tasks>(context, listen: false).startTask(themeId);
-    // });
-  }
-
   final GlobalKey<GreenAnimatedIconState> animatedStateKeyGreen =
       GlobalKey<GreenAnimatedIconState>();
 
@@ -41,8 +27,7 @@ class _TaskItemState extends State<TaskItem> {
 
   @override
   Widget build(BuildContext context) {
-    var answerType = Provider.of<Tasks>(context, listen: false).getAnswerType;
-    print('get answer type -------------------------> $answerType');
+    final task = Provider.of<Task>(context).taskItems;
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -62,7 +47,7 @@ class _TaskItemState extends State<TaskItem> {
                           width: 6,
                         ),
                         Text(
-                          Provider.of<Tasks>(context).getRightCount,
+                          task[0].rightAnswersCount,
                           style:
                               TextStyle(color: Color(0xFFf06388), fontSize: 18),
                         ),
@@ -75,7 +60,7 @@ class _TaskItemState extends State<TaskItem> {
                           width: 6,
                         ),
                         Text(
-                          Provider.of<Tasks>(context).getWrongCount,
+                          task[0].wrongAnswersCount,
                           style:
                               TextStyle(color: Color(0xFFf06388), fontSize: 18),
                         )
@@ -92,7 +77,7 @@ class _TaskItemState extends State<TaskItem> {
                           width: 6,
                         ),
                         Text(
-                          Provider.of<Tasks>(context).getReward,
+                          task[0].rewardAmount,
                           style:
                               TextStyle(color: Color(0xFFf06388), fontSize: 18),
                         )
@@ -112,7 +97,7 @@ class _TaskItemState extends State<TaskItem> {
                           width: 6,
                         ),
                         Text(
-                          '${Provider.of<Tasks>(context).getcurrentCount}/${Provider.of<Tasks>(context).getTotalCount}',
+                          '${task[0].currentQuestionNumber}/${task[0].totalQuestionCount}',
                           style:
                               TextStyle(color: Color(0xFFf06388), fontSize: 18),
                         )
@@ -141,8 +126,7 @@ class _TaskItemState extends State<TaskItem> {
                         width: double.infinity,
                         height: 220,
                         fit: BoxFit.contain,
-                        image: NetworkImage(
-                            Provider.of<Tasks>(context).getImageUrl),
+                        image: NetworkImage(task[0].imageUrl),
                         // fadeInDuration: Duration(seconds: 3),
 
                         // fadeOutDuration: Duration(seconds: 1),
@@ -157,7 +141,7 @@ class _TaskItemState extends State<TaskItem> {
                       // height: 30,
                       child: Center(
                         child: Text(
-                          Provider.of<Tasks>(context).getQuestion,
+                          task[0].question,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
@@ -174,9 +158,9 @@ class _TaskItemState extends State<TaskItem> {
           Flexible(
             child: Container(
               margin: EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
-              child: Provider.of<Tasks>(context).getAnswerType == '1'
+              child: task[0].answerType == '1'
                   ? ListView.builder(
-                      itemCount: Provider.of<Tasks>(context).getAnswers.length,
+                      itemCount: task[0].answerVariants.length,
                       itemBuilder: (ctx, i) {
                         return Container(
                           margin: EdgeInsets.only(top: 5),
@@ -188,28 +172,17 @@ class _TaskItemState extends State<TaskItem> {
                             //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                             child: RaisedButton(
                               onPressed: () {
-                                Provider.of<Tasks>(context, listen: false)
-                                    .answerTask(
-                                        Provider.of<Tasks>(context,
-                                                listen: false)
-                                            .getAnswerId,
-                                        i);
-                                print(
-                                    'right answer --------------> ${Provider.of<Tasks>(context, listen: false).rightAnswerValue}');
+                                Provider.of<Task>(context, listen: false)
+                                    .answerTask(task[0].answerIdForApi, i);
+
                                 i.toString() ==
-                                        Provider.of<Tasks>(context,
-                                                listen: false)
-                                            .getRightAnswer
-                                            .toString()
+                                        task[0].rightAnswerListElementNumber
                                     ? animatedStateKeyGreen.currentState
                                         .getAnimationFromChild()
                                     : animatedStateKeyRed.currentState
                                         .getAnimationFromChild();
                                 i.toString() ==
-                                        Provider.of<Tasks>(context,
-                                                listen: false)
-                                            .getRightAnswer
-                                            .toString()
+                                        task[0].rightAnswerListElementNumber
                                     ? _showOyboyRightAnswerDialog(i)
                                     : _showOyboyWrongAnswerDialog(i);
                               },
@@ -217,9 +190,8 @@ class _TaskItemState extends State<TaskItem> {
                               highlightColor: Color(0xFF74bec9),
                               highlightElevation: 5.0,
                               child: Text(
-                                Provider.of<Tasks>(context).getAnswers[i] !=
-                                        null
-                                    ? Provider.of<Tasks>(context).getAnswers[i]
+                                task[0].answerVariants[i] != null
+                                    ? task[0].answerVariants[i]
                                     : '',
                                 style: TextStyle(
                                     color: Color(0xFF74bec9),
@@ -234,7 +206,7 @@ class _TaskItemState extends State<TaskItem> {
                           ),
                         );
                       })
-                  : Text('Image or smth...'),
+                  : Text('Image or smth..................'),
             ),
           ),
         ],

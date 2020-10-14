@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         //
         ChangeNotifierProvider<Disciplines>(create: (context) => Disciplines()),
         ChangeNotifierProvider<Themes>(create: (context) => Themes()),
-        ChangeNotifierProvider<Tasks>(create: (context) => Tasks()),
+        ChangeNotifierProvider<Task>(create: (context) => Task()),
         //
         ChangeNotifierProvider<TokenData>(create: (context) => TokenData()),
         ChangeNotifierProvider<ChatTokenData>(

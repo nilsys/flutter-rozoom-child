@@ -55,6 +55,10 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<Task>(context, listen: false).taskItems;
+    final taskListen = Provider.of<Task>(context).taskItems;
+    var resultTrue = taskListen[0].continueOrFinish;
+
     return SlideTransition(
       position: _offsetAnimation,
       child: Dialog(
@@ -104,8 +108,7 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                       children: <Widget>[
                         Flexible(
                           child: Text(
-                            Provider.of<Tasks>(context, listen: false)
-                                .rightAnswerValue,
+                            task[0].rightAnswerStringValue,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -128,10 +131,11 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                         //     Provider.of<Tasks>(context, listen: false)
                         //         .getAnswerId,
                         //     widget.answerIndex);
-                        print(
-                            'result ----------------------> ${Provider.of<Tasks>(context, listen: false).getResult}');
+
                         // setState(() {
-                        Provider.of<Tasks>(context, listen: false).getResult
+                        print('result ? --------> ${task[0].continueOrFinish}');
+                        print('result listen ? --------> $resultTrue');
+                        resultTrue
                             ?
                             // onOk();
                             Navigator.pop(context)
