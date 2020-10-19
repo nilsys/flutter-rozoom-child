@@ -55,7 +55,8 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
-    final task = Provider.of<Task>(context, listen: false).taskItems;
+    var continueOrFinish = Provider.of<TaskModel>(context).continueOrFinish;
+
     // final taskListen = Provider.of<Task>(context).taskItems;
     // var resultTrue = taskListen[0].continueOrFinish;
     return SlideTransition(
@@ -84,43 +85,45 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                     ),
                   ),
                   Padding(padding: EdgeInsets.only(top: 25.0)),
-                  ButtonTheme(
-                    minWidth: 80,
-                    height: 45,
-                    // shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(50.0),
-                    //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
-                    child: RaisedButton(
-                      onPressed: () {
-                        // Provider.of<Tasks>(context, listen: false).answerTask(
-                        //     Provider.of<Tasks>(context, listen: false)
-                        //         .getAnswerId,
-                        //     widget.answerIndex);
+                  Consumer<TaskModel>(
+                    builder: (ctx, task, child) => ButtonTheme(
+                      minWidth: 80,
+                      height: 45,
+                      // shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(50.0),
+                      //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
+                      child: RaisedButton(
+                        onPressed: () {
+                          // Provider.of<Tasks>(context, listen: false).answerTask(
+                          //     Provider.of<Tasks>(context, listen: false)
+                          //         .getAnswerId,
+                          //     widget.answerIndex);
 
-                        // setState(() {
-                        print(
-                            'result no listen? --------> ${task[0].continueOrFinish}');
-                        // print('result ? --------> ${resultTrue}');
-                        task[0].continueOrFinish
-                            ?
-                            // onOk();
-                            Navigator.pop(context)
-                            : Navigator.of(context).pushNamed(
-                                TaskResultScreen.routeName,
-                              );
-                        // });
-                      },
-                      // elevation: 3.0,
-                      // highlightColor: Color(0xFF74bec9),
-                      highlightElevation: 5.0,
-                      child: Text(
-                        'Йдемо далі',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      color: Colors.red,
-                      // padding: EdgeInsets.all(15.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                          // setState(() {
+
+                          print(
+                              'result from widget --------> ${task.continueOrFinish}');
+                          task.continueOrFinish
+                              ?
+                              // onOk();
+                              Navigator.pop(context)
+                              : Navigator.of(context).pushNamed(
+                                  TaskResultScreen.routeName,
+                                );
+                          // });
+                        },
+                        // elevation: 3.0,
+                        // highlightColor: Color(0xFF74bec9),
+                        highlightElevation: 5.0,
+                        child: Text(
+                          'Йдемо далі',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        color: Colors.red,
+                        // padding: EdgeInsets.all(15.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                       ),
                     ),
                   ),

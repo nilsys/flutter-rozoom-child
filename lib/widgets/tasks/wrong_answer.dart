@@ -55,9 +55,12 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
-    final task = Provider.of<Task>(context, listen: false).taskItems;
-    final taskListen = Provider.of<Task>(context).taskItems;
-    var resultTrue = taskListen[0].continueOrFinish;
+    // var continueOrFinish = Provider.of<TaskModel>(context).continueOrFinish;
+    var rightAnswerStringValue =
+        Provider.of<TaskModel>(context, listen: false).rightAnswerStringValue;
+    var explainText =
+        Provider.of<TaskModel>(context, listen: false).explainText;
+    var answerType = Provider.of<TaskModel>(context, listen: false).answerType;
 
     return SlideTransition(
       position: _offsetAnimation,
@@ -83,78 +86,104 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 50.0, right: 100, top: 20, bottom: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Flexible(
-                          child: Text(
-                            'Вірна відповідь:',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
+                  answerType == '3'
+                      ? Text('')
+                      : Padding(
+                          padding: EdgeInsets.only(
+                              left: 50.0, right: 100, top: 20, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  'Вірна відповідь:',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 50.0, right: 100),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Flexible(
-                          child: Text(
-                            task[0].rightAnswerStringValue,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
-                          ),
+                  answerType == '3'
+                      ? Text('')
+                      : Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 50.0, right: 100),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Text(
+                                      rightAnswerStringValue,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 50.0, right: 100),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Flexible(
+                                    child: Text(
+                                      explainText,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
                   Padding(padding: EdgeInsets.only(top: 25.0)),
-                  ButtonTheme(
-                    minWidth: 80,
-                    height: 45,
-                    // shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(50.0),
-                    //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
-                    child: RaisedButton(
-                      onPressed: () {
-                        // Provider.of<Tasks>(context, listen: false).answerTask(
-                        //     Provider.of<Tasks>(context, listen: false)
-                        //         .getAnswerId,
-                        //     widget.answerIndex);
+                  Consumer<TaskModel>(
+                    builder: (ctx, task, child) => ButtonTheme(
+                      minWidth: 80,
+                      height: 45,
+                      // shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(50.0),
+                      //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
+                      child: RaisedButton(
+                        onPressed: () {
+                          // Provider.of<Tasks>(context, listen: false).answerTask(
+                          //     Provider.of<Tasks>(context, listen: false)
+                          //         .getAnswerId,
+                          //     widget.answerIndex);
 
-                        // setState(() {
-                        print('result ? --------> ${task[0].continueOrFinish}');
-                        print('result listen ? --------> $resultTrue');
-                        resultTrue
-                            ?
-                            // onOk();
-                            Navigator.pop(context)
-                            : Navigator.of(context).pushNamed(
-                                TaskResultScreen.routeName,
-                              );
-                        // });
-                      },
-                      // elevation: 3.0,
-                      // highlightColor: Color(0xFF74bec9),
-                      highlightElevation: 5.0,
-                      child: Text(
-                        'Я зрозумів',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      color: Colors.green,
-                      // padding: EdgeInsets.all(15.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
+                          // setState(() {
+
+                          task.continueOrFinish
+                              ?
+                              // onOk();
+                              Navigator.pop(context)
+                              : Navigator.of(context).pushNamed(
+                                  TaskResultScreen.routeName,
+                                );
+                          // });
+                        },
+                        // elevation: 3.0,
+                        // highlightColor: Color(0xFF74bec9),
+                        highlightElevation: 5.0,
+                        child: Text(
+                          'Я зрозумів',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        color: Colors.green,
+                        // padding: EdgeInsets.all(15.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
                       ),
                     ),
                   ),

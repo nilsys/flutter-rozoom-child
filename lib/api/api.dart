@@ -1,6 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+apiRequest(endpoint, data, {headers = ''}) async {
+  try {
+    print('0000000000000000000000000000kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk!');
+    return await http.post(endpoint, body: data);
+  } catch (error) {
+    throw error;
+  }
+}
+
 class CallApi {
   final String _url = 'https://rozoom.com.ua/api/';
 

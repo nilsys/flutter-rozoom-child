@@ -50,6 +50,9 @@ dependencies:
   socket_io_client: ^0.9.1
   flutter_inappwebview: ^4.0.0+4
   curved_navigation_bar: ^0.3.4
+  image_picker: ^0.6.7+12
+  dio: ^3.0.10
+  audioplayers: ^0.16.1
 
 
 
@@ -90,8 +93,8 @@ flutter:
     - assets/images/profile/32.png
     - assets/images/profile/33.png
     - assets/images/profile/34.png
-    - assets/images/coin.svg
-    - assets/images/uah.svg
+    - assets/images/stats/coin.png
+    - assets/images/stats/uah.png
     - assets/images/bottom-icons/battles.svg
     - assets/images/tasks/right-answer-boy.png
     - assets/images/tasks/wrong-answer-boy.png
