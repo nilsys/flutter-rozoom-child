@@ -266,7 +266,38 @@ class _TaskItemState extends State<TaskItem> {
                     //     borderRadius: BorderRadius.circular(50.0),
                     //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                     child: RaisedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Color(0xFF74bec9).withOpacity(0.6),
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 3, color: Color(0xFFf06388)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(0.0))),
+                            content: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  'Ви отримали карточку',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Image.network(
+                                  'https://rozoom.com.ua/uploads/cards/LsA3UqnE78AQpGSuUSoIv9OZA5rpCHSdWkyShU3Q.jpeg',
+                                  height: 100,
+                                )
+                              ],
+                            ),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                        await new Future.delayed(const Duration(seconds: 3))
+                            .then((value) =>
+                                Scaffold.of(context).hideCurrentSnackBar());
+                        // _showDialog('message');
                         Provider.of<TaskModel>(context, listen: false)
                             .answerTask(task.answerIdForApi, i);
 
@@ -472,5 +503,57 @@ class _TaskItemState extends State<TaskItem> {
             // ),
           );
         });
+  }
+
+  void _showDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Color(0xFF74bec9).withOpacity(0.6),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 3, color: Color(0xFFf06388)),
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        title: Text(
+          'Вірна відповідь',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              'Ви отримали карточку',
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Image.network(
+              'https://rozoom.com.ua/uploads/cards/LsA3UqnE78AQpGSuUSoIv9OZA5rpCHSdWkyShU3Q.jpeg',
+              height: 100,
+            )
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'Далі',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          // FlatButton(
+          //   child: Text(
+          //     'Ні',
+          //     style: TextStyle(color: Colors.white),
+          //   ),
+          //   onPressed: () {
+          //     Navigator.of(ctx).pop();
+          //   },
+          // )
+        ],
+      ),
+    );
   }
 }
