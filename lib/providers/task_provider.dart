@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class Discipline {
+class DisciplineModel {
   final int id;
   final String title;
   final String titleUa;
@@ -10,7 +10,7 @@ class Discipline {
   final String label;
   final String titleRu;
 
-  Discipline({
+  DisciplineModel({
     @required this.id,
     @required this.title,
     @required this.titleUa,
@@ -21,9 +21,9 @@ class Discipline {
 }
 
 class Disciplines with ChangeNotifier {
-  List<Discipline> _disciplineItems = [];
+  List<DisciplineModel> _disciplineItems = [];
 
-  List<Discipline> get disciplineItems {
+  List<DisciplineModel> get disciplineItems {
     return [..._disciplineItems];
   }
 
@@ -34,11 +34,11 @@ class Disciplines with ChangeNotifier {
     try {
       final response = await http.post(url + token);
       var extractedData = json.decode(response.body)['disciplines'];
-      final List<Discipline> loadedDisciplines = [];
+      final List<DisciplineModel> loadedDisciplines = [];
 
       for (var i = 0; i < extractedData.length; i++) {
         loadedDisciplines.add(
-          Discipline(
+          DisciplineModel(
             id: extractedData[i]['id'],
             title: extractedData[i]['title'],
             titleUa: extractedData[i]['label'],
@@ -56,7 +56,7 @@ class Disciplines with ChangeNotifier {
   }
 }
 
-class Theme {
+class ThemeModel {
   final int disciplineId;
   final int id;
   final String name;
@@ -64,7 +64,7 @@ class Theme {
   final String klass;
   final String tasksCount;
 
-  Theme(
+  ThemeModel(
       {this.disciplineId,
       @required this.id,
       @required this.name,
@@ -74,9 +74,9 @@ class Theme {
 }
 
 class Themes with ChangeNotifier {
-  List<Theme> _themeItems = [];
+  List<ThemeModel> _themeItems = [];
 
-  List<Theme> get themeItems {
+  List<ThemeModel> get themeItems {
     return [..._themeItems];
   }
 
@@ -97,9 +97,9 @@ class Themes with ChangeNotifier {
       // print(url + token);
       var extractedData = json.decode(response.body)['themes'];
       // print(extractedData);
-      final List<Theme> loadedTasks = [];
+      final List<ThemeModel> loadedTasks = [];
       for (var i = 0; i < extractedData.length; i++) {
-        loadedTasks.add(Theme(
+        loadedTasks.add(ThemeModel(
             id: extractedData[i]['id'],
             name: extractedData[i]['name'],
             imageUrl: extractedData[i]['image'] != null

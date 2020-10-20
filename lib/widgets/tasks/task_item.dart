@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/providers/profile_provider.dart';
+import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/widgets/tasks/green_icon.dart';
 import 'package:rozoom_app/widgets/tasks/red_icon.dart';

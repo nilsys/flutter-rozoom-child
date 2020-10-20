@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/providers/profile_provider.dart';
+import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
 

@@ -37,6 +37,7 @@ class Profile with ChangeNotifier {
     try {
       final data = {'api_token': token};
       final response = await apiRequest(url, data);
+      print(response);
 
       final extractedData = json.decode(response.body);
       print('user info --------> $extractedData');
@@ -51,7 +52,7 @@ class Profile with ChangeNotifier {
           : "Телефон не встановлено.";
       birthday = extractedData['user']['birthday'] != null
           ? extractedData['user']['birthday']
-          : "День народження не встановлено.";
+          : "1900-01-01";
       balance = extractedData['user']['balance'] != null
           ? extractedData['user']['balance']
           : "0";

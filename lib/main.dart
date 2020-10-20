@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/models/Provider.dart';
-import 'package:rozoom_app/providers/profile_provider.dart';
+import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/home_screen.dart';
 import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
-import 'package:rozoom_app/screens/profile_screen.dart';
+import 'package:rozoom_app/screens/edit_profile_screen.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/profile_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
@@ -16,7 +17,6 @@ import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen2.dart';
 import 'package:rozoom_app/screens/test_screen.dart';
-import 'package:rozoom_app/widgets/pickers/user_image_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Rozoom',
-        home: HomeChild(),
+        home: EditProfileScreen(),
         theme: ThemeData(
           // primaryColor: Color(0xFFf06388),
           // primaryColor: Colors.red,
@@ -62,6 +62,8 @@ class MyApp extends StatelessWidget {
           // accentColor: Color(0XFFFEF9EB),
         ),
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+        supportedLocales: [const Locale('uk'), const Locale('ru')],
         routes: {
           DisciplinesOverviewScreen.routeName: (context) =>
               DisciplinesOverviewScreen(),
