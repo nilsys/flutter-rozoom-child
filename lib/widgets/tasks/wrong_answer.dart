@@ -66,18 +66,22 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
       position: _offsetAnimation,
       child: Dialog(
         backgroundColor: Colors.red,
-        shape: CircleBorder(),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        // shape: CircleBorder(),
         child: Stack(
           overflow: Overflow.visible,
           children: <Widget>[
             Container(
-              height: 300.0,
-              width: 300.0,
+              // margin: EdgeInsets.all(15),
+              height: 350.0,
+              width: 350.0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(right: 30.0, top: 5),
+                    padding: EdgeInsets.only(top: 15),
                     child: Text(
                       'Невірно:(',
                       style: TextStyle(
@@ -88,99 +92,63 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                   ),
                   answerType == '3'
                       ? Text('')
-                      : Padding(
-                          padding: EdgeInsets.only(
-                              left: 50.0, right: 100, top: 20, bottom: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  'Вірна відповідь:',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                  answerType == '3'
-                      ? Text('')
                       : Column(
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.only(left: 50.0, right: 100),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      rightAnswerStringValue,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
+                              padding: EdgeInsets.only(top: 15),
+                              child: Text(
+                                'Вірна відповідь:',
+                                style: TextStyle(
+                                    color: Colors.yellow,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(left: 50.0, right: 100),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      explainText,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ],
+                              padding: EdgeInsets.only(
+                                  top: 5, bottom: 15, right: 25, left: 25),
+                              child: Text(
+                                rightAnswerStringValue,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 25, right: 35),
+                              child: Text(
+                                explainText.length > 250
+                                    ? explainText.replaceRange(
+                                        250, explainText.length, '...')
+                                    : explainText,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
                               ),
                             ),
                           ],
                         ),
-                  Padding(padding: EdgeInsets.only(top: 25.0)),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
                   Consumer<TaskModel>(
                     builder: (ctx, task, child) => ButtonTheme(
                       minWidth: 80,
                       height: 45,
-                      // shape: RoundedRectangleBorder(
-                      //     borderRadius: BorderRadius.circular(50.0),
-                      //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                       child: RaisedButton(
                         onPressed: () {
-                          // Provider.of<Tasks>(context, listen: false).answerTask(
-                          //     Provider.of<Tasks>(context, listen: false)
-                          //         .getAnswerId,
-                          //     widget.answerIndex);
-
-                          // setState(() {
-
                           task.continueOrFinish
-                              ?
-                              // onOk();
-                              Navigator.pop(context)
+                              ? Navigator.pop(context)
                               : Navigator.of(context).pushNamed(
                                   TaskResultScreen.routeName,
                                 );
-                          // });
                         },
-                        // elevation: 3.0,
-                        // highlightColor: Color(0xFF74bec9),
                         highlightElevation: 5.0,
                         child: Text(
                           'Я зрозумів',
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                         color: Colors.green,
-                        // padding: EdgeInsets.all(15.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -191,11 +159,11 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
               ),
             ),
             Positioned(
-              top: 60,
-              left: 190,
+              top: 250,
+              left: 220,
               child: Image.asset('assets/images/tasks/wrong-answer-boy.png'),
-              height: 350,
-            )
+              height: 200,
+            ),
           ],
         ),
       ),

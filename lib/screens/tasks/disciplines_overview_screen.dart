@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
+import 'package:rozoom_app/screens/edit_profile_screen.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
+
+enum FilterOptions {
+  EditProfile,
+  Logout,
+}
 
 class DisciplinesOverviewScreen extends StatefulWidget {
   static const routeName = '/disciplines-overview';
@@ -48,14 +53,30 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
           onPressed: null,
         ),
         actions: <Widget>[
-          IconButton(
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.EditProfile) {
+                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
+                  // _showOnlyFavorites = true;
+                } else {
+                  // _showOnlyFavorites = false;
+                }
+              });
+            },
             icon: Icon(
               Icons.more_vert,
-              color: Colors.grey,
             ),
-            onPressed: () {
-              // Navigator.pop(context);
-            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Профайл'),
+                value: FilterOptions.EditProfile,
+              ),
+              PopupMenuItem(
+                child: Text('Вийти'),
+                value: FilterOptions.Logout,
+              ),
+            ],
           ),
         ],
         title: _isLoading

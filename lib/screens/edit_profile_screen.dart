@@ -9,19 +9,14 @@ import 'package:rozoom_app/widgets/profile/user_image_picker.dart';
 import 'package:rozoom_app/widgets/profile/username_form.dart';
 
 class EditProfileScreen extends StatefulWidget {
+  static const routeName = '/edit-profile';
+
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _isLoading = false;
-
-  final _usernameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _birthdayController = TextEditingController();
-  // final _oldPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -37,16 +32,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   @override
-  void dispose() {
-    _usernameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _birthdayController.dispose();
-    _newPasswordController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -57,19 +42,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Icons.arrow_back,
             color: Colors.grey,
           ),
-          onPressed: null,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.grey,
-            ),
-            onPressed: () {
-              // Navigator.pop(context);
-            },
-          ),
-        ],
         title: _isLoading
             ? Text('')
             : Consumer<Profile>(

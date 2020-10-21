@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/widgets/tasks/green_icon.dart';
 import 'package:rozoom_app/widgets/tasks/red_icon.dart';
 import 'package:rozoom_app/widgets/tasks/right_answer.dart';
+import 'package:rozoom_app/widgets/tasks/task_navbar.dart';
+import 'package:rozoom_app/widgets/tasks/task_question.dart';
 import 'package:rozoom_app/widgets/tasks/wrong_answer.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -27,10 +28,20 @@ class _TaskItemState extends State<TaskItem> {
   final GlobalKey<RedAnimatedIconState> animatedStateKeyRed =
       GlobalKey<RedAnimatedIconState>();
 
+  final _form = GlobalKey<FormState>();
   final _answerFieldController = TextEditingController();
 
-  AudioPlayer audioPlayer = AudioPlayer();
-  bool playing = false;
+  AudioPlayer audioPlayer_0 = AudioPlayer();
+  AudioPlayer audioPlayer_1 = AudioPlayer();
+  AudioPlayer audioPlayer_2 = AudioPlayer();
+  AudioPlayer audioPlayer_3 = AudioPlayer();
+  List audioPlayer;
+
+  static bool p0 = false;
+  static bool p1 = false;
+  static bool p2 = false;
+  static bool p3 = false;
+  List playings = [p0, p1, p2, p3];
 
   @override
   void dispose() {
@@ -38,161 +49,53 @@ class _TaskItemState extends State<TaskItem> {
     super.dispose();
   }
 
+  void playAudio(url, i) async {
+    audioPlayer = [audioPlayer_0, audioPlayer_1, audioPlayer_2, audioPlayer_3];
+
+    if (playings[i]) {
+      var res = await audioPlayer[i].stop();
+      if (res == 1) {
+        setState(() {
+          playings[i] = false;
+        });
+      }
+    } else {
+      var res = await audioPlayer[i].play(url);
+      if (res == 1) {
+        setState(() {
+          playings[i] = true;
+          print('playing $i from function --- true');
+        });
+      }
+    }
+  }
+
+  void stopAudio() async {
+    audioPlayer = [audioPlayer_0, audioPlayer_1, audioPlayer_2, audioPlayer_3];
+    for (var i = 0; i < audioPlayer.length; i++) {
+      if (playings[i]) {
+        var res = await audioPlayer[i].stop();
+        if (res == 1) {
+          setState(() {
+            playings[i] = false;
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Consumer<TaskModel>(
-        builder: (ctx, task, child) => Column(
+    return SingleChildScrollView(
+      child: SafeArea(
+        child: Column(
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Card(
-                elevation: 3,
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          GreenAnimatedIcon(key: animatedStateKeyGreen),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            task.rightAnswersCount,
-                            style: TextStyle(
-                                color: Color(0xFFf06388), fontSize: 18),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          RedAnimatedIcon(key: animatedStateKeyRed),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            task.wrongAnswersCount,
-                            style: TextStyle(
-                                color: Color(0xFFf06388), fontSize: 18),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.attach_money,
-                            color: Colors.black54,
-                            size: 30,
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            task.rewardAmount,
-                            style: TextStyle(
-                                color: Color(0xFFf06388), fontSize: 18),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            '?',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            '${task.currentQuestionNumber}/${task.totalQuestionCount}',
-                            style: TextStyle(
-                                color: Color(0xFFf06388), fontSize: 18),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              width: double.infinity,
-              // height: 200,
-              child: Card(
-                elevation: 3,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      child: ClipRRect(
-                        // borderRadius: BorderRadius.all(
-                        //   Radius.circular(30),
-                        // ),
-                        child: FadeInImage(
-                          width: double.infinity,
-                          height: 220,
-                          fit: BoxFit.contain,
-                          image: NetworkImage(task.imageUrl),
-                          // fadeInDuration: Duration(seconds: 3),
-
-                          // fadeOutDuration: Duration(seconds: 1),
-                          placeholder: AssetImage('assets/images/brand.png'),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, right: 20, left: 20),
-                      child: Container(
-                        // height: 30,
-                        child: Center(
-                          child: Text(
-                            task.question,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    task.audioQuestion == 'no audio'
-                        ? Text('')
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, right: 20, left: 20),
-                            child: Container(
-                              // height: 30,
-                              child: Center(
-                                child: InkWell(
-                                  onTap: () async {
-                                    playAudio(task.audioQuestion);
-                                  },
-                                  child: Icon(
-                                    playing == false
-                                        ? Icons.play_circle_outline
-                                        : Icons.pause_circle_outline,
-                                    color: Color(0xFF74bec9),
-                                    size: 34,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(
-              child: Container(
+            TaskNavbar(
+                animatedStateKeyGreen: animatedStateKeyGreen,
+                animatedStateKeyRed: animatedStateKeyRed),
+            TaskQuestion(),
+            Consumer<TaskModel>(
+              builder: (ctx, task, child) => Container(
                 margin:
                     EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
                 child: getTaskId(task),
@@ -204,43 +107,8 @@ class _TaskItemState extends State<TaskItem> {
     );
   }
 
-  void _showOyboyRightAnswerDialog(i) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AnimatedRightAnswerDialog(answerIndex: i),
-    );
-  }
-
-  void _showOyboyWrongAnswerDialog(i) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AnimatedWrongAnswerDialog(answerIndex: i),
-    );
-  }
-
-  void playAudio(url) async {
-    if (playing) {
-      var res = await audioPlayer.stop();
-      if (res == 1) {
-        setState(() {
-          playing = false;
-        });
-      }
-    } else {
-      var res = await audioPlayer.play(url);
-      if (res == 1) {
-        setState(() {
-          playing = true;
-        });
-      }
-    }
-  }
-
   Widget getTaskId(task) {
     final taskId = Provider.of<TaskModel>(context, listen: false).getAnswerType;
-    print('task id ------> $taskId');
     switch (taskId) {
       case '1':
         return buttonAnswerType(task);
@@ -253,10 +121,14 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Widget buttonAnswerType(task) {
+    // final playingLEN =
+    // Provider.of<TaskModel>(context, listen: false).audioAnswer_0;
+    final taskId = Provider.of<TaskModel>(context, listen: false).getAnswerType;
     return ListView.builder(
         itemCount: task.answerVariants.length,
+        shrinkWrap: true,
         itemBuilder: (ctx, i) {
-          return task.audioQuestion == 'no audio'
+          return task.audioAnswer[i] == 'no audio'
               ? Container(
                   margin: EdgeInsets.only(top: 5),
                   child: ButtonTheme(
@@ -267,37 +139,6 @@ class _TaskItemState extends State<TaskItem> {
                     //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                     child: RaisedButton(
                       onPressed: () async {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Color(0xFF74bec9).withOpacity(0.6),
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    width: 3, color: Color(0xFFf06388)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(0.0))),
-                            content: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Text(
-                                  'Ви отримали карточку',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Image.network(
-                                  'https://rozoom.com.ua/uploads/cards/LsA3UqnE78AQpGSuUSoIv9OZA5rpCHSdWkyShU3Q.jpeg',
-                                  height: 100,
-                                )
-                              ],
-                            ),
-                            duration: Duration(seconds: 3),
-                          ),
-                        );
-                        await new Future.delayed(const Duration(seconds: 3))
-                            .then((value) =>
-                                Scaffold.of(context).hideCurrentSnackBar());
-                        // _showDialog('message');
                         Provider.of<TaskModel>(context, listen: false)
                             .answerTask(task.answerIdForApi, i);
 
@@ -341,6 +182,7 @@ class _TaskItemState extends State<TaskItem> {
                         //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                         child: RaisedButton(
                           onPressed: () {
+                            stopAudio();
                             Provider.of<TaskModel>(context, listen: false)
                                 .answerTask(task.answerIdForApi, i);
 
@@ -352,6 +194,9 @@ class _TaskItemState extends State<TaskItem> {
                             i.toString() == task.rightAnswerListElementNumber
                                 ? _showOyboyRightAnswerDialog(i)
                                 : _showOyboyWrongAnswerDialog(i);
+
+                            // Provider.of<TaskModel>(context, listen: false)
+                            //     .nullAudio();
                           },
                           elevation: 3.0,
                           highlightColor: Color(0xFF74bec9),
@@ -377,10 +222,10 @@ class _TaskItemState extends State<TaskItem> {
                     ),
                     InkWell(
                       onTap: () async {
-                        playAudio(task.audioQuestion);
+                        playAudio(task.audioAnswer[i], i);
                       },
                       child: Icon(
-                        playing == false
+                        playings[i] == false
                             ? Icons.play_circle_outline
                             : Icons.pause_circle_outline,
                         color: Color(0xFF74bec9),
@@ -398,49 +243,67 @@ class _TaskItemState extends State<TaskItem> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: TextFormField(
-              controller: _answerFieldController,
-              // obscureText: true,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return '';
-                }
-              },
-              decoration: InputDecoration(
-                hintText: 'Впишіть відповідь',
+            child: Form(
+              key: _form,
+              child: TextFormField(
+                controller: _answerFieldController,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) {
+                  final isValid = _form.currentState.validate();
+                  if (!isValid) {
+                    return;
+                  }
+                  Provider.of<TaskModel>(context, listen: false)
+                      .answerTaskWithForm(
+                          task.answerIdForApi, _answerFieldController.text);
+
+                  _answerFieldController.text == task.rightAnswerStringValue
+                      ? animatedStateKeyGreen.currentState
+                          .getAnimationFromChild()
+                      : animatedStateKeyRed.currentState
+                          .getAnimationFromChild();
+                  _answerFieldController.text == task.rightAnswerStringValue
+                      ? _showOyboyRightAnswerDialog('text')
+                      : _showOyboyWrongAnswerDialog('text');
+                  _answerFieldController.clear();
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Дайте відповідь';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Впишіть відповідь',
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      final isValid = _form.currentState.validate();
+                      if (!isValid) {
+                        return;
+                      }
+                      Provider.of<TaskModel>(context, listen: false)
+                          .answerTaskWithForm(
+                              task.answerIdForApi, _answerFieldController.text);
+
+                      _answerFieldController.text == task.rightAnswerStringValue
+                          ? animatedStateKeyGreen.currentState
+                              .getAnimationFromChild()
+                          : animatedStateKeyRed.currentState
+                              .getAnimationFromChild();
+                      _answerFieldController.text == task.rightAnswerStringValue
+                          ? _showOyboyRightAnswerDialog('text')
+                          : _showOyboyWrongAnswerDialog('text');
+                      _answerFieldController.clear();
+                    },
+                    icon: Icon(
+                      Icons.check,
+                      color: Theme.of(context).primaryColor,
+                      size: 36,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-          RaisedButton(
-            onPressed: () {
-              Provider.of<TaskModel>(context, listen: false).answerTaskWithForm(
-                  task.answerIdForApi, _answerFieldController.text);
-              print(
-                  '_answerFieldController.text ------- ${_answerFieldController.text}');
-
-              print(
-                  'rightAnswerStringValue ------- ${task.rightAnswerStringValue}');
-
-              _answerFieldController.text == task.rightAnswerStringValue
-                  ? animatedStateKeyGreen.currentState.getAnimationFromChild()
-                  : animatedStateKeyRed.currentState.getAnimationFromChild();
-              _answerFieldController.text == task.rightAnswerStringValue
-                  ? _showOyboyRightAnswerDialog('text')
-                  : _showOyboyWrongAnswerDialog('text');
-              _answerFieldController.clear();
-            },
-            elevation: 3.0,
-            highlightColor: Color(0xFF74bec9),
-            highlightElevation: 5.0,
-            child: Text(
-              'Відповісти',
-              style: TextStyle(
-                  color: Color(0xFF74bec9), fontWeight: FontWeight.bold),
-            ),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Color(0xFF74bec9), width: 2)),
           ),
         ],
       ),
@@ -450,6 +313,7 @@ class _TaskItemState extends State<TaskItem> {
   Widget imageAnswerType(task) {
     return GridView.builder(
         itemCount: task.answerVariants.length,
+        shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 3 / 2,
@@ -505,55 +369,19 @@ class _TaskItemState extends State<TaskItem> {
         });
   }
 
-  void _showDialog(String message) {
+  void _showOyboyRightAnswerDialog(i) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Color(0xFF74bec9).withOpacity(0.6),
-        shape: RoundedRectangleBorder(
-            side: BorderSide(width: 3, color: Color(0xFFf06388)),
-            borderRadius: BorderRadius.all(Radius.circular(32.0))),
-        title: Text(
-          'Вірна відповідь',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              'Ви отримали карточку',
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Image.network(
-              'https://rozoom.com.ua/uploads/cards/LsA3UqnE78AQpGSuUSoIv9OZA5rpCHSdWkyShU3Q.jpeg',
-              height: 100,
-            )
-          ],
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Далі',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          // FlatButton(
-          //   child: Text(
-          //     'Ні',
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          //   onPressed: () {
-          //     Navigator.of(ctx).pop();
-          //   },
-          // )
-        ],
-      ),
+      barrierDismissible: false,
+      builder: (ctx) => AnimatedRightAnswerDialog(answerIndex: i),
+    );
+  }
+
+  void _showOyboyWrongAnswerDialog(i) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AnimatedWrongAnswerDialog(answerIndex: i),
     );
   }
 }

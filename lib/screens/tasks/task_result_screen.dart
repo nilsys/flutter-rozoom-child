@@ -212,9 +212,9 @@ class TaskResultScreen extends StatelessWidget {
                                       color: Colors.green,
                                     ),
                                   ),
-                                  SvgPicture.asset(
-                                    'assets/images/coin.svg',
-                                    height: 30,
+                                  Image.asset(
+                                    'assets/images/stats/coin.png',
+                                    scale: 0.55,
                                   ),
                                 ],
                               ),

@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Rozoom',
-        home: EditProfileScreen(),
+        home: HomeChild(),
         theme: ThemeData(
           // primaryColor: Color(0xFFf06388),
           // primaryColor: Colors.red,
@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
           ThemesOverviewScreen2.routeName: (context) => ThemesOverviewScreen2(),
           TaskOverviewScreen.routeName: (context) => TaskOverviewScreen(),
           TaskResultScreen.routeName: (context) => TaskResultScreen(),
+          EditProfileScreen.routeName: (context) => EditProfileScreen(),
 
           '/home': (context) => HomeChild(),
           // '/messenger': (context) => Messenger(),

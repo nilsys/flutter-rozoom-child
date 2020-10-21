@@ -81,9 +81,7 @@ class Themes with ChangeNotifier {
   }
 
   Future<void> nullThemeImages() async {
-    print(_themeItems);
     _themeItems = [];
-    print(_themeItems);
     return _themeItems;
   }
 
@@ -104,7 +102,7 @@ class Themes with ChangeNotifier {
             name: extractedData[i]['name'],
             imageUrl: extractedData[i]['image'] != null
                 ? 'https://rozoom.com.ua/uploads/' + extractedData[i]['image']
-                : 'https://rozoom.com.ua/images/design/brand.svg',
+                : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg',
             klass: extractedData[i]['class'] != null
                 ? extractedData[i]['class']
                 : 'ထ',
@@ -134,7 +132,14 @@ class TaskModel with ChangeNotifier {
   String answerType;
   String resultPoints;
   String explainText;
+  String cardTitle;
+  String cardUrl;
   String audioQuestion;
+  String audioAnswer_0;
+  String audioAnswer_1;
+  String audioAnswer_2;
+  String audioAnswer_3;
+  List audioAnswer;
 
   TaskModel(
       {this.continueOrFinish,
@@ -152,7 +157,14 @@ class TaskModel with ChangeNotifier {
       this.answerType,
       this.resultPoints,
       this.explainText,
-      this.audioQuestion});
+      this.cardTitle,
+      this.cardUrl,
+      this.audioQuestion,
+      this.audioAnswer_0,
+      this.audioAnswer_1,
+      this.audioAnswer_2,
+      this.audioAnswer_3,
+      this.audioAnswer});
 
   get getContinueOrFinish => continueOrFinish;
   get getRightAnswersCount => rightAnswersCount;
@@ -169,6 +181,11 @@ class TaskModel with ChangeNotifier {
   get getAnswerType => answerType;
   get getResultPoints => resultPoints;
   get getAudioQuestion => audioQuestion;
+
+  // Future<void> nullAudio() async {
+  //   audioAnswer = ['no audio', 'no audio', 'no audio', 'no audio'];
+  //   return audioAnswer;
+  // }
 
   Future<void> startTask(themeId) async {
     final token =
@@ -195,7 +212,7 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://rozoom.com.ua/images/design/brand.svg';
+          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();
       answerVariants = extractedData['answer']['variants'];
@@ -206,15 +223,58 @@ class TaskModel with ChangeNotifier {
       extractedData['task']['explain_text'] == null
           ? explainText = ''
           : explainText = extractedData['task']['explain_text'].toString();
-      print('explain: $explainText');
       if (extractedData['audios'] is List) {
         audioQuestion = 'no audio';
+        audioAnswer_0 = 'no audio';
+        audioAnswer_1 = 'no audio';
+        audioAnswer_2 = 'no audio';
+        audioAnswer_3 = 'no audio';
+        audioAnswer = [
+          audioAnswer_0,
+          audioAnswer_1,
+          audioAnswer_2,
+          audioAnswer_3
+        ];
       } else {
         extractedData['audios']['question'] == null
             ? audioQuestion = 'no audio'
             : audioQuestion = 'https://rozoom.com.ua/uploads/' +
                 extractedData['audios']['question'].toString();
+        extractedData['audios']['answer_0'] == null
+            ? audioAnswer_0 = 'no audio'
+            : audioAnswer_0 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_0'].toString();
+        extractedData['audios']['answer_1'] == null
+            ? audioAnswer_1 = 'no audio'
+            : audioAnswer_1 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_1'].toString();
+        extractedData['audios']['answer_2'] == null
+            ? audioAnswer_2 = 'no audio'
+            : audioAnswer_2 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_2'].toString();
+        extractedData['audios']['answer_3'] == null
+            ? audioAnswer_3 = 'no audio'
+            : audioAnswer_3 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_3'].toString();
+        audioAnswer = [
+          audioAnswer_0,
+          audioAnswer_1,
+          audioAnswer_2,
+          audioAnswer_3
+        ];
       }
+
+      if (extractedData['card_title'] != false) {
+        cardTitle = extractedData['card_title'];
+        cardUrl =
+            'https://rozoom.com.ua/uploads/' + extractedData['card']['image'];
+      } else {
+        cardTitle = 'no card';
+        cardUrl = 'no cardUrl';
+      }
+
+      print('cardTitle --------- $cardTitle');
+      print('cardUrl --------- $cardUrl');
 
       notifyListeners();
     } catch (error) {
@@ -250,6 +310,7 @@ class TaskModel with ChangeNotifier {
                 .toString();
         rewardAmount = extractedData['session']['reward'].toString();
         resultPoints = extractedData['points'].toString();
+
         notifyListeners();
         return;
       }
@@ -265,7 +326,8 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://rozoom.com.ua/images/design/brand.svg';
+          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
+
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();
       answerVariants = extractedData['answer']['variants'];
@@ -276,15 +338,58 @@ class TaskModel with ChangeNotifier {
       extractedData['task']['explain_text'] == null
           ? explainText = ''
           : explainText = extractedData['task']['explain_text'].toString();
-      print('explain: $explainText');
       if (extractedData['audios'] is List) {
         audioQuestion = 'no audio';
+        audioAnswer_0 = 'no audio';
+        audioAnswer_1 = 'no audio';
+        audioAnswer_2 = 'no audio';
+        audioAnswer_3 = 'no audio';
+        audioAnswer = [
+          audioAnswer_0,
+          audioAnswer_1,
+          audioAnswer_2,
+          audioAnswer_3
+        ];
       } else {
         extractedData['audios']['question'] == null
             ? audioQuestion = 'no audio'
             : audioQuestion = 'https://rozoom.com.ua/uploads/' +
                 extractedData['audios']['question'].toString();
+        extractedData['audios']['answer_0'] == null
+            ? audioAnswer_0 = 'no audio'
+            : audioAnswer_0 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_0'].toString();
+        extractedData['audios']['answer_1'] == null
+            ? audioAnswer_1 = 'no audio'
+            : audioAnswer_1 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_1'].toString();
+        extractedData['audios']['answer_2'] == null
+            ? audioAnswer_2 = 'no audio'
+            : audioAnswer_2 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_2'].toString();
+        extractedData['audios']['answer_3'] == null
+            ? audioAnswer_3 = 'no audio'
+            : audioAnswer_3 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_3'].toString();
+        audioAnswer = [
+          audioAnswer_0,
+          audioAnswer_1,
+          audioAnswer_2,
+          audioAnswer_3
+        ];
       }
+
+      if (extractedData['card_title'] != false) {
+        cardTitle = extractedData['card_title'];
+        cardUrl =
+            'https://rozoom.com.ua/uploads/' + extractedData['card']['image'];
+      } else {
+        cardTitle = 'no card';
+        cardUrl = 'no cardUrl';
+      }
+
+      print('cardTitle --------- $cardTitle');
+      print('cardUrl --------- $cardUrl');
 
       notifyListeners();
     } catch (error) {
@@ -321,6 +426,7 @@ class TaskModel with ChangeNotifier {
                 .toString();
         rewardAmount = extractedData['session']['reward'].toString();
         resultPoints = extractedData['points'].toString();
+
         notifyListeners();
         return;
       }
@@ -336,7 +442,8 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://rozoom.com.ua/images/design/brand.svg';
+          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
+
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();
       answerVariants = extractedData['answer']['variants'];
@@ -347,15 +454,59 @@ class TaskModel with ChangeNotifier {
       extractedData['task']['explain_text'] == null
           ? explainText = ''
           : explainText = extractedData['task']['explain_text'].toString();
-      print('explain: $explainText');
       if (extractedData['audios'] is List) {
         audioQuestion = 'no audio';
+        audioAnswer_0 = 'no audio';
+        audioAnswer_1 = 'no audio';
+        audioAnswer_2 = 'no audio';
+        audioAnswer_3 = 'no audio';
+        audioAnswer = [
+          audioAnswer_0,
+          audioAnswer_1,
+          audioAnswer_2,
+          audioAnswer_3
+        ];
       } else {
         extractedData['audios']['question'] == null
             ? audioQuestion = 'no audio'
             : audioQuestion = 'https://rozoom.com.ua/uploads/' +
                 extractedData['audios']['question'].toString();
+        extractedData['audios']['answer_0'] == null
+            ? audioAnswer_0 = 'no audio'
+            : audioAnswer_0 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_0'].toString();
+        extractedData['audios']['answer_1'] == null
+            ? audioAnswer_1 = 'no audio'
+            : audioAnswer_1 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_1'].toString();
+        extractedData['audios']['answer_2'] == null
+            ? audioAnswer_2 = 'no audio'
+            : audioAnswer_2 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_2'].toString();
+        extractedData['audios']['answer_3'] == null
+            ? audioAnswer_3 = 'no audio'
+            : audioAnswer_3 = 'https://rozoom.com.ua/uploads/' +
+                extractedData['audios']['answer_3'].toString();
+        audioAnswer = [
+          audioAnswer_0,
+          audioAnswer_1,
+          audioAnswer_2,
+          audioAnswer_3
+        ];
       }
+
+      if (extractedData['card_title'] != false) {
+        cardTitle = extractedData['card_title'];
+        cardUrl =
+            'https://rozoom.com.ua/uploads/' + extractedData['card']['image'];
+      } else {
+        cardTitle = 'no card';
+        cardUrl = 'no cardUrl';
+      }
+
+      print('cardTitle --------- $cardTitle');
+      print('cardUrl --------- $cardUrl');
+
       notifyListeners();
     } catch (error) {
       throw error;

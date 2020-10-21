@@ -55,7 +55,8 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
-    var continueOrFinish = Provider.of<TaskModel>(context).continueOrFinish;
+    var cardTitle = Provider.of<TaskModel>(context, listen: false).cardTitle;
+    var cardUrl = Provider.of<TaskModel>(context, listen: false).cardUrl;
 
     // final taskListen = Provider.of<Task>(context).taskItems;
     // var resultTrue = taskListen[0].continueOrFinish;
@@ -63,19 +64,22 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
       position: _offsetAnimation,
       child: Dialog(
         backgroundColor: Colors.green,
-        shape: CircleBorder(),
+        // shape: CircleBorder(),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: Stack(
           overflow: Overflow.visible,
           children: <Widget>[
             Container(
               // alignment: Alignment.centerRight,
-              height: 300.0,
-              width: 300.0,
+              height: 350.0,
+              width: 350.0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(15.0),
+                    padding: EdgeInsets.only(top: 15.0),
                     child: Text(
                       'Вірно!',
                       style: TextStyle(
@@ -84,14 +88,54 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Padding(padding: EdgeInsets.only(top: 25.0)),
+                  cardTitle == 'no card'
+                      ? SizedBox()
+                      : Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 15),
+                              child: Text(
+                                'Ви отримали картку',
+                                style: TextStyle(
+                                    color: Colors.yellow,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 5, bottom: 15, right: 25, left: 25),
+                              child: Text(
+                                cardTitle,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Container(
+                                width: 125,
+                                height: 125,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.lightGreen, width: 1)),
+                                child: Image.network(
+                                  cardUrl,
+                                  fit: BoxFit.fill,
+                                  // width: 150,
+                                  // height: 100,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                  Padding(padding: EdgeInsets.only(top: 15.0)),
                   Consumer<TaskModel>(
                     builder: (ctx, task, child) => ButtonTheme(
                       minWidth: 80,
                       height: 45,
-                      // shape: RoundedRectangleBorder(
-                      //     borderRadius: BorderRadius.circular(50.0),
-                      //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                       child: RaisedButton(
                         onPressed: () {
                           // Provider.of<Tasks>(context, listen: false).answerTask(
@@ -101,8 +145,6 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
 
                           // setState(() {
 
-                          print(
-                              'result from widget --------> ${task.continueOrFinish}');
                           task.continueOrFinish
                               ?
                               // onOk();
@@ -131,10 +173,10 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
               ),
             ),
             Positioned(
-              top: 60,
-              right: 190,
+              top: 250,
+              left: 0,
               child: Image.asset('assets/images/tasks/right-answer-boy.png'),
-              height: 350,
+              height: 250,
             )
           ],
         ),

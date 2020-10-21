@@ -49,6 +49,7 @@ class _ThemesOverviewScreen2State extends State<ThemesOverviewScreen2> {
           ),
           onPressed: () {
             Navigator.pop(context);
+            Provider.of<Themes>(context, listen: false).nullThemeImages();
           },
         ),
         actions: <Widget>[
