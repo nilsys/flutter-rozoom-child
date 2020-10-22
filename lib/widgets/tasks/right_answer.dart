@@ -55,9 +55,6 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
-    var cardTitle = Provider.of<TaskModel>(context, listen: false).cardTitle;
-    var cardUrl = Provider.of<TaskModel>(context, listen: false).cardUrl;
-
     // final taskListen = Provider.of<Task>(context).taskItems;
     // var resultTrue = taskListen[0].continueOrFinish;
     return SlideTransition(
@@ -68,72 +65,72 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
-        child: Stack(
-          overflow: Overflow.visible,
-          children: <Widget>[
-            Container(
-              // alignment: Alignment.centerRight,
-              height: 350.0,
-              width: 350.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 15.0),
-                    child: Text(
-                      'Вірно!',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold),
+        child: Consumer<TaskModel>(
+          builder: (ctx, task, child) => Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Container(
+                // alignment: Alignment.centerRight,
+                height: 350.0,
+                width: 350.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.0),
+                      child: Text(
+                        'Вірно!',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  cardTitle == 'no card'
-                      ? SizedBox()
-                      : Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 15),
-                              child: Text(
-                                'Ви отримали картку',
-                                style: TextStyle(
-                                    color: Colors.yellow,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 5, bottom: 15, right: 25, left: 25),
-                              child: Text(
-                                cardTitle,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(5),
-                              child: Container(
-                                width: 125,
-                                height: 125,
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.lightGreen, width: 1)),
-                                child: Image.network(
-                                  cardUrl,
-                                  fit: BoxFit.fill,
-                                  // width: 150,
-                                  // height: 100,
+                    task.cardTitle == 'no card'
+                        ? SizedBox()
+                        : Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: Text(
+                                  'Ви отримали картку',
+                                  style: TextStyle(
+                                      color: Colors.yellow,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
-                  Consumer<TaskModel>(
-                    builder: (ctx, task, child) => ButtonTheme(
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, bottom: 15, right: 25, left: 25),
+                                child: Text(
+                                  task.cardTitle,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Container(
+                                  width: 125,
+                                  height: 125,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.lightGreen, width: 1)),
+                                  child: Image.network(
+                                    task.cardUrl,
+                                    fit: BoxFit.fill,
+                                    // width: 150,
+                                    // height: 100,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                    Padding(padding: EdgeInsets.only(top: 15.0)),
+                    ButtonTheme(
                       minWidth: 80,
                       height: 45,
                       child: RaisedButton(
@@ -168,17 +165,17 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              top: 250,
-              left: 0,
-              child: Image.asset('assets/images/tasks/right-answer-boy.png'),
-              height: 250,
-            )
-          ],
+              Positioned(
+                top: 250,
+                left: 0,
+                child: Image.asset('assets/images/tasks/right-answer-boy.png'),
+                height: 250,
+              )
+            ],
+          ),
         ),
       ),
     );

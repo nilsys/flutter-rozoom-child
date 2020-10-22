@@ -32,7 +32,7 @@ class Profile with ChangeNotifier {
 
   Future<void> getProfileInfo() async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url = 'https://rozoom.com.ua/api/mobile/me';
     try {
       final data = {'api_token': token};
@@ -70,7 +70,7 @@ class Profile with ChangeNotifier {
 
   Future<void> updateUserInfo(param) async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url = 'https://rozoom.com.ua/api/mobile/me/update?$param';
     try {
       final data = {'api_token': token};
@@ -85,7 +85,7 @@ class Profile with ChangeNotifier {
     Response response;
     Dio dio = new Dio();
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url = 'https://rozoom.com.ua/api/mobile/me/update';
     try {
       FormData formData = new FormData.fromMap({

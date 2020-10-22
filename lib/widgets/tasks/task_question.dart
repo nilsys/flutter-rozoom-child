@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 
 class TaskQuestion extends StatefulWidget {
+  TaskQuestion({this.key});
+  final key;
   @override
-  _TaskQuestionState createState() => _TaskQuestionState();
+  TaskQuestionState createState() => TaskQuestionState();
 }
 
-class _TaskQuestionState extends State<TaskQuestion> {
+class TaskQuestionState extends State<TaskQuestion> {
   AudioPlayer audioPlayer = AudioPlayer();
   bool playing = false;
 
@@ -25,6 +27,17 @@ class _TaskQuestionState extends State<TaskQuestion> {
       if (res == 1) {
         setState(() {
           playing = true;
+        });
+      }
+    }
+  }
+
+  void stopAudioFromChild() async {
+    if (playing) {
+      var res = await audioPlayer.stop();
+      if (res == 1) {
+        setState(() {
+          playing = false;
         });
       }
     }
@@ -47,7 +60,7 @@ class _TaskQuestionState extends State<TaskQuestion> {
                   child: FadeInImage(
                     width: double.infinity,
                     height: 200,
-                    fit: BoxFit.fill,
+                    fit: BoxFit.contain,
                     image: NetworkImage(task.imageUrl),
                     // fadeInDuration: Duration(seconds: 3),
                     // fadeOutDuration: Duration(seconds: 1),

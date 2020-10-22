@@ -29,7 +29,7 @@ class Disciplines with ChangeNotifier {
 
   Future<void> fetchAndSetDisciplines() async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url = 'https://rozoom.com.ua/api/mobile/disciplines?api_token=';
     try {
       final response = await http.post(url + token);
@@ -87,7 +87,7 @@ class Themes with ChangeNotifier {
 
   Future<void> fetchandSetThemes(disciplineId) async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url =
         'https://rozoom.com.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
     try {
@@ -189,7 +189,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> startTask(themeId) async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url = 'https://rozoom.com.ua/task/start/$themeId?api_token=';
     try {
       final headers = {'Accept': 'text/json'};
@@ -284,7 +284,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> answerTask(answerId, answerListElementNumber) async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url =
         'https://rozoom.com.ua/task/answer/$answerId/$answerListElementNumber?api_token=';
     try {
@@ -399,7 +399,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> answerTaskWithForm(answerId, answerText) async {
     final token =
-        'gFkqb6b6RvWjo0gJoCbUNzZSnyRRBR3pU5rczNEHTI2cshuDyLn5n1edhgK6L1N1R0hC0dQfCAR396FZ';
+        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
     final url =
         'https://rozoom.com.ua/task/answer/$answerId/text?text=$answerText&api_token=';
     try {

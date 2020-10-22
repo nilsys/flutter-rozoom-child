@@ -28,6 +28,9 @@ class _TaskItemState extends State<TaskItem> {
   final GlobalKey<RedAnimatedIconState> animatedStateKeyRed =
       GlobalKey<RedAnimatedIconState>();
 
+  final GlobalKey<TaskQuestionState> taskQuestionState =
+      GlobalKey<TaskQuestionState>();
+
   final _form = GlobalKey<FormState>();
   final _answerFieldController = TextEditingController();
 
@@ -93,7 +96,7 @@ class _TaskItemState extends State<TaskItem> {
             TaskNavbar(
                 animatedStateKeyGreen: animatedStateKeyGreen,
                 animatedStateKeyRed: animatedStateKeyRed),
-            TaskQuestion(),
+            TaskQuestion(key: taskQuestionState),
             Consumer<TaskModel>(
               builder: (ctx, task, child) => Container(
                 margin:
@@ -183,6 +186,7 @@ class _TaskItemState extends State<TaskItem> {
                         child: RaisedButton(
                           onPressed: () {
                             stopAudio();
+                            taskQuestionState.currentState.stopAudioFromChild();
                             Provider.of<TaskModel>(context, listen: false)
                                 .answerTask(task.answerIdForApi, i);
 
