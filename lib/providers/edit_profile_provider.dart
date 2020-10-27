@@ -32,7 +32,7 @@ class Profile with ChangeNotifier {
 
   Future<void> getProfileInfo() async {
     final token =
-        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
+        'cq5BTzXGn4u0jzk3dXYIzayhJ5fR3HzIYcOzVr5NsxzGsvjHaWdbv00vI3x9rDi0R3STIMvNZhfR7O8a';
     final url = 'https://rozoom.com.ua/api/mobile/me';
     try {
       final data = {'api_token': token};
@@ -50,6 +50,7 @@ class Profile with ChangeNotifier {
       phone = extractedData['user']['phone'] != null
           ? extractedData['user']['phone']
           : "Телефон не встановлено.";
+
       birthday = extractedData['user']['birthday'] != null
           ? extractedData['user']['birthday']
           : "1900-01-01";
@@ -70,7 +71,7 @@ class Profile with ChangeNotifier {
 
   Future<void> updateUserInfo(param) async {
     final token =
-        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
+        'cq5BTzXGn4u0jzk3dXYIzayhJ5fR3HzIYcOzVr5NsxzGsvjHaWdbv00vI3x9rDi0R3STIMvNZhfR7O8a';
     final url = 'https://rozoom.com.ua/api/mobile/me/update?$param';
     try {
       final data = {'api_token': token};
@@ -85,7 +86,7 @@ class Profile with ChangeNotifier {
     Response response;
     Dio dio = new Dio();
     final token =
-        'PiEINMr9RIRSgRHroLBPLOM0dl6UPDl3FhnNuu2B1tMqdwGsnClVkK5muPEgBwXuGMZxjiHOlo8FDAl8';
+        'cq5BTzXGn4u0jzk3dXYIzayhJ5fR3HzIYcOzVr5NsxzGsvjHaWdbv00vI3x9rDi0R3STIMvNZhfR7O8a';
     final url = 'https://rozoom.com.ua/api/mobile/me/update';
     try {
       FormData formData = new FormData.fromMap({

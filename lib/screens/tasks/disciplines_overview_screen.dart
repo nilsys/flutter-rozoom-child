@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
+import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
 
 enum FilterOptions {
@@ -50,7 +51,9 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
             Icons.arrow_back,
             color: Colors.grey,
           ),
-          onPressed: null,
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
+          },
         ),
         actions: <Widget>[
           PopupMenuButton(

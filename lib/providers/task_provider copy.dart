@@ -29,7 +29,7 @@ class Disciplines with ChangeNotifier {
 
   Future<void> fetchAndSetDisciplines() async {
     final token =
-        'ZTXaUwNQp46vnzEEejS2KLE38KZNZsBMVjG3ZLMGBum8t8Y5ehmwBxakxnJFR0lG8bDKoc3Pc0F1HCcH';
+        'PF9QnSId5i3VUn8rXoujOEHytlVB5cDeqUz6aEQFJZonZKvryBafcAmsTg2U0C6dlga5idgzfJmy2K6r';
     final url = 'https://rozoom.com.ua/api/mobile/disciplines?api_token=';
     try {
       final response = await http.post(url + token);
@@ -89,7 +89,7 @@ class Themes with ChangeNotifier {
 
   Future<void> fetchandSetThemes(disciplineId) async {
     final token =
-        'ZTXaUwNQp46vnzEEejS2KLE38KZNZsBMVjG3ZLMGBum8t8Y5ehmwBxakxnJFR0lG8bDKoc3Pc0F1HCcH';
+        'PF9QnSId5i3VUn8rXoujOEHytlVB5cDeqUz6aEQFJZonZKvryBafcAmsTg2U0C6dlga5idgzfJmy2K6r';
     final url =
         'https://rozoom.com.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
     try {
@@ -184,7 +184,7 @@ class Tasks with ChangeNotifier {
 
   Future<void> startTask(themeId) async {
     final token =
-        'ZTXaUwNQp46vnzEEejS2KLE38KZNZsBMVjG3ZLMGBum8t8Y5ehmwBxakxnJFR0lG8bDKoc3Pc0F1HCcH';
+        'PF9QnSId5i3VUn8rXoujOEHytlVB5cDeqUz6aEQFJZonZKvryBafcAmsTg2U0C6dlga5idgzfJmy2K6r';
     final url = 'https://rozoom.com.ua/task/start/$themeId?api_token=';
     try {
       final headers = {'Accept': 'text/json'};
@@ -252,7 +252,7 @@ class Tasks with ChangeNotifier {
   Future<void> answerTask(answerIdReq, answerPosition) async {
     print('answer task okkkkkkkkkkkkkkkkkkkkkkkkkkkkk!');
     final token =
-        'ZTXaUwNQp46vnzEEejS2KLE38KZNZsBMVjG3ZLMGBum8t8Y5ehmwBxakxnJFR0lG8bDKoc3Pc0F1HCcH';
+        'PF9QnSId5i3VUn8rXoujOEHytlVB5cDeqUz6aEQFJZonZKvryBafcAmsTg2U0C6dlga5idgzfJmy2K6r';
     final url =
         'https://rozoom.com.ua/task/answer/$answerId/$answerPosition?api_token=';
     try {
@@ -328,7 +328,7 @@ class Tasks with ChangeNotifier {
 
   Future<void> resultTask(sessionId) async {
     final token =
-        'ZTXaUwNQp46vnzEEejS2KLE38KZNZsBMVjG3ZLMGBum8t8Y5ehmwBxakxnJFR0lG8bDKoc3Pc0F1HCcH';
+        'PF9QnSId5i3VUn8rXoujOEHytlVB5cDeqUz6aEQFJZonZKvryBafcAmsTg2U0C6dlga5idgzfJmy2K6r';
     final url = 'https://rozoom.com.ua/task/result/$sessionId?api_token=';
     try {
       final headers = {'Accept': 'text/json'};

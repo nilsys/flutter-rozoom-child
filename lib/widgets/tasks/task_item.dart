@@ -242,74 +242,63 @@ class _TaskItemState extends State<TaskItem> {
   }
 
   Widget formAnswerType(task) {
-    return Expanded(
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Form(
-              key: _form,
-              child: TextFormField(
-                controller: _answerFieldController,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) {
-                  final isValid = _form.currentState.validate();
-                  if (!isValid) {
-                    return;
-                  }
-                  Provider.of<TaskModel>(context, listen: false)
-                      .answerTaskWithForm(
-                          task.answerIdForApi, _answerFieldController.text);
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Form(
+        key: _form,
+        child: TextFormField(
+          controller: _answerFieldController,
+          textInputAction: TextInputAction.done,
+          onFieldSubmitted: (_) {
+            final isValid = _form.currentState.validate();
+            if (!isValid) {
+              return;
+            }
+            Provider.of<TaskModel>(context, listen: false).answerTaskWithForm(
+                task.answerIdForApi, _answerFieldController.text);
 
-                  _answerFieldController.text == task.rightAnswerStringValue
-                      ? animatedStateKeyGreen.currentState
-                          .getAnimationFromChild()
-                      : animatedStateKeyRed.currentState
-                          .getAnimationFromChild();
-                  _answerFieldController.text == task.rightAnswerStringValue
-                      ? _showOyboyRightAnswerDialog('text')
-                      : _showOyboyWrongAnswerDialog('text');
-                  _answerFieldController.clear();
-                },
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Дайте відповідь';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Впишіть відповідь',
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      final isValid = _form.currentState.validate();
-                      if (!isValid) {
-                        return;
-                      }
-                      Provider.of<TaskModel>(context, listen: false)
-                          .answerTaskWithForm(
-                              task.answerIdForApi, _answerFieldController.text);
+            _answerFieldController.text == task.rightAnswerStringValue
+                ? animatedStateKeyGreen.currentState.getAnimationFromChild()
+                : animatedStateKeyRed.currentState.getAnimationFromChild();
+            _answerFieldController.text == task.rightAnswerStringValue
+                ? _showOyboyRightAnswerDialog('text')
+                : _showOyboyWrongAnswerDialog('text');
+            _answerFieldController.clear();
+          },
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Дайте відповідь';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: 'Впишіть відповідь',
+            suffixIcon: IconButton(
+              onPressed: () {
+                final isValid = _form.currentState.validate();
+                if (!isValid) {
+                  return;
+                }
+                Provider.of<TaskModel>(context, listen: false)
+                    .answerTaskWithForm(
+                        task.answerIdForApi, _answerFieldController.text);
 
-                      _answerFieldController.text == task.rightAnswerStringValue
-                          ? animatedStateKeyGreen.currentState
-                              .getAnimationFromChild()
-                          : animatedStateKeyRed.currentState
-                              .getAnimationFromChild();
-                      _answerFieldController.text == task.rightAnswerStringValue
-                          ? _showOyboyRightAnswerDialog('text')
-                          : _showOyboyWrongAnswerDialog('text');
-                      _answerFieldController.clear();
-                    },
-                    icon: Icon(
-                      Icons.check,
-                      color: Theme.of(context).primaryColor,
-                      size: 36,
-                    ),
-                  ),
-                ),
+                _answerFieldController.text == task.rightAnswerStringValue
+                    ? animatedStateKeyGreen.currentState.getAnimationFromChild()
+                    : animatedStateKeyRed.currentState.getAnimationFromChild();
+                _answerFieldController.text == task.rightAnswerStringValue
+                    ? _showOyboyRightAnswerDialog('text')
+                    : _showOyboyWrongAnswerDialog('text');
+                _answerFieldController.clear();
+              },
+              icon: Icon(
+                Icons.check,
+                color: Theme.of(context).primaryColor,
+                size: 36,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -10,6 +10,7 @@ import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
+import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/profile_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Rozoom',
-        home: HomeChild(),
+        home: AuthScreen(),
         theme: ThemeData(
           // primaryColor: Color(0xFFf06388),
           // primaryColor: Colors.red,
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: [GlobalMaterialLocalizations.delegate],
         supportedLocales: [const Locale('uk'), const Locale('ru')],
         routes: {
+          IndexScreen.routeName: (context) => IndexScreen(),
           DisciplinesOverviewScreen.routeName: (context) =>
               DisciplinesOverviewScreen(),
           ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),

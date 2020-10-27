@@ -6,7 +6,8 @@ import 'package:rozoom_app/models/Provider.dart';
 import 'package:rozoom_app/models/http_exception.dart';
 import 'package:rozoom_app/providers/auth_token_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
-import 'package:rozoom_app/providers/video_chat_provider.dart';
+import 'package:rozoom_app/widgets/fade-animation.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -21,31 +22,44 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       // resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Container(
-              height: deviceSize.height,
-              width: deviceSize.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+      body: SafeArea(
+        child: Container(
+          height: deviceSize.height,
+          width: deviceSize.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Stack(
                 children: <Widget>[
-                  Flexible(
-                    child: Image.asset('assets/images/mainlogo.png'),
+                  Container(
+                    child: Image.asset('assets/images/auth/blue-circle-hq.png'),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
-                    child: AuthCard(),
-                  ),
+                  Positioned(
+                      // left: 50,
+                      // top: 20,
+                      child: FadeAnimation(
+                    2,
+                    Container(
+                      padding: EdgeInsets.only(left: 50, top: 20),
+                      child: Image.asset(
+                        'assets/images/auth/boy-hq.png',
+                        scale: 1.1,
+                      ),
+                    ),
+                  )),
                 ],
               ),
-            ),
+              SizedBox(
+                height: 5,
+              ),
+              Flexible(
+                flex: deviceSize.width > 600 ? 2 : 1,
+                child: AuthCard(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -220,9 +234,7 @@ class _AuthCardState extends State<AuthCard>
     Provider.of<TokenData>(context, listen: false).changeTokenData(_token);
     print(
         '02 - TokenData -----------------> ${Provider.of<TokenData>(context, listen: false).getTokenData}');
-    Provider.of<AuthToken>(context, listen: false).changeAuthToken(_token);
-    print(
-        '03 - AuthToken -----------------> ${Provider.of<AuthToken>(context, listen: false).getAuthToken}');
+
     Provider.of<Pusher>(context, listen: false).changeRozoomToken(_token);
     print(
         '04 - PusherToken -----------------> ${Provider.of<Pusher>(context, listen: false).getRozoomToken}');
@@ -273,9 +285,7 @@ class _AuthCardState extends State<AuthCard>
     Provider.of<TokenData>(context, listen: false).changeTokenData(_token);
     print(
         '02 - TokenData -----------------> ${Provider.of<TokenData>(context, listen: false).getTokenData}');
-    Provider.of<AuthToken>(context, listen: false).changeAuthToken(_token);
-    print(
-        '03 - AuthToken -----------------> ${Provider.of<AuthToken>(context, listen: false).getAuthToken}');
+
     Provider.of<Pusher>(context, listen: false).changeRozoomToken(_token);
     print(
         '04 - PusherToken -----------------> ${Provider.of<Pusher>(context, listen: false).getRozoomToken}');
@@ -323,9 +333,9 @@ class _AuthCardState extends State<AuthCard>
       child: AnimatedContainer(
         duration: Duration(milliseconds: 400),
         curve: Curves.linear,
-        height: _authMode == AuthMode.Signup ? 380 : 260,
+        height: _authMode == AuthMode.Signup ? 340 : 260,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 380 : 260),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 340 : 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -333,49 +343,55 @@ class _AuthCardState extends State<AuthCard>
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Логін'),
-                  // keyboardType: TextInputType.emailAddress,
-                  controller: _loginController,
-                  validator: _authMode == AuthMode.Signup
-                      ? (value) {
-                          if (value.isEmpty) {
-                            // if (value.isEmpty || !value.contains('@')) {
-                            return 'Введіть логін!';
-                          }
+                FadeAnimation(
+                  2.6,
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Логін'),
+                    // keyboardType: TextInputType.emailAddress,
+                    controller: _loginController,
+                    validator: _authMode == AuthMode.Signup
+                        ? (value) {
+                            if (value.isEmpty) {
+                              // if (value.isEmpty || !value.contains('@')) {
+                              return 'Введіть логін!';
+                            }
 
-                          if (!value.contains('@') && !isNumeric(value)) {
-                            print(!value.contains('@'));
-                            print(!isNumeric(value));
-                            print(value);
-                            print(value.runtimeType);
-                            // if (value.isEmpty || !value.contains('@')) {
-                            return 'Логін має бути  email або телефон!';
+                            if (!value.contains('@') && !isNumeric(value)) {
+                              print(!value.contains('@'));
+                              print(!isNumeric(value));
+                              print(value);
+                              print(value.runtimeType);
+                              // if (value.isEmpty || !value.contains('@')) {
+                              return 'Логін має бути  email або телефон!';
+                            }
                           }
-                        }
-                      : (value) {
-                          if (value.isEmpty) {
-                            // if (value.isEmpty || !value.contains('@')) {
-                            return 'Введіть логін!';
-                          }
-                        },
-                  onSaved: (value) {
-                    _authData['email'] = value;
-                  },
+                        : (value) {
+                            if (value.isEmpty) {
+                              // if (value.isEmpty || !value.contains('@')) {
+                              return 'Введіть логін!';
+                            }
+                          },
+                    onSaved: (value) {
+                      _authData['email'] = value;
+                    },
+                  ),
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Пароль'),
-                  obscureText: true,
-                  controller: _passwordController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      // if (value.isEmpty || value.length < 5) {
-                      return 'Введіть пароль!';
-                    }
-                  },
-                  onSaved: (value) {
-                    _authData['password'] = value;
-                  },
+                FadeAnimation(
+                  2.8,
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Пароль'),
+                    obscureText: true,
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        // if (value.isEmpty || value.length < 5) {
+                        return 'Введіть пароль!';
+                      }
+                    },
+                    onSaved: (value) {
+                      _authData['password'] = value;
+                    },
+                  ),
                 ),
                 // AnimatedContainer(
                 //   constraints: BoxConstraints(
@@ -440,27 +456,35 @@ class _AuthCardState extends State<AuthCard>
                 if (_isLoading)
                   CircularProgressIndicator()
                 else
-                  RaisedButton(
-                    child: Text(
-                      _authMode == AuthMode.Login ? 'ЛОГІН' : 'РЕЄСТРАЦІЯ',
-                      style: TextStyle(color: Colors.white),
+                  FadeAnimation(
+                    3,
+                    RaisedButton(
+                      child: Text(
+                        _authMode == AuthMode.Login ? 'ЛОГІН' : 'РЕЄСТРАЦІЯ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: _submit,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                      color: Color(0xFFf06388),
+                      textColor:
+                          Theme.of(context).primaryTextTheme.button.color,
                     ),
-                    onPressed: _submit,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                    color: Color(0xFFf06388),
-                    textColor: Theme.of(context).primaryTextTheme.button.color,
                   ),
-                FlatButton(
-                  child: Text(
-                      '${_authMode == AuthMode.Login ? 'РЕЄСТРАЦІЯ' : 'ЛОГІН'} '),
-                  onPressed: _switchAuthMode,
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textColor: Theme.of(context).primaryColor,
+                FadeAnimation(
+                  3.2,
+                  FlatButton(
+                    child: Text(
+                        '${_authMode == AuthMode.Login ? 'РЕЄСТРАЦІЯ' : 'ЛОГІН'} '),
+                    onPressed: _switchAuthMode,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    textColor: Theme.of(context).primaryColor,
+                  ),
                 ),
               ],
             ),

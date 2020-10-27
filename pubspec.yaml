@@ -55,6 +55,7 @@ dependencies:
   image_picker: ^0.6.7+12
   dio: ^3.0.10
   audioplayers: ^0.16.1
+  simple_animations: ^2.2.3
   
 
 
@@ -78,13 +79,28 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/mainlogo.png
+    - assets/images/auth/blue-circle-hq.png
+    - assets/images/auth/boy-hq.png
+    - assets/images/logo.png
+    - assets/images/index/bg.png
+    - assets/images/index/bg2.png
+    - assets/images/index/01.png
+    - assets/images/index/02.png
+    - assets/images/index/03.png
+    - assets/images/index/04.png
+    - assets/images/index/11.png
+    - assets/images/index/12.png
+    - assets/images/index/13.png
+    - assets/images/index/21.png
+    - assets/images/index/22.png
+    - assets/images/index/23.png
+    - assets/images/index/24.png
+    - assets/images/index/25.png
     - assets/images/brand.png
     - assets/images/icon_parents.svg
     - assets/images/icon_teacher.svg
     - assets/images/icon_kids.svg
-    - assets/images/profile/brand.svg
-    - assets/images/profile/logo.png
+    
     - assets/images/profile/01.png
     - assets/images/profile/02.png
     - assets/images/profile/03.png
