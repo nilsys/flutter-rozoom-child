@@ -8,8 +8,8 @@ import 'package:jitsi_meet/room_name_constraint.dart';
 import 'package:jitsi_meet/room_name_constraint_type.dart';
 import 'package:jitsi_meet/feature_flag/feature_flag_enum.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/api/api.dart';
-import 'package:rozoom_app/models/Provider.dart';
+import 'package:rozoom_app/models/api.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 
 class Video extends StatefulWidget {
@@ -45,9 +45,8 @@ class _VideoState extends State<Video> {
   inviteToConf() async {
     var data = {};
     try {
-      final _token = Provider.of<TokenData>(context, listen: false);
-      var resChat = await CallApi()
-          .postData(data, 'me/chat?api_token=${_token.getTokenData}');
+      final _token = Provider.of<Auth>(context, listen: false).token;
+      var resChat = await CallApi().postData(data, 'me/chat?api_token=$_token');
       var _chatData = resChat.body;
       // print('---------------------$loadedFriends');
       List _extractedData = json.decode(_chatData)['friends'];
@@ -61,8 +60,8 @@ class _VideoState extends State<Video> {
       for (var i = 0; i < loadedFriends.length; i++) {
         print('---------------------${loadedFriends[i]}');
         var data = {'to_id': loadedFriends[i], 'body': 'Заходи в видеочат!'};
-        var resChat = await CallApi()
-            .postData(data, 'me/chat/send?api_token=${_token.getTokenData}');
+        var resChat =
+            await CallApi().postData(data, 'me/chat/send?api_token=$_token');
       }
     } catch (error) {
       throw (error);

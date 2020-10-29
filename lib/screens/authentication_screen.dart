@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/models/http_exception.dart';
 import 'package:rozoom_app/providers/auth_provider.dart';
-import 'package:rozoom_app/screens/index_screen.dart';
+
 import 'package:rozoom_app/widgets/fade-animation.dart';
 
 enum AuthMode { Signup, Login }
@@ -253,7 +253,6 @@ class _AuthCardState extends State<AuthCard>
                           controller: _passwordController,
                           validator: (value) {
                             if (value.isEmpty) {
-                              // if (value.isEmpty || value.length < 5) {
                               return 'Введіть пароль!';
                             }
                           },
@@ -308,7 +307,8 @@ class _AuthCardState extends State<AuthCard>
                           _submit();
                         },
                         onSaved: (value) {
-                          _authData['username'] = value;
+                          print('value ------------------$value');
+                          _authData['username'] = value != '' ? value : 'Пусто';
                         },
                       ),
                     ),

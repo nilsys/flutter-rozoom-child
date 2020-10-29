@@ -61,10 +61,10 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
       position: _offsetAnimation,
       child: Dialog(
         backgroundColor: Colors.green,
-        // shape: CircleBorder(),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
+        shape: CircleBorder(),
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(30.0),
+        // ),
         child: Consumer<TaskModel>(
           builder: (ctx, task, child) => Stack(
             overflow: Overflow.visible,
@@ -77,7 +77,7 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: 15.0),
+                      padding: EdgeInsets.only(top: 20.0),
                       child: Text(
                         'Вірно!',
                         style: TextStyle(
@@ -102,7 +102,7 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    top: 5, bottom: 15, right: 25, left: 25),
+                                    top: 15, right: 25, left: 25),
                                 child: Text(
                                   task.cardTitle,
                                   style: TextStyle(
@@ -129,42 +129,44 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                               ),
                             ],
                           ),
-                    Padding(padding: EdgeInsets.only(top: 15.0)),
-                    ButtonTheme(
-                      minWidth: 80,
-                      height: 45,
-                      child: RaisedButton(
-                        onPressed: () {
-                          // Provider.of<Tasks>(context, listen: false).answerTask(
-                          //     Provider.of<Tasks>(context, listen: false)
-                          //         .getAnswerId,
-                          //     widget.answerIndex);
+                    Padding(
+                        child: ButtonTheme(
+                          minWidth: 80,
+                          height: 45,
+                          child: RaisedButton(
+                            onPressed: () {
+                              // Provider.of<Tasks>(context, listen: false).answerTask(
+                              //     Provider.of<Tasks>(context, listen: false)
+                              //         .getAnswerId,
+                              //     widget.answerIndex);
 
-                          // setState(() {
+                              // setState(() {
 
-                          task.continueOrFinish
-                              ?
-                              // onOk();
-                              Navigator.pop(context)
-                              : Navigator.of(context).pushNamed(
-                                  TaskResultScreen.routeName,
-                                );
-                          // });
-                        },
-                        // elevation: 3.0,
-                        // highlightColor: Color(0xFF74bec9),
-                        highlightElevation: 5.0,
-                        child: Text(
-                          'Йдемо далі',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                              task.continueOrFinish
+                                  ?
+                                  // onOk();
+                                  Navigator.pop(context)
+                                  : Navigator.of(context).pushNamed(
+                                      TaskResultScreen.routeName,
+                                    );
+                              // });
+                            },
+                            // elevation: 3.0,
+                            // highlightColor: Color(0xFF74bec9),
+                            highlightElevation: 5.0,
+                            child: Text(
+                              'Йдемо далі',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            color: Colors.red,
+                            // padding: EdgeInsets.all(15.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
                         ),
-                        color: Colors.red,
-                        // padding: EdgeInsets.all(15.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                    ),
+                        padding: EdgeInsets.only(top: 5, bottom: 25)),
                   ],
                 ),
               ),
@@ -172,7 +174,7 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                 top: 250,
                 left: 0,
                 child: Image.asset('assets/images/tasks/right-answer-boy.png'),
-                height: 250,
+                height: 150,
               )
             ],
           ),

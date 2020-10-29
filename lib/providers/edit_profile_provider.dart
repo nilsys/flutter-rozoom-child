@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'package:rozoom_app/api/api.dart';
+import 'package:rozoom_app/models/api.dart';
 import 'package:rozoom_app/models/http_exception.dart';
 
 class Profile with ChangeNotifier {
@@ -34,7 +34,7 @@ class Profile with ChangeNotifier {
 
   Future<void> getProfileInfo() async {
     print('get profile auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/api/mobile/me';
+    final url = 'https://rozoom.com.ua/api/mobile/me';
     try {
       final data = {'api_token': authToken};
       final response = await apiRequest(url, data);
@@ -76,7 +76,7 @@ class Profile with ChangeNotifier {
 
   Future<void> updateUserInfo(param) async {
     print('update profile auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/api/mobile/me/update?$param';
+    final url = 'https://rozoom.com.ua/api/mobile/me/update?$param';
     try {
       final data = {'api_token': authToken};
       await http.post(url, body: data);
@@ -90,7 +90,7 @@ class Profile with ChangeNotifier {
     Response response;
     Dio dio = new Dio();
     print('send avatar auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/api/mobile/me/update';
+    final url = 'https://rozoom.com.ua/api/mobile/me/update';
     try {
       FormData formData = new FormData.fromMap({
         "api_token": authToken,
@@ -98,6 +98,7 @@ class Profile with ChangeNotifier {
             await MultipartFile.fromFile(filepath, filename: "avatar.png"),
       });
       response = await dio.post(url, data: formData);
+      print(response);
       await getProfileInfo();
     } catch (error) {
       throw error;

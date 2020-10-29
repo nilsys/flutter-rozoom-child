@@ -1,20 +1,11 @@
-import 'dart:async';
-import 'dart:math';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/api/api.dart';
-import 'package:rozoom_app/pages/conference_alert.dart';
 import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
-import 'package:rozoom_app/screens/home_child_screen.dart';
 import 'package:rozoom_app/screens/messenger/friends_overview_screen.dart';
-import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
-import 'package:rozoom_app/widgets/chat/badge_icon.dart';
-import 'package:rozoom_app/models/Provider.dart';
+import 'package:rozoom_app/widgets/home_child.dart';
 
 enum FilterOptions {
   EditProfile,
@@ -30,133 +21,113 @@ class IndexScreen extends StatefulWidget {
 
 class _IndexScreenState extends State<IndexScreen> {
   bool _isLoading = false;
-  int _selectedIndex = 1;
+  int _currentIndex = 1;
+
+  @override
+  void initState() {
+    _isLoading = true;
+    Provider.of<Profile>(context, listen: false).getProfileInfo().then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Random random = new Random();
-    int rnd = random.nextInt(10000) + 999;
-    print(rnd);
-    final _token = context.watch<TokenData>().getTokenData;
-    final unreadMessages = Provider.of<Pusher>(context).getTotalUnreadMessages;
-
+    final balance = Provider.of<Profile>(context, listen: false).balance;
+    final certificates =
+        Provider.of<Profile>(context, listen: false).certificates;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 1,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
-          },
-        ),
+        // leading: IconButton(
+        //   icon: Icon(
+        //     Icons.arrow_back,
+        //     color: Colors.grey,
+        //   ),
+        //   onPressed: () {
+        //     Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
+        //   },
+        // ),
         actions: <Widget>[
           PopupMenuButton(
+            padding: EdgeInsets.all(8),
+            elevation: 1,
             onSelected: (FilterOptions selectedValue) {
               setState(() {
                 if (selectedValue == FilterOptions.EditProfile) {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                   // _showOnlyFavorites = true;
                 } else {
-                  // Navigator.of(context)
-                  //     .pushReplacementNamed(AuthScreen.routeName);
                   Provider.of<Auth>(context, listen: false).logout();
                 }
               });
             },
-            icon: Icon(
-              Icons.more_vert,
-            ),
+            icon: Icon(Icons.more_vert, color: Colors.grey),
             itemBuilder: (_) => [
               PopupMenuItem(
-                child: Text('Профайл'),
-                value: FilterOptions.EditProfile,
-              ),
-              PopupMenuItem(
-                child: Text('Вийти'),
-                value: FilterOptions.Logout,
-              ),
+                  child: Text('Профайл'), value: FilterOptions.EditProfile),
+              PopupMenuItem(child: Text('Вийти'), value: FilterOptions.Logout),
             ],
           ),
         ],
         title: _isLoading
             ? Text('')
-            : Consumer<Profile>(
-                builder: (ctx, profile, child) => Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    // Text(
-                    //   'Дісципліни',
-                    //   style: TextStyle(fontSize: 16),
-                    // ),
-                    SizedBox(
-                      width: 35,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/coin.png',
-                      // height: 300,
-                      scale: 0.55,
-                      // width: 50,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.getBalance,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/uah.png',
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.getCertificates,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  ],
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(width: 35),
+                  Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                  SizedBox(width: 5),
+                  Text(balance,
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                  SizedBox(width: 10),
+                  Image.asset('assets/images/stats/uah.png', height: 30),
+                  SizedBox(width: 5),
+                  Text(certificates,
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                ],
               ),
       ),
       body: IndexedStack(
-        index: _selectedIndex,
+        index: _currentIndex,
         children: <Widget>[
-          FriendsOverviewScreen(),
-          DisciplinesOverviewScreen(),
+          Text('chat screen'),
+          HomeChild(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        // type: BottomNavigationBarType.fixed,
-        // currentIndex: currentIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Theme.of(context).accentColor,
-        currentIndex: _selectedIndex,
+        // type: BottomNavigationBarType.shifting,
+        selectedItemColor: Theme.of(context).accentColor,
+        unselectedItemColor: Theme.of(context).primaryColor,
+        currentIndex: _currentIndex,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            _currentIndex = index;
           });
         },
         items: [
           BottomNavigationBarItem(
             // icon: Icon(Icons.people_outline, size: 25),
-            icon: Consumer<Pusher>(
-              builder: (_, count, icon) => BadgeIcon(
-                  icon: Icon(Icons.people_outline, size: 25),
-                  badgeCount: count.getTotalUnreadMessages),
-            ),
+            // icon: Consumer<Pusher>(
+            //   builder: (_, count, icon) => BadgeIcon(
+            //       icon: Icon(Icons.people_outline, size: 25),
+            //       badgeCount: count.getTotalUnreadMessages),
+            // ),
+            icon: Icon(Icons.people_outline, size: 25),
             title: Text('Друзі'),
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.school), title: Text('Навчання')),
+            icon: Icon(Icons.school),
+            title: Text('Навчання'),
+          ),
         ],
       ),
     );

@@ -35,10 +35,12 @@ class DisciplineItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 2),
-              child: Text(
-                titleUa,
-                style: TextStyle(
-                  color: Color(0xFF74bec9),
+              child: Center(
+                child: Text(
+                  titleUa,
+                  style: TextStyle(
+                    color: Color(0xFF74bec9),
+                  ),
                 ),
               ),
             )

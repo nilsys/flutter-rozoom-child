@@ -4,10 +4,7 @@ import 'package:http/http.dart' as http;
 
 class VideoChat extends ChangeNotifier {
   String authToken;
-  String get getAuthToken => authToken;
-  set setAuthToken(String value) {
-    authToken = value;
-  }
+  VideoChat(this.authToken);
 
   String _videoChatName;
   String get videoChatName => _videoChatName;

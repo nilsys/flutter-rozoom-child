@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/models/http_exception.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
+import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
+import 'package:rozoom_app/screens/edit_profile_screen.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
 import 'package:rozoom_app/widgets/tasks/task_item.dart';
 
@@ -76,31 +79,50 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                 color: Colors.grey,
               ),
               onPressed: () {
-                _showExitDialog('Завершити проходження?');
+                _showExitDialog('');
               }),
           actions: <Widget>[
-            IconButton(
+            PopupMenuButton(
+              onSelected: (FilterOptions selectedValue) {
+                setState(() {
+                  if (selectedValue == FilterOptions.EditProfile) {
+                    Navigator.of(context)
+                        .pushNamed(EditProfileScreen.routeName);
+                  } else {
+                    Provider.of<Auth>(context, listen: false).logout();
+                  }
+                });
+              },
               icon: Icon(
                 Icons.more_vert,
                 color: Colors.grey,
               ),
-              onPressed: () {
-                // Navigator.pop(context);
-              },
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                    child: Text('Профайл'), value: FilterOptions.EditProfile),
+                PopupMenuItem(
+                    child: Text('Вийти'), value: FilterOptions.Logout),
+              ],
             ),
           ],
           title: _isLoading
               ? Text('')
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      themeName.length > 30
-                          ? '${themeName.replaceRange(30, themeName.length, '...')}'
-                          : '$themeName',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
+              : Consumer<Profile>(
+                  builder: (ctx, profile, child) => Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      SizedBox(width: 35),
+                      Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                      SizedBox(width: 5),
+                      Text(profile.getBalance,
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                      SizedBox(width: 10),
+                      Image.asset('assets/images/stats/uah.png', height: 30),
+                      SizedBox(width: 5),
+                      Text(profile.getCertificates,
+                          style: TextStyle(color: Colors.black, fontSize: 16)),
+                    ],
+                  ),
                 ),
         ),
         body: _isLoading
@@ -120,7 +142,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             side: BorderSide(width: 3, color: Color(0xFFf06388)),
             borderRadius: BorderRadius.all(Radius.circular(32.0))),
         title: Text(
-          'Помилка теми!',
+          'Увага!',
           style: TextStyle(color: Colors.white),
         ),
         content: Text(
@@ -165,7 +187,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
             side: BorderSide(width: 3, color: Color(0xFFf06388)),
             borderRadius: BorderRadius.all(Radius.circular(32.0))),
         title: Text(
-          'Вийти із завдання?',
+          'Завершити проходження?',
           style: TextStyle(color: Colors.white),
         ),
         content: Text(

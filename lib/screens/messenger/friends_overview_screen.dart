@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rozoom_app/pages/video_screen.dart';
+import 'package:rozoom_app/widgets/chat/video_screen.dart';
 
 import 'package:rozoom_app/widgets/messenger/friends_list.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rozoom_app/pages/chat.dart';
+import 'package:rozoom_app/widgets/chat/chat.dart';
 
 class FriendItem extends StatefulWidget {
   final String id;

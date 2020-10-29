@@ -55,7 +55,6 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
 
   @override
   Widget build(BuildContext context) {
-    // var continueOrFinish = Provider.of<TaskModel>(context).continueOrFinish;
     var rightAnswerStringValue =
         Provider.of<TaskModel>(context, listen: false).rightAnswerStringValue;
     var explainText =
@@ -66,10 +65,10 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
       position: _offsetAnimation,
       child: Dialog(
         backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        // shape: CircleBorder(),
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(30.0),
+        // ),
+        shape: CircleBorder(),
         child: Stack(
           overflow: Overflow.visible,
           children: <Widget>[
@@ -81,7 +80,7 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: 45),
                     child: Text(
                       'Невірно:(',
                       style: TextStyle(
@@ -92,37 +91,42 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                   ),
                   answerType == '3'
                       ? Text('')
-                      : SingleChildScrollView(
-                          child: Column(
+                      : Expanded(
+                          child: ListView(
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(top: 15),
-                                child: Text(
-                                  'Вірна відповідь:',
-                                  style: TextStyle(
-                                      color: Colors.yellow,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
+                                child: Center(
+                                  child: Text(
+                                    'Вірна відповідь:',
+                                    style: TextStyle(
+                                        color: Colors.yellow,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, bottom: 15, right: 25, left: 25),
+                                  child: Text(
+                                    rightAnswerStringValue,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(
-                                    top: 5, bottom: 15, right: 25, left: 25),
+                                padding: EdgeInsets.only(left: 45, right: 45),
                                 child: Text(
-                                  rightAnswerStringValue,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 25, right: 35),
-                                child: Text(
-                                  explainText.length > 250
-                                      ? explainText.replaceRange(
-                                          250, explainText.length, '...')
-                                      : explainText,
+                                  // explainText.length > 250
+                                  //     ? explainText.replaceRange(
+                                  //         250, explainText.length, '...')
+                                  //     :
+                                  explainText,
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,
@@ -132,39 +136,41 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                             ],
                           ),
                         ),
-                  Padding(padding: EdgeInsets.only(top: 15.0)),
-                  Consumer<TaskModel>(
-                    builder: (ctx, task, child) => ButtonTheme(
-                      minWidth: 80,
-                      height: 45,
-                      child: RaisedButton(
-                        onPressed: () {
-                          task.continueOrFinish
-                              ? Navigator.pop(context)
-                              : Navigator.of(context).pushNamed(
-                                  TaskResultScreen.routeName,
-                                );
-                        },
-                        highlightElevation: 5.0,
-                        child: Text(
-                          'Я зрозумів',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                        ),
-                        color: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                  Padding(
+                      child: Consumer<TaskModel>(
+                        builder: (ctx, task, child) => ButtonTheme(
+                          minWidth: 80,
+                          height: 45,
+                          child: RaisedButton(
+                            onPressed: () {
+                              task.continueOrFinish
+                                  ? Navigator.pop(context)
+                                  : Navigator.of(context).pushNamed(
+                                      TaskResultScreen.routeName,
+                                    );
+                            },
+                            highlightElevation: 5.0,
+                            child: Text(
+                              'Я зрозумів',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            color: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                      padding: EdgeInsets.only(top: 15.0, bottom: 55)),
                 ],
               ),
             ),
             Positioned(
               top: 250,
-              left: 220,
+              left: 230,
               child: Image.asset('assets/images/tasks/wrong-answer-boy.png'),
-              height: 200,
+              height: 150,
             ),
           ],
         ),

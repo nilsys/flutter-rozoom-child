@@ -18,7 +18,7 @@ class AuthToken with ChangeNotifier {
 
 class Auth with ChangeNotifier {
   String _token;
-  DateTime _expiryDate;
+  // DateTime _expiryDate;
 
   bool get isAuth {
     print('isAuth ---------------------> $token');
@@ -34,11 +34,13 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(email, password, username) async {
     final String url =
-        'https://new.rozoom.co.ua/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
+        'https://rozoom.com.ua/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
     print(url);
     try {
       final response = await http.post(url);
+      print(response.statusCode);
       final _apiData = json.decode(response.body) as Map<String, dynamic>;
+      print(_apiData);
       if (_apiData == null) {
         throw HttpException('Щось пішло не так. Спробуйте ще');
       }
@@ -72,9 +74,11 @@ class Auth with ChangeNotifier {
 
   Future<void> signin(email, password) async {
     final String url =
-        'https://new.rozoom.co.ua/api/mobile/auth?login=$email&password=$password';
+        'https://rozoom.com.ua/api/mobile/auth?login=$email&password=$password';
     try {
+      print(url);
       final response = await http.post(url);
+      print(response.statusCode);
       final _apiData = json.decode(response.body) as Map<String, dynamic>;
       if (_apiData == null) {
         throw HttpException('Щось пішло не так. Спробуйте ще');

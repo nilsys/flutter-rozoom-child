@@ -4,9 +4,7 @@ import 'package:rozoom_app/models/http_exception.dart';
 import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
-import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
-import 'package:rozoom_app/screens/home_child_screen.dart';
 import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
 
@@ -34,11 +32,7 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
         _isLoading = true;
       });
       try {
-        print('start!!!!!!!!!!!!!!!!!');
         getUserProfile();
-        // Provider.of<Profile>(context, listen: false)
-        //     .getProfileInfo()
-        //     .then((_) =>
         Provider.of<Disciplines>(context, listen: false)
             .fetchAndSetDisciplines()
             // )
@@ -48,13 +42,8 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
           });
         });
       } on HttpException catch (error) {
-        print('*************rgfgswrswghwhrew********************');
         var errorMessage = error.toString();
-
         _showErrorDialog(errorMessage);
-      } catch (error) {
-        print(
-            '11111111111111*************rgfgswrswghwhrew********************');
       }
     }
     _isInit = false;
@@ -97,90 +86,64 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
       // backgroundColor: Colors.blue.withOpacity(0.2),
       // backgroundColor: Color(0XFFFEF9EB),
       appBar: AppBar(
-          elevation: 1,
-          backgroundColor: Colors.white,
-          leading: IconButton(
+        elevation: 1,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.grey,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
+          },
+        ),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.EditProfile) {
+                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
+                } else {
+                  Provider.of<Auth>(context, listen: false).logout();
+                }
+              });
+            },
             icon: Icon(
-              Icons.arrow_back,
+              Icons.more_vert,
               color: Colors.grey,
             ),
-            onPressed: () {
-              Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
-            },
-          ),
-          actions: <Widget>[
-            PopupMenuButton(
-              onSelected: (FilterOptions selectedValue) {
-                setState(() {
-                  if (selectedValue == FilterOptions.EditProfile) {
-                    Navigator.of(context)
-                        .pushNamed(EditProfileScreen.routeName);
-                    // _showOnlyFavorites = true;
-                  } else {
-                    // Navigator.of(context)
-                    //     .pushReplacementNamed(AuthScreen.routeName);
-                    Provider.of<Auth>(context, listen: false).logout();
-                  }
-                });
-              },
-              icon: Icon(
-                Icons.more_vert,
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Профайл'),
+                value: FilterOptions.EditProfile,
               ),
-              itemBuilder: (_) => [
-                PopupMenuItem(
-                  child: Text('Профайл'),
-                  value: FilterOptions.EditProfile,
-                ),
-                PopupMenuItem(
-                  child: Text('Вийти'),
-                  value: FilterOptions.Logout,
-                ),
-              ],
-            ),
-          ],
-          title: _isLoading ? Text('') : Text('')
-          // : Consumer<Profile>(
-          //     builder: (ctx, profile, child) => Row(
-          //       mainAxisAlignment: MainAxisAlignment.end,
-          //       children: <Widget>[
-          //         // Text(
-          //         //   'Дісципліни',
-          //         //   style: TextStyle(fontSize: 16),
-          //         // ),
-          //         SizedBox(
-          //           width: 35,
-          //         ),
-          //         Image.asset(
-          //           'assets/images/stats/coin.png',
-          //           // height: 300,
-          //           scale: 0.55,
-          //           // width: 50,
-          //         ),
-          //         SizedBox(
-          //           width: 5,
-          //         ),
-          //         Text(
-          //           profile.getBalance,
-          //           style: TextStyle(color: Colors.black, fontSize: 16),
-          //         ),
-          //         SizedBox(
-          //           width: 10,
-          //         ),
-          //         Image.asset(
-          //           'assets/images/stats/uah.png',
-          //           height: 30,
-          //         ),
-          //         SizedBox(
-          //           width: 5,
-          //         ),
-          //         Text(
-          //           profile.getCertificates,
-          //           style: TextStyle(color: Colors.black, fontSize: 16),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
+              PopupMenuItem(
+                child: Text('Вийти'),
+                value: FilterOptions.Logout,
+              ),
+            ],
           ),
+        ],
+        title: _isLoading
+            ? Text('')
+            : Consumer<Profile>(
+                builder: (ctx, profile, child) => Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    SizedBox(width: 35),
+                    Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                    SizedBox(width: 5),
+                    Text(profile.getBalance,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                    SizedBox(width: 10),
+                    Image.asset('assets/images/stats/uah.png', height: 30),
+                    SizedBox(width: 5),
+                    Text(profile.getCertificates,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                  ],
+                ),
+              ),
+      ),
       body: Column(
         children: <Widget>[
           Container(
@@ -196,7 +159,8 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
                       color: Color(0xFF74bec9),
                     ),
                     onPressed: () {
-                      // Navigator.pop(context);
+                      Navigator.of(context)
+                          .pushReplacementNamed(IndexScreen.routeName);
                     },
                   ),
                   Text(

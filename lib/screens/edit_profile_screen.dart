@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
+import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/widgets/profile/birthday_form.dart';
 import 'package:rozoom_app/widgets/profile/email_form.dart';
 import 'package:rozoom_app/widgets/profile/password_form.dart';
@@ -43,49 +45,52 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             color: Colors.grey,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
         ),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.EditProfile) {
+                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
+                } else {
+                  Provider.of<Auth>(context, listen: false).logout();
+                }
+              });
+            },
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.grey,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Профайл'),
+                value: FilterOptions.EditProfile,
+              ),
+              PopupMenuItem(
+                child: Text('Вийти'),
+                value: FilterOptions.Logout,
+              ),
+            ],
+          ),
+        ],
         title: _isLoading
             ? Text('')
             : Consumer<Profile>(
                 builder: (ctx, profile, child) => Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    // Text(
-                    //   'Дісципліни',
-                    //   style: TextStyle(fontSize: 16),
-                    // ),
-                    SizedBox(
-                      width: 35,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/coin.png',
-                      // height: 300,
-                      scale: 0.55,
-                      // width: 50,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.balance,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/uah.png',
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.certificates,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
+                    SizedBox(width: 35),
+                    Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                    SizedBox(width: 5),
+                    Text(profile.getBalance,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                    SizedBox(width: 10),
+                    Image.asset('assets/images/stats/uah.png', height: 30),
+                    SizedBox(width: 5),
+                    Text(profile.getCertificates,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
                   ],
                 ),
               ),

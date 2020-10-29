@@ -8,21 +8,7 @@ import 'package:rozoom_app/providers/friend_provider.dart';
 
 class Pusher with ChangeNotifier {
   String authToken;
-  String get getAuthToken => authToken;
-  set setAuthToken(String value) {
-    authToken = value;
-  }
-
-  String rozoomToken =
-      'No rozoom token......................................................';
-
-  String get getRozoomToken => rozoomToken;
-
-  void changeRozoomToken(String newRozoomToken) {
-    rozoomToken = newRozoomToken;
-
-    notifyListeners();
-  }
+  Pusher(this.authToken);
 
   Map<String, dynamic> _apiMessagesData;
   String pusherToken;
@@ -54,7 +40,7 @@ class Pusher with ChangeNotifier {
         cluster: 'eu',
         encrypted: true,
         auth: PusherAuth(
-          'https://rozoom.com.ua/broadcasting/auth?api_token=$rozoomToken',
+          'https://rozoom.com.ua/broadcasting/auth?api_token=$authToken',
           headers: {'X-CSRF-Token': pusherToken},
         ),
       );
@@ -97,7 +83,7 @@ class Pusher with ChangeNotifier {
         cluster: 'eu',
         encrypted: true,
         auth: PusherAuth(
-          'https://rozoom.com.ua/broadcasting/auth?api_token=$rozoomToken',
+          'https://rozoom.com.ua/broadcasting/auth?api_token=$authToken',
           headers: {'X-CSRF-Token': pusherToken},
         ),
       );
@@ -139,7 +125,7 @@ class Pusher with ChangeNotifier {
   }
 
   Future<void> getApiData() async {
-    final url = 'https://rozoom.com.ua/api/me/chat?api_token=$rozoomToken';
+    final url = 'https://rozoom.com.ua/api/me/chat?api_token=$authToken';
     // print('-------------------------token provider auth $rozoomToken');
     try {
       final response = await http.post(url);
@@ -209,7 +195,7 @@ class Pusher with ChangeNotifier {
       // final response = await http.post(url);
       // final responseData = json.decode(response.body);
       // _apiMessagesData = responseData;
-      final List<Friend> _newFriendList = _friendList;
+      // final List<Friend> _newFriendList = _friendList;
 
       // print(
       //     'int.parse---888888888888888888888888888888888${int.parse(friendId)}');
@@ -253,7 +239,7 @@ class Pusher with ChangeNotifier {
   }
 
   Future<void> readOneMessage(data, friendId) async {
-    final url = 'https://rozoom.com.ua/api/me/chat/read?api_token=$rozoomToken';
+    final url = 'https://rozoom.com.ua/api/me/chat/read?api_token=$authToken';
 
     try {
       final response = await http.post(url, body: data);
@@ -269,7 +255,7 @@ class Pusher with ChangeNotifier {
   }
 
   Future<void> readAllMessages(String friendId) async {
-    final url = 'https://rozoom.com.ua/api/me/chat/read?api_token=$rozoomToken';
+    final url = 'https://rozoom.com.ua/api/me/chat/read?api_token=$authToken';
     try {
       List _apiData = _apiMessagesData['friends'];
       List _unreadMessages = [];
@@ -287,7 +273,8 @@ class Pusher with ChangeNotifier {
             // print('-data------- $data');
             print(url);
             final response = await http.post(url, body: data);
-            final responseData = json.decode(response.body);
+            print(response);
+            // final responseData = json.decode(response.body);
             // print('Read message -> api response: $responseData');
           } catch (error) {
             print('-------error of reading all messages $error');
@@ -319,10 +306,10 @@ class Pusher with ChangeNotifier {
     List _apiData = _apiMessagesData['friends'];
     final List<Message> loadedMessage = _friendChatList;
     final List<Friend> _newFriendList = _friendList;
-    List _extractedFriendList = [];
+    // List _extractedFriendList = [];
     for (var i = 0; i < _apiData.length; i++) {
       if (_apiData[i]['id'] == userId) {
-        _extractedFriendList = _apiData[i]['messages'];
+        // _extractedFriendList = _apiData[i]['messages'];
 
         loadedMessage.add(
           Message(
@@ -360,6 +347,36 @@ class Pusher with ChangeNotifier {
 
     _friendChatList = loadedMessage;
     _friendList = _newFriendList;
+    notifyListeners();
+  }
+}
+
+class MessageCount with ChangeNotifier {
+  int _messageCount = 0;
+
+  int get getMessageCount => _messageCount;
+
+  void incrementMessageCount() {
+    _messageCount += 1;
+
+    notifyListeners();
+  }
+
+  void setToZeroMessageCount() {
+    _messageCount = 0;
+
+    notifyListeners();
+  }
+}
+
+class MyId with ChangeNotifier {
+  String _myIdnData = 'No token yet.';
+
+  String get getData => _myIdnData;
+
+  void changeData(String newMyIdnData) {
+    _myIdnData = newMyIdnData;
+
     notifyListeners();
   }
 }

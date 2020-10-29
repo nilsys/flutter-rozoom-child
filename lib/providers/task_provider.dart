@@ -33,7 +33,7 @@ class Disciplines with ChangeNotifier {
 
   Future<void> fetchAndSetDisciplines() async {
     print('discipline auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/api/mobile/disciplines?api_token=';
+    final url = 'https://rozoom.com.ua/api/mobile/disciplines?api_token=';
     try {
       final response = await http.post(url + authToken);
       var extractedData = json.decode(response.body)['disciplines'];
@@ -60,7 +60,7 @@ class Disciplines with ChangeNotifier {
   }
 }
 
-class ThemeModel {
+class ThemeModel with ChangeNotifier {
   final int disciplineId;
   final int id;
   final String name;
@@ -70,11 +70,11 @@ class ThemeModel {
 
   ThemeModel(
       {this.disciplineId,
-      @required this.id,
-      @required this.name,
-      @required this.imageUrl,
-      @required this.klass,
-      @required this.tasksCount});
+      this.id,
+      this.name,
+      this.imageUrl,
+      this.klass,
+      this.tasksCount});
 }
 
 class Themes with ChangeNotifier {
@@ -94,7 +94,7 @@ class Themes with ChangeNotifier {
   Future<void> fetchandSetThemes(disciplineId) async {
     print('theme auth token ---------------------------- $authToken');
     final url =
-        'https://new.rozoom.co.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
+        'https://rozoom.com.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
     try {
       final response = await http.post(url + authToken);
       // print(url + token);
@@ -107,7 +107,7 @@ class Themes with ChangeNotifier {
             name: extractedData[i]['name'],
             imageUrl: extractedData[i]['image'] != null
                 ? 'https://rozoom.com.ua/uploads/' + extractedData[i]['image']
-                : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg',
+                : '',
             klass: extractedData[i]['class'] != null
                 ? extractedData[i]['class']
                 : 'ထ',
@@ -198,7 +198,7 @@ class TaskModel with ChangeNotifier {
   // }
 
   Future<void> getFixTaskInfo() async {
-    final url = 'https://new.rozoom.co.ua/tasks/fix?api_token=';
+    final url = 'https://rozoom.com.ua/tasks/fix?api_token=';
     print(url);
 
     try {
@@ -218,7 +218,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> fixTasks() async {
     print('start task auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/tasks/fix/start?api_token=';
+    final url = 'https://rozoom.com.ua/tasks/fix/start?api_token=';
     print(url);
 
     try {
@@ -245,7 +245,7 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
+          : '';
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();
       answerVariants = extractedData['answer']['variants'];
@@ -317,7 +317,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> startTask(themeId) async {
     print('start task auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/task/start/$themeId?api_token=';
+    final url = 'https://rozoom.com.ua/task/start/$themeId?api_token=';
     print(url);
     try {
       final headers = {'Accept': 'text/json'};
@@ -343,7 +343,7 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
+          : '';
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();
       answerVariants = extractedData['answer']['variants'];
@@ -416,7 +416,7 @@ class TaskModel with ChangeNotifier {
   Future<void> answerTask(answerId, answerListElementNumber) async {
     print('answer task auth token ---------------------------- $authToken');
     final url =
-        'https://new.rozoom.co.ua/task/answer/$answerId/$answerListElementNumber?api_token=';
+        'https://rozoom.com.ua/task/answer/$answerId/$answerListElementNumber?api_token=';
     print(url);
 
     try {
@@ -433,8 +433,7 @@ class TaskModel with ChangeNotifier {
       if (extractedData['result'] == false) {
         print(
             'result false auth token ---------------------------- $authToken');
-        final url =
-            'https://new.rozoom.co.ua/task/result/$sessionId?api_token=';
+        final url = 'https://rozoom.com.ua/task/result/$sessionId?api_token=';
         print('url ---------- $url');
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
@@ -463,7 +462,7 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
+          : '';
 
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();
@@ -538,7 +537,7 @@ class TaskModel with ChangeNotifier {
     print(
         'answer form task auth token ---------------------------- $authToken');
     final url =
-        'https://new.rozoom.co.ua/task/answer/$answerId/text?text=$answerText&api_token=';
+        'https://rozoom.com.ua/task/answer/$answerId/text?text=$answerText&api_token=';
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + authToken, headers: headers);
@@ -554,8 +553,7 @@ class TaskModel with ChangeNotifier {
       if (extractedData['result'] == false) {
         print(
             'result false form auth token ---------------------------- $authToken');
-        final url =
-            'https://new.rozoom.co.ua/task/result/$sessionId?api_token=';
+        final url = 'https://rozoom.com.ua/task/result/$sessionId?api_token=';
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
         var extractedData = json.decode(response.body);
@@ -582,7 +580,7 @@ class TaskModel with ChangeNotifier {
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
               extractedData['task']['image'].toString()
-          : 'https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-pink-pink-brain-cartoon-cartoon-brain-png-image_473733.jpg';
+          : '';
 
       question = extractedData['task']['question'].toString();
       answerIdForApi = extractedData['answer']['id'].toString();

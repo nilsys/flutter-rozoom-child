@@ -12,10 +12,7 @@ class ThemeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // onTap: () {
-      //   Navigator.of(context)
-      //       .pushNamed(TaskOverviewScreen.routeName, arguments: id);
-      // },
+      margin: EdgeInsets.all(1),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -33,15 +30,14 @@ class ThemeItem extends StatelessWidget {
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
                   child: FadeInImage(
-                    width: double.infinity,
-                    height: 250,
-                    fit: BoxFit.cover,
-                    image: NetworkImage(imageUrl),
-                    // fadeInDuration: Duration(seconds: 3),
+                      width: double.infinity,
+                      height: 250,
+                      fit: BoxFit.cover,
+                      image: NetworkImage(imageUrl),
+                      // fadeInDuration: Duration(seconds: 3),
 
-                    // fadeOutDuration: Duration(seconds: 1),
-                    placeholder: AssetImage('assets/images/brand.png'),
-                  ),
+                      // fadeOutDuration: Duration(seconds: 1),
+                      placeholder: AssetImage('assets/images/brand.png')),
                 ),
                 Positioned(
                   bottom: 20,
@@ -49,14 +45,11 @@ class ThemeItem extends StatelessWidget {
                   child: Container(
                     width: 300,
                     padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                    color: Colors.lightBlue.withOpacity(0.4),
+                    color: Colors.black.withOpacity(0.55),
                     child: Text(
                       name,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 22, color: Colors.white),
                       overflow: TextOverflow.fade,
                       softWrap: true,
                     ),
@@ -65,89 +58,66 @@ class ThemeItem extends StatelessWidget {
               ],
             ),
             Container(
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 border: Border(
                   top: BorderSide(width: 0.3),
                 ),
               ),
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 20, bottom: 0),
-                  //   child: Container(
-                  //     // height: 30,
-                  //     child: Center(
-                  //       child: Text(
-                  //         name,
-                  //         textAlign: TextAlign.center,
-                  //         style: TextStyle(
-                  //           fontSize: 18,
-                  //           color: Colors.black87,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.school,
-                              color: Color(0xFF74bec9),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'клас: $klass      ',
-                              style: TextStyle(
-                                color: Color(0xFFf06388),
-                              ),
-                            ),
-                          ],
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Icon(
+                        Icons.school,
+                        color: Color(0xFF74bec9),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'клас: $klass ',
+                        style: TextStyle(
+                          color: Color(0xFFf06388),
                         ),
-                        RaisedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                                TaskOverviewScreen.routeName,
-                                arguments: {'themeId': id, 'themeName': name});
-                          },
-                          elevation: 2.0,
-                          highlightColor: Color(0xFF74bec9),
-                          highlightElevation: 5.0,
-                          child: Text(
-                            'Розпочати',
-                            style: TextStyle(color: Color(0xFF74bec9)),
-                          ),
-                          color: Colors.white,
-                          // padding: EdgeInsets.all(15.0),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(
-                                  color: Color(0xFF74bec9), width: 1)),
-                        ),
-                        Row(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'завдань: $tasksCount',
-                              style: TextStyle(
-                                color: Color(0xFFf06388),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(Icons.school, color: Color(0xFF74bec9)),
-                          ],
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  RaisedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                          TaskOverviewScreen.routeName,
+                          arguments: {'themeId': id, 'themeName': name});
+                    },
+                    elevation: 2.0,
+                    highlightColor: Color(0xFF74bec9),
+                    highlightElevation: 5.0,
+                    child: Text(
+                      ' Розпочати ',
+                      style: TextStyle(color: Color(0xFF74bec9)),
                     ),
+                    color: Colors.white,
+                    // padding: EdgeInsets.all(15.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(color: Color(0xFF74bec9), width: 1)),
+                  ),
+                  Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'завдань: $tasksCount',
+                        style: TextStyle(
+                          color: Color(0xFFf06388),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Icon(Icons.school, color: Color(0xFF74bec9)),
+                    ],
                   ),
                 ],
               ),

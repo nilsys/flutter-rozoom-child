@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
+import 'package:rozoom_app/screens/edit_profile_screen.dart';
+import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/widgets/tasks/theme_item.dart';
 
 class ThemesOverviewScreen extends StatefulWidget {
-  static const routeName = '/themes-overview2';
+  static const routeName = '/themes-overview';
 
   @override
   _ThemesOverviewScreenState createState() => _ThemesOverviewScreenState();
@@ -48,19 +51,37 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
             color: Colors.grey,
           ),
           onPressed: () {
-            Navigator.pop(context);
             Provider.of<Themes>(context, listen: false).nullThemeImages();
+            print('pop of theme screen');
+
+            Navigator.of(context).pop();
           },
         ),
         actions: <Widget>[
-          IconButton(
+          PopupMenuButton(
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.EditProfile) {
+                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
+                } else {
+                  Provider.of<Auth>(context, listen: false).logout();
+                }
+              });
+            },
             icon: Icon(
               Icons.more_vert,
               color: Colors.grey,
             ),
-            onPressed: () {
-              // Navigator.pop(context);
-            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text('Профайл'),
+                value: FilterOptions.EditProfile,
+              ),
+              PopupMenuItem(
+                child: Text('Вийти'),
+                value: FilterOptions.Logout,
+              ),
+            ],
           ),
         ],
         title: _isLoading
@@ -69,40 +90,16 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
                 builder: (ctx, profile, child) => Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    // Text(
-                    //   'Дісципліни',
-                    //   style: TextStyle(fontSize: 16),
-                    // ),
-                    SizedBox(
-                      width: 35,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/coin.png',
-                      // height: 300,
-                      scale: 0.55,
-                      // width: 50,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.balance,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/uah.png',
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.certificates,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
+                    SizedBox(width: 35),
+                    Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                    SizedBox(width: 5),
+                    Text(profile.getBalance,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                    SizedBox(width: 10),
+                    Image.asset('assets/images/stats/uah.png', height: 30),
+                    SizedBox(width: 5),
+                    Text(profile.getCertificates,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
                   ],
                 ),
               ),
@@ -122,25 +119,14 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
                       color: Color(0xFF74bec9),
                     ),
                     onPressed: () {
-                      // Navigator.pop(context);
+                      Navigator.of(context)
+                          .pushReplacementNamed(IndexScreen.routeName);
                     },
                   ),
-                  Text(
-                    '/ ',
-                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
-                  ),
-                  Text(
-                    disciplineTitleUa,
-                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
-                  ),
-                  Text(
-                    ' / ',
-                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
-                  ),
-                  Text(
-                    'Оберіть тему',
-                    style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
-                  ),
+                  Text('/ ',
+                      style: TextStyle(color: Color(0xFF74bec9), fontSize: 16)),
+                  Text(disciplineTitleUa,
+                      style: TextStyle(color: Color(0xFF74bec9), fontSize: 16)),
                 ],
               ),
             ),

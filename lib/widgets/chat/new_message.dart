@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/api/api.dart';
-import 'package:rozoom_app/models/Provider.dart';
+import 'package:rozoom_app/models/api.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
+import 'package:rozoom_app/providers/pusher_provider.dart';
 
 class NewMessage extends StatefulWidget {
   final String id;
@@ -20,13 +21,13 @@ class _NewMessageState extends State<NewMessage> {
 
   sendApi() async {
     var data = {'to_id': widget.id, 'body': _enteredMessage};
-    final _token = Provider.of<TokenData>(context, listen: false);
+    final _token = Provider.of<Auth>(context, listen: false).token;
     // var resRozoom = await CallApi()
     //     .postData(data, 'mobile/me?api_token=${_token.getTokenData}');
     // final _token = Provider.of<TokenData>(context, listen: false);
     // var _token = context.watch<ChatTokenData>().getTokenData;
-    var resChat = await CallApi()
-        .postData(data, 'me/chat/send?api_token=${_token.getTokenData}');
+    var resChat =
+        await CallApi().postData(data, 'me/chat/send?api_token=$_token');
     // var _chatData = resChat.body;
     // print('************************chat data: $_chatData');
     // Map<String, dynamic> _data = json.decode(_chatData);

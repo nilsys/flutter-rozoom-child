@@ -6,6 +6,7 @@ import 'package:rozoom_app/widgets/tasks/red_icon.dart';
 import 'package:rozoom_app/widgets/tasks/right_answer.dart';
 import 'package:rozoom_app/widgets/tasks/task_navbar.dart';
 import 'package:rozoom_app/widgets/tasks/task_question.dart';
+import 'package:rozoom_app/widgets/tasks/theme_item.dart';
 import 'package:rozoom_app/widgets/tasks/wrong_answer.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -89,10 +90,28 @@ class _TaskItemState extends State<TaskItem> {
 
   @override
   Widget build(BuildContext context) {
+    // final taskName = Provider.of<ThemeItem>(context).name;
     return SingleChildScrollView(
       child: SafeArea(
         child: Column(
           children: <Widget>[
+            // имя темы в заголовке задания
+
+            // Container(
+            //   alignment: Alignment.centerLeft,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10.0, left: 15.0),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       children: <Widget>[
+            //         Text(
+            //           widget.themeName,
+            //           style: TextStyle(color: Color(0xFF74bec9), fontSize: 16),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             TaskNavbar(
                 animatedStateKeyGreen: animatedStateKeyGreen,
                 animatedStateKeyRed: animatedStateKeyRed),
@@ -126,14 +145,14 @@ class _TaskItemState extends State<TaskItem> {
   Widget buttonAnswerType(task) {
     // final playingLEN =
     // Provider.of<TaskModel>(context, listen: false).audioAnswer_0;
-    final taskId = Provider.of<TaskModel>(context, listen: false).getAnswerType;
+    // final taskId = Provider.of<TaskModel>(context, listen: false).getAnswerType;
     return ListView.builder(
         itemCount: task.answerVariants.length,
         shrinkWrap: true,
         itemBuilder: (ctx, i) {
           return task.audioAnswer[i] == 'no audio'
               ? Container(
-                  margin: EdgeInsets.only(top: 5),
+                  margin: EdgeInsets.only(top: 5, left: 10, right: 10),
                   child: ButtonTheme(
                     minWidth: 150,
                     height: 45,
@@ -142,6 +161,7 @@ class _TaskItemState extends State<TaskItem> {
                     //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                     child: RaisedButton(
                       onPressed: () async {
+                        taskQuestionState.currentState.stopAudioFromChild();
                         Provider.of<TaskModel>(context, listen: false)
                             .answerTask(task.answerIdForApi, i);
 
@@ -172,71 +192,80 @@ class _TaskItemState extends State<TaskItem> {
                     ),
                   ),
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 5),
-                      child: ButtonTheme(
-                        minWidth: 150,
-                        height: 45,
-                        // shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(50.0),
-                        //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
-                        child: RaisedButton(
-                          onPressed: () {
-                            stopAudio();
-                            taskQuestionState.currentState.stopAudioFromChild();
-                            Provider.of<TaskModel>(context, listen: false)
-                                .answerTask(task.answerIdForApi, i);
+              : Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 5),
+                          child: ButtonTheme(
+                            minWidth: 150,
+                            height: 45,
+                            // shape: RoundedRectangleBorder(
+                            //     borderRadius: BorderRadius.circular(50.0),
+                            //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
+                            child: RaisedButton(
+                              onPressed: () {
+                                stopAudio();
+                                taskQuestionState.currentState
+                                    .stopAudioFromChild();
+                                Provider.of<TaskModel>(context, listen: false)
+                                    .answerTask(task.answerIdForApi, i);
 
-                            i.toString() == task.rightAnswerListElementNumber
-                                ? animatedStateKeyGreen.currentState
-                                    .getAnimationFromChild()
-                                : animatedStateKeyRed.currentState
-                                    .getAnimationFromChild();
-                            i.toString() == task.rightAnswerListElementNumber
-                                ? _showOyboyRightAnswerDialog(i)
-                                : _showOyboyWrongAnswerDialog(i);
+                                i.toString() ==
+                                        task.rightAnswerListElementNumber
+                                    ? animatedStateKeyGreen.currentState
+                                        .getAnimationFromChild()
+                                    : animatedStateKeyRed.currentState
+                                        .getAnimationFromChild();
+                                i.toString() ==
+                                        task.rightAnswerListElementNumber
+                                    ? _showOyboyRightAnswerDialog(i)
+                                    : _showOyboyWrongAnswerDialog(i);
 
-                            // Provider.of<TaskModel>(context, listen: false)
-                            //     .nullAudio();
-                          },
-                          elevation: 3.0,
-                          highlightColor: Color(0xFF74bec9),
-                          highlightElevation: 5.0,
-                          child: Text(
-                            task.answerVariants[i] != null
-                                ? task.answerVariants[i]
-                                : '',
-                            style: TextStyle(
-                                color: Color(0xFF74bec9),
-                                fontWeight: FontWeight.bold),
+                                // Provider.of<TaskModel>(context, listen: false)
+                                //     .nullAudio();
+                              },
+                              elevation: 3.0,
+                              highlightColor: Color(0xFF74bec9),
+                              highlightElevation: 5.0,
+                              child: Text(
+                                task.answerVariants[i] != null
+                                    ? task.answerVariants[i]
+                                    : '',
+                                style: TextStyle(
+                                    color: Color(0xFF74bec9),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  side: BorderSide(
+                                      color: Color(0xFF74bec9), width: 2)),
+                            ),
                           ),
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(
-                                  color: Color(0xFF74bec9), width: 2)),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        playAudio(task.audioAnswer[i], i);
-                      },
-                      child: Icon(
-                        playings[i] == false
-                            ? Icons.play_circle_outline
-                            : Icons.pause_circle_outline,
-                        color: Color(0xFF74bec9),
-                        size: 34,
+                      SizedBox(
+                        width: 10,
                       ),
-                    ),
-                  ],
+                      Flexible(
+                        child: InkWell(
+                          onTap: () async {
+                            playAudio(task.audioAnswer[i], i);
+                          },
+                          child: Icon(
+                            playings[i] == false
+                                ? Icons.play_circle_outline
+                                : Icons.pause_circle_outline,
+                            color: Color(0xFF74bec9),
+                            size: 34,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
         });
   }
