@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/models/Provider.dart';
 import 'package:rozoom_app/models/http_exception.dart';
-import 'package:rozoom_app/providers/auth_token_provider.dart';
-import 'package:rozoom_app/providers/pusher_provider.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
+import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/widgets/fade-animation.dart';
-import 'package:simple_animations/simple_animations.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -17,11 +13,8 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
-    // transformConfig.translate(-10.0);
     return Scaffold(
       backgroundColor: Colors.white,
-      // resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           height: deviceSize.height,
@@ -66,27 +59,28 @@ class AuthScreen extends StatelessWidget {
 }
 
 class AuthCard extends StatefulWidget {
-  const AuthCard({
-    Key key,
-  }) : super(key: key);
-
   @override
   _AuthCardState createState() => _AuthCardState();
 }
 
 class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
+  var _isLoading = false;
+
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final _passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _loginController = TextEditingController();
+  final _passwordFocusNode = FocusNode();
+  final _loginFocusNode = FocusNode();
+
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
     'email': '',
     'username': '',
     'password': '',
   };
-  var _isLoading = false;
-  final _passwordController = TextEditingController();
-  final _usernameController = TextEditingController();
-  final _loginController = TextEditingController();
+
   AnimationController _controller;
   Animation<Offset> _slideAnimation;
   Animation<double> _opacityAnimation;
@@ -124,30 +118,13 @@ class _AuthCardState extends State<AuthCard>
     _passwordController.dispose();
     _usernameController.dispose();
     _loginController.dispose();
+    _loginFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
-  }
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Помилка!'),
-        content: Text(message),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('ОК'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
-    );
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
-      // Invalid!
       return;
     }
     _formKey.currentState.save();
@@ -156,38 +133,25 @@ class _AuthCardState extends State<AuthCard>
     });
     try {
       if (_authMode == AuthMode.Login) {
-        // Log user in
-        await login(
+        await Provider.of<Auth>(context, listen: false).signin(
           _authData['email'],
           _authData['password'],
         );
       } else {
-        // Sign user up
-        await signup(
+        await Provider.of<Auth>(context, listen: false).signup(
           _authData['email'],
-          _authData['username'],
           _authData['password'],
+          _authData['username'],
         );
-        // Navigator.pushNamed(context, '/home');
       }
+      // Navigator.of(context).pushReplacementNamed(HomeChild.routeName);
     } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This email address is already in use.';
-      } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage = 'This is not a valid email address';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage = 'This password is too weak.';
-      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find a user with that email.';
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid password.';
-      }
+      var errorMessage = error.toString();
+
       _showErrorDialog(errorMessage);
     } catch (error) {
-      // const errorMessage =
-      //     'Could not authenticate you. Please try again later.';
-      // _showErrorDialog(errorMessage);
+      const errorMessage = 'Щось пішло не так. Спробуйте ще';
+      _showErrorDialog(errorMessage);
     }
 
     setState(() {
@@ -220,106 +184,6 @@ class _AuthCardState extends State<AuthCard>
       return false;
     }
     return double.tryParse(s) != null;
-  }
-
-  Future<void> login(email, password) async {
-    final String url =
-        'https://rozoom.com.ua/api/mobile/auth?login=$email&password=$password';
-
-    final response = await http.post(url);
-    final _apiData = json.decode(response.body) as Map<String, dynamic>;
-    print('01 --- ApiData --------------> $_apiData');
-    final _token = _apiData['api_token'];
-
-    Provider.of<TokenData>(context, listen: false).changeTokenData(_token);
-    print(
-        '02 - TokenData -----------------> ${Provider.of<TokenData>(context, listen: false).getTokenData}');
-
-    Provider.of<Pusher>(context, listen: false).changeRozoomToken(_token);
-    print(
-        '04 - PusherToken -----------------> ${Provider.of<Pusher>(context, listen: false).getRozoomToken}');
-
-    // Provider.of<VideoChat>(context, listen: false).setAuthToken(_token);
-
-    var errorMessage = '';
-    print('${_apiData['result']}');
-    print('${_apiData['result'].runtimeType}');
-    if (_apiData['result'] == false) {
-      errorMessage = 'Щось пішло не так. Спробуйте ще.';
-      _showErrorDialog(errorMessage);
-    }
-    if (_apiData['exists'] == false) {
-      errorMessage = 'Користувача с таким логіном не існує';
-      _showErrorDialog(errorMessage);
-    }
-    if (_apiData['exists'] == true && _apiData['authenticated'] == false) {
-      errorMessage = 'Невірний пароль';
-      _showErrorDialog(errorMessage);
-    }
-
-    print('${_apiData['user']['is_parent']}');
-    print('${_apiData['user']['is_parent'].runtimeType}');
-    if (_apiData['user']['is_parent'] != 0) {
-      errorMessage = 'Цей логін вже зареєстрований на батьківський акаунт!';
-      _showErrorDialog(errorMessage);
-    }
-    if (_apiData['exists'] == true &&
-        _apiData['authenticated'] == true &&
-        _apiData['user']['is_parent'] == 0) {
-      setState(() {
-        _isLoading = true;
-        Navigator.pushNamed(context, '/home');
-      });
-    }
-  }
-
-  Future<void> signup(email, username, password) async {
-    final String url =
-        'https://rozoom.com.ua/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
-    print(url);
-
-    final response = await http.post(url);
-    final _apiData = json.decode(response.body) as Map<String, dynamic>;
-    print('01 --- ApiData --------------> $_apiData');
-    final _token = _apiData['api_token'];
-    Provider.of<TokenData>(context, listen: false).changeTokenData(_token);
-    print(
-        '02 - TokenData -----------------> ${Provider.of<TokenData>(context, listen: false).getTokenData}');
-
-    Provider.of<Pusher>(context, listen: false).changeRozoomToken(_token);
-    print(
-        '04 - PusherToken -----------------> ${Provider.of<Pusher>(context, listen: false).getRozoomToken}');
-
-    var errorMessage = '';
-    print('${_apiData['result']}');
-    print('${_apiData['result'].runtimeType}');
-    if (_apiData['result'] == false) {
-      errorMessage = 'Щось пішло не так. Спробуйте ще.';
-      _showErrorDialog(errorMessage);
-    }
-    if (_apiData['exists'] == true) {
-      errorMessage = 'Користувач с таким логіном вже існує';
-      _showErrorDialog(errorMessage);
-    }
-    // if (_apiData['exists'] == true && _apiData['authenticated'] == false) {
-    //   errorMessage = 'Невірний пароль';
-    //   _showErrorDialog(errorMessage);
-    // }
-
-    print('${_apiData['user']['is_parent']}');
-    print('${_apiData['user']['is_parent'].runtimeType}');
-    // if (_apiData['user']['is_parent'] != 0) {
-    //   errorMessage = 'Цей логін вже зареєстрований на батьківський акаунт!';
-    //   _showErrorDialog(errorMessage);
-    // }
-    if (_apiData['exists'] == false &&
-        _apiData['authenticated'] == true &&
-        _apiData['user']['is_parent'] == 0) {
-      setState(() {
-        _isLoading = true;
-        Navigator.pushNamed(context, '/home');
-      });
-    }
   }
 
   @override
@@ -371,6 +235,10 @@ class _AuthCardState extends State<AuthCard>
                               return 'Введіть логін!';
                             }
                           },
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(_passwordFocusNode);
+                    },
                     onSaved: (value) {
                       _authData['email'] = value;
                     },
@@ -378,48 +246,47 @@ class _AuthCardState extends State<AuthCard>
                 ),
                 FadeAnimation(
                   2.8,
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Пароль'),
-                    obscureText: true,
-                    controller: _passwordController,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        // if (value.isEmpty || value.length < 5) {
-                        return 'Введіть пароль!';
-                      }
-                    },
-                    onSaved: (value) {
-                      _authData['password'] = value;
-                    },
-                  ),
+                  _authMode == AuthMode.Signup
+                      ? TextFormField(
+                          decoration: InputDecoration(labelText: 'Пароль'),
+                          obscureText: true,
+                          controller: _passwordController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              // if (value.isEmpty || value.length < 5) {
+                              return 'Введіть пароль!';
+                            }
+                          },
+                          onSaved: (value) {
+                            _authData['password'] = value;
+                          },
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context)
+                                .requestFocus(_loginFocusNode);
+                          },
+                          focusNode: _passwordFocusNode,
+                        )
+                      : TextFormField(
+                          decoration: InputDecoration(labelText: 'Пароль'),
+                          obscureText: true,
+                          controller: _passwordController,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              // if (value.isEmpty || value.length < 5) {
+                              return 'Введіть пароль!';
+                            }
+                          },
+                          onSaved: (value) {
+                            _authData['password'] = value;
+                          },
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) {
+                            _submit();
+                          },
+                          focusNode: _passwordFocusNode,
+                        ),
                 ),
-                // AnimatedContainer(
-                //   constraints: BoxConstraints(
-                //     minHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                //     maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
-                //   ),
-                //   duration: Duration(milliseconds: 300),
-                //   curve: Curves.easeIn,
-                //   child: FadeTransition(
-                //     opacity: _opacityAnimation,
-                //     child: SlideTransition(
-                //       position: _slideAnimation,
-                //       child: TextFormField(
-                //         enabled: _authMode == AuthMode.Signup,
-                //         decoration:
-                //             InputDecoration(labelText: 'Підтвердіть пароль'),
-                //         obscureText: true,
-                //         validator: _authMode == AuthMode.Signup
-                //             ? (value) {
-                //                 if (value != _passwordController.text) {
-                //                   return 'Пароль не співпадає!';
-                //                 }
-                //               }
-                //             : null,
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 AnimatedContainer(
                   constraints: BoxConstraints(
                     minHeight: _authMode == AuthMode.Signup ? 60 : 0,
@@ -435,14 +302,11 @@ class _AuthCardState extends State<AuthCard>
                         enabled: _authMode == AuthMode.Signup,
                         decoration: InputDecoration(labelText: "Ваше ім'я"),
                         controller: _usernameController,
-                        // obscureText: true,
-                        // validator: _authMode == AuthMode.Signup
-                        //     ? (value) {
-                        //         if (value.isEmpty) {
-                        //           return "Введіть ім'я!";
-                        //         }
-                        //       }
-                        //     : null,
+                        textInputAction: TextInputAction.done,
+                        focusNode: _loginFocusNode,
+                        onFieldSubmitted: (_) {
+                          _submit();
+                        },
                         onSaved: (value) {
                           _authData['username'] = value;
                         },
@@ -490,6 +354,38 @@ class _AuthCardState extends State<AuthCard>
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Color(0xFF74bec9).withOpacity(0.6),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 3, color: Color(0xFFf06388)),
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        title: Text(
+          'Помилка!',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'ОК',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
       ),
     );
   }

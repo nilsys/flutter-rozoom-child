@@ -4,20 +4,19 @@ import 'package:provider/provider.dart';
 import 'package:rozoom_app/models/Provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
-import 'package:rozoom_app/screens/authentication_screen.dart';
-import 'package:rozoom_app/screens/home_screen.dart';
-import 'package:rozoom_app/providers/auth_token_provider.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
-import 'package:rozoom_app/screens/index_screen.dart';
+import 'package:rozoom_app/screens/home_child_screen.dart';
+import 'package:rozoom_app/screens/splash_screen.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
-import 'package:rozoom_app/screens/tasks/profile_screen.dart';
+import 'package:rozoom_app/screens/tasks/fix_task_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
 import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
-import 'package:rozoom_app/screens/tasks/themes_overview_screen2.dart';
-import 'package:rozoom_app/screens/test_screen.dart';
+import 'package:rozoom_app/screens/authentication_screen.dart';
+import 'package:rozoom_app/screens/index_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,13 +24,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        //
-        ChangeNotifierProvider<Disciplines>(create: (context) => Disciplines()),
-        ChangeNotifierProvider<Themes>(create: (context) => Themes()),
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+        ChangeNotifierProxyProvider<Auth, Disciplines>(
+          update: (ctx, auth, _) => Disciplines(auth.token),
+        ),
+        ChangeNotifierProxyProvider<Auth, Themes>(
+          update: (ctx, auth, _) => Themes(auth.token),
+        ),
+        ChangeNotifierProxyProvider<Auth, TaskModel>(
+          update: (ctx, auth, _) => TaskModel(auth.token),
+        ),
+        ChangeNotifierProxyProvider<Auth, Profile>(
+          update: (ctx, auth, _) => Profile(auth.token),
+        ),
 
-        ChangeNotifierProvider<TaskModel>(create: (context) => TaskModel()),
-        ChangeNotifierProvider<Profile>(create: (context) => Profile()),
-        //
+        // ChangeNotifierProxyProvider<Auth, Profile>(
+        //   update: (ctx, auth, _) => Profile(auth.token),
+        // ),
+        //  ChangeNotifierProxyProvider<Auth, Profile>(
+        //   update: (ctx, auth, _) => Profile(auth.token),
+        // ),
+        //  ChangeNotifierProxyProvider<Auth, Profile>(
+        //   update: (ctx, auth, _) => Profile(auth.token),
+        // ),
+
+        // поудалять провайдеры нахуй
         ChangeNotifierProvider<TokenData>(create: (context) => TokenData()),
         ChangeNotifierProvider<ChatTokenData>(
             create: (context) => ChatTokenData()),
@@ -52,50 +69,41 @@ class MyApp extends StatelessWidget {
           update: (_, auth, token) => token..setAuthToken = auth.getAuthToken,
         ),
       ],
-      child: MaterialApp(
-        title: 'Rozoom',
-        home: AuthScreen(),
-        theme: ThemeData(
-          // primaryColor: Color(0xFFf06388),
-          // primaryColor: Colors.red,
-          primaryColor: Color(0xFF74bec9),
-          accentColor: Color(0xFFf06388),
-          // accentColor: Color(0XFFFEF9EB),
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Rozoom',
+          home: auth.isAuth
+              ? IndexScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
+          theme: ThemeData(
+            primaryColor: Color(0xFF74bec9),
+            accentColor: Color(0xFFf06388),
+            // accentColor: Color(0XFFFEF9EB),
+          ),
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+          supportedLocales: [const Locale('uk'), const Locale('ru')],
+          routes: {
+            AuthScreen.routeName: (context) => AuthScreen(),
+            IndexScreen.routeName: (context) => IndexScreen(),
+            HomeChildScreen.routeName: (context) => HomeChildScreen(),
+            DisciplinesOverviewScreen.routeName: (context) =>
+                DisciplinesOverviewScreen(),
+            ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),
+            TaskOverviewScreen.routeName: (context) => TaskOverviewScreen(),
+            TaskResultScreen.routeName: (context) => TaskResultScreen(),
+            FixTaskScreen.routeName: (context) => FixTaskScreen(),
+            EditProfileScreen.routeName: (context) => EditProfileScreen(),
+          },
         ),
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: [GlobalMaterialLocalizations.delegate],
-        supportedLocales: [const Locale('uk'), const Locale('ru')],
-        routes: {
-          IndexScreen.routeName: (context) => IndexScreen(),
-          DisciplinesOverviewScreen.routeName: (context) =>
-              DisciplinesOverviewScreen(),
-          ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),
-          ThemesOverviewScreen2.routeName: (context) => ThemesOverviewScreen2(),
-          TaskOverviewScreen.routeName: (context) => TaskOverviewScreen(),
-          TaskResultScreen.routeName: (context) => TaskResultScreen(),
-          EditProfileScreen.routeName: (context) => EditProfileScreen(),
-
-          '/home': (context) => HomeChild(),
-          // '/messenger': (context) => Messenger(),
-          // '/chat': (context) => Chat(),
-        },
       ),
-    );
-  }
-}
-
-class MainPage extends StatefulWidget {
-  MainPage({Key key}) : super(key: key);
-
-  @override
-  _MainPageState createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BottomNavBar(),
     );
   }
 }

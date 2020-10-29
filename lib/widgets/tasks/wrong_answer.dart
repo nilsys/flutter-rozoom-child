@@ -92,43 +92,45 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                   ),
                   answerType == '3'
                       ? Text('')
-                      : Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 15),
-                              child: Text(
-                                'Вірна відповідь:',
-                                style: TextStyle(
-                                    color: Colors.yellow,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400),
+                      : SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 15),
+                                child: Text(
+                                  'Вірна відповідь:',
+                                  style: TextStyle(
+                                      color: Colors.yellow,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 5, bottom: 15, right: 25, left: 25),
-                              child: Text(
-                                rightAnswerStringValue,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w500),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, bottom: 15, right: 25, left: 25),
+                                child: Text(
+                                  rightAnswerStringValue,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 25, right: 35),
-                              child: Text(
-                                explainText.length > 250
-                                    ? explainText.replaceRange(
-                                        250, explainText.length, '...')
-                                    : explainText,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500),
+                              Padding(
+                                padding: EdgeInsets.only(left: 25, right: 35),
+                                child: Text(
+                                  explainText.length > 250
+                                      ? explainText.replaceRange(
+                                          250, explainText.length, '...')
+                                      : explainText,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                   Padding(padding: EdgeInsets.only(top: 15.0)),
                   Consumer<TaskModel>(

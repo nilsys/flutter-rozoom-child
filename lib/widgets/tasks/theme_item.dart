@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
 
 class ThemeItem extends StatelessWidget {
   final int id;
@@ -10,101 +11,143 @@ class ThemeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigator.of(context).pushNamed(ThemesOverviewScreen.routeName,
-        //     arguments: DisciplineItem(id, titleUa, imageUrl));
-      },
+    return Container(
+      // onTap: () {
+      //   Navigator.of(context)
+      //       .pushNamed(TaskOverviewScreen.routeName, arguments: id);
+      // },
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-            Radius.circular(8),
+            Radius.circular(15),
           ),
         ),
-        elevation: 1,
+        elevation: 4,
+        margin: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 2),
-                child: FadeInImage(
-                  image: NetworkImage(imageUrl),
-                  // fadeInDuration: Duration(seconds: 3),
+            Stack(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15)),
+                  child: FadeInImage(
+                    width: double.infinity,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    image: NetworkImage(imageUrl),
+                    // fadeInDuration: Duration(seconds: 3),
 
-                  // fadeOutDuration: Duration(seconds: 1),
-                  placeholder: AssetImage('assets/images/brand.png'),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 10, bottom: 5, right: 20, left: 20),
-              child: Container(
-                // height: 30,
-                child: Center(
-                  child: Text(
-                    name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                    ),
+                    // fadeOutDuration: Duration(seconds: 1),
+                    placeholder: AssetImage('assets/images/brand.png'),
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Icon(
-                        Icons.school,
-                        color: Color(0xFF74bec9),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'клас: $klass      ',
-                        style: TextStyle(
-                          color: Color(0xFFf06388),
-                        ),
-                      ),
-                    ],
-                  ),
-                  RaisedButton(
-                    onPressed: () {},
-                    elevation: 2.0,
-                    highlightColor: Color(0xFF74bec9),
-                    highlightElevation: 5.0,
+                Positioned(
+                  bottom: 20,
+                  right: 0,
+                  child: Container(
+                    width: 300,
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    color: Colors.lightBlue.withOpacity(0.4),
                     child: Text(
-                      'Розпочати',
-                      style: TextStyle(color: Color(0xFF74bec9)),
+                      name,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: Colors.white,
+                      ),
+                      overflow: TextOverflow.fade,
+                      softWrap: true,
                     ),
-                    color: Colors.white,
-                    // padding: EdgeInsets.all(15.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(color: Color(0xFF74bec9), width: 1)),
                   ),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'завдань: $tasksCount',
-                        style: TextStyle(
-                          color: Color(0xFFf06388),
+                ),
+              ],
+            ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(width: 0.3),
+                ),
+              ),
+              child: Column(
+                children: <Widget>[
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 20, bottom: 0),
+                  //   child: Container(
+                  //     // height: 30,
+                  //     child: Center(
+                  //       child: Text(
+                  //         name,
+                  //         textAlign: TextAlign.center,
+                  //         style: TextStyle(
+                  //           fontSize: 18,
+                  //           color: Colors.black87,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Icon(
+                              Icons.school,
+                              color: Color(0xFF74bec9),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              'клас: $klass      ',
+                              style: TextStyle(
+                                color: Color(0xFFf06388),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(Icons.school, color: Color(0xFF74bec9)),
-                    ],
+                        RaisedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamed(
+                                TaskOverviewScreen.routeName,
+                                arguments: {'themeId': id, 'themeName': name});
+                          },
+                          elevation: 2.0,
+                          highlightColor: Color(0xFF74bec9),
+                          highlightElevation: 5.0,
+                          child: Text(
+                            'Розпочати',
+                            style: TextStyle(color: Color(0xFF74bec9)),
+                          ),
+                          color: Colors.white,
+                          // padding: EdgeInsets.all(15.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(
+                                  color: Color(0xFF74bec9), width: 1)),
+                        ),
+                        Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              'завдань: $tasksCount',
+                              style: TextStyle(
+                                color: Color(0xFFf06388),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.school, color: Color(0xFF74bec9)),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

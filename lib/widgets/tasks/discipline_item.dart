@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
-import 'package:rozoom_app/screens/tasks/themes_overview_screen2.dart';
 
 class DisciplineItem extends StatelessWidget {
   final int id;
@@ -13,7 +13,7 @@ class DisciplineItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(ThemesOverviewScreen2.routeName,
+        Navigator.of(context).pushNamed(ThemesOverviewScreen.routeName,
             arguments: {'disciplineId': id, 'disciplineTitleUa': titleUa});
       },
       child: Card(

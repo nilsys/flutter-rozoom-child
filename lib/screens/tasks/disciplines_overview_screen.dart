@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rozoom_app/models/http_exception.dart';
+import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
+import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
+import 'package:rozoom_app/screens/home_child_screen.dart';
 import 'package:rozoom_app/screens/index_screen.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
 
@@ -20,112 +24,163 @@ class DisciplinesOverviewScreen extends StatefulWidget {
 }
 
 class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
-  bool _isLoading = false;
+  var _isInit = true;
+  var _isLoading = false;
 
   @override
-  void initState() {
-    _isLoading = true;
-    Provider.of<Disciplines>(context, listen: false)
-        .fetchAndSetDisciplines()
-        .then((_) =>
-            Provider.of<Profile>(context, listen: false).getProfileInfo())
-        .then((_) {
+  void didChangeDependencies() {
+    if (_isInit) {
       setState(() {
-        _isLoading = false;
+        _isLoading = true;
       });
-    });
-    super.initState();
+      try {
+        print('start!!!!!!!!!!!!!!!!!');
+        getUserProfile();
+        // Provider.of<Profile>(context, listen: false)
+        //     .getProfileInfo()
+        //     .then((_) =>
+        Provider.of<Disciplines>(context, listen: false)
+            .fetchAndSetDisciplines()
+            // )
+            .then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      } on HttpException catch (error) {
+        print('*************rgfgswrswghwhrew********************');
+        var errorMessage = error.toString();
+
+        _showErrorDialog(errorMessage);
+      } catch (error) {
+        print(
+            '11111111111111*************rgfgswrswghwhrew********************');
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
+
+  getUserProfile() async {
+    try {
+      await Provider.of<Profile>(context, listen: false).getProfileInfo();
+    } on HttpException catch (error) {
+      var errorMessage = error.toString();
+
+      _showErrorDialog(errorMessage);
+
+      return;
+    } catch (error) {}
+  }
+
+  // @override
+  // void initState() {
+  //   _isLoading = true;
+  //   Provider.of<Profile>(context, listen: false)
+  //       .getProfileInfo()
+  //       .then((_) => Provider.of<Disciplines>(context, listen: false)
+  //           .fetchAndSetDisciplines())
+  //       .then((_) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final disciplines = Provider.of<Disciplines>(context).disciplineItems;
+    // isAuthTokenValid();
+    final disciplines =
+        Provider.of<Disciplines>(context, listen: false).disciplineItems;
     return Scaffold(
       // backgroundColor: Colors.blue.withOpacity(0.2),
       // backgroundColor: Color(0XFFFEF9EB),
       appBar: AppBar(
-        elevation: 1,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.grey,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
-          },
-        ),
-        actions: <Widget>[
-          PopupMenuButton(
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.EditProfile) {
-                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
-                  // _showOnlyFavorites = true;
-                } else {
-                  // _showOnlyFavorites = false;
-                }
-              });
-            },
+          elevation: 1,
+          backgroundColor: Colors.white,
+          leading: IconButton(
             icon: Icon(
-              Icons.more_vert,
+              Icons.arrow_back,
+              color: Colors.grey,
             ),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Профайл'),
-                value: FilterOptions.EditProfile,
-              ),
-              PopupMenuItem(
-                child: Text('Вийти'),
-                value: FilterOptions.Logout,
-              ),
-            ],
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
+            },
           ),
-        ],
-        title: _isLoading
-            ? Text('')
-            : Consumer<Profile>(
-                builder: (ctx, profile, child) => Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    // Text(
-                    //   'Дісципліни',
-                    //   style: TextStyle(fontSize: 16),
-                    // ),
-                    SizedBox(
-                      width: 35,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/coin.png',
-                      // height: 300,
-                      scale: 0.55,
-                      // width: 50,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.balance,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Image.asset(
-                      'assets/images/stats/uah.png',
-                      height: 30,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      profile.certificates,
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  ],
-                ),
+          actions: <Widget>[
+            PopupMenuButton(
+              onSelected: (FilterOptions selectedValue) {
+                setState(() {
+                  if (selectedValue == FilterOptions.EditProfile) {
+                    Navigator.of(context)
+                        .pushNamed(EditProfileScreen.routeName);
+                    // _showOnlyFavorites = true;
+                  } else {
+                    // Navigator.of(context)
+                    //     .pushReplacementNamed(AuthScreen.routeName);
+                    Provider.of<Auth>(context, listen: false).logout();
+                  }
+                });
+              },
+              icon: Icon(
+                Icons.more_vert,
               ),
-      ),
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  child: Text('Профайл'),
+                  value: FilterOptions.EditProfile,
+                ),
+                PopupMenuItem(
+                  child: Text('Вийти'),
+                  value: FilterOptions.Logout,
+                ),
+              ],
+            ),
+          ],
+          title: _isLoading ? Text('') : Text('')
+          // : Consumer<Profile>(
+          //     builder: (ctx, profile, child) => Row(
+          //       mainAxisAlignment: MainAxisAlignment.end,
+          //       children: <Widget>[
+          //         // Text(
+          //         //   'Дісципліни',
+          //         //   style: TextStyle(fontSize: 16),
+          //         // ),
+          //         SizedBox(
+          //           width: 35,
+          //         ),
+          //         Image.asset(
+          //           'assets/images/stats/coin.png',
+          //           // height: 300,
+          //           scale: 0.55,
+          //           // width: 50,
+          //         ),
+          //         SizedBox(
+          //           width: 5,
+          //         ),
+          //         Text(
+          //           profile.getBalance,
+          //           style: TextStyle(color: Colors.black, fontSize: 16),
+          //         ),
+          //         SizedBox(
+          //           width: 10,
+          //         ),
+          //         Image.asset(
+          //           'assets/images/stats/uah.png',
+          //           height: 30,
+          //         ),
+          //         SizedBox(
+          //           width: 5,
+          //         ),
+          //         Text(
+          //           profile.getCertificates,
+          //           style: TextStyle(color: Colors.black, fontSize: 16),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          ),
       body: Column(
         children: <Widget>[
           Container(
@@ -171,6 +226,38 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
                 disciplines[i].imageUrl,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Color(0xFF74bec9).withOpacity(0.6),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(width: 3, color: Color(0xFFf06388)),
+            borderRadius: BorderRadius.all(Radius.circular(32.0))),
+        title: Text(
+          '',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          message,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'ОК',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              Provider.of<Auth>(context, listen: false).logout();
+            },
           ),
         ],
       ),
