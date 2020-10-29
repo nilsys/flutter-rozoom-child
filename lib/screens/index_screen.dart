@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
-import 'package:rozoom_app/providers/pusher_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
-import 'package:rozoom_app/screens/messenger/friends_overview_screen.dart';
 import 'package:rozoom_app/widgets/home_child.dart';
 
 enum FilterOptions {

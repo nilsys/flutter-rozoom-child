@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';

@@ -6,7 +6,6 @@ import 'package:rozoom_app/widgets/tasks/red_icon.dart';
 import 'package:rozoom_app/widgets/tasks/right_answer.dart';
 import 'package:rozoom_app/widgets/tasks/task_navbar.dart';
 import 'package:rozoom_app/widgets/tasks/task_question.dart';
-import 'package:rozoom_app/widgets/tasks/theme_item.dart';
 import 'package:rozoom_app/widgets/tasks/wrong_answer.dart';
 import 'package:audioplayers/audioplayers.dart';
 
