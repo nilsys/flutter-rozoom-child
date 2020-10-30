@@ -55,18 +55,16 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
           title: 'Rozoom',
-          home:
-              // IndexScreen(),
-              auth.isAuth
-                  ? IndexScreen()
-                  : FutureBuilder(
-                      future: auth.tryAutoLogin(),
-                      builder: (ctx, authResultSnapshot) =>
-                          authResultSnapshot.connectionState ==
-                                  ConnectionState.waiting
-                              ? SplashScreen()
-                              : AuthScreen(),
-                    ),
+          home: auth.isAuth
+              ? IndexScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
           theme: ThemeData(
             primaryColor: Color(0xFF74bec9),
             accentColor: Color(0xFFf06388),
