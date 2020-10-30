@@ -59,6 +59,14 @@ class Auth with ChangeNotifier {
       }
       print('01 --- ApiData --------------> $_apiData');
       _token = _apiData['api_token'];
+
+      //Локализация
+      final String urlLocal =
+          'https://rozoom.com.ua/api/mobile/me/update?preferred_lang=ua&api_token=$_token';
+      final responseLocal = await http.post(urlLocal);
+      print('localization ${responseLocal.body}');
+      //
+
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode(
@@ -106,6 +114,14 @@ class Auth with ChangeNotifier {
       print('01 --- ApiData --------------> $_apiData');
       _token = _apiData['api_token'];
       print('sign in token ----------------- $_token');
+
+      // Локализация
+      final String urlLocal =
+          'https://rozoom.com.ua/api/mobile/me/update?preferred_lang=ua&api_token=$_token';
+      final responseLocal = await http.post(urlLocal);
+      print('localization ${responseLocal.body}');
+      //
+
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       final userData = json.encode(

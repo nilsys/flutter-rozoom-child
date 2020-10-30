@@ -191,80 +191,76 @@ class _TaskItemState extends State<TaskItem> {
                     ),
                   ),
                 )
-              : Flexible(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Flexible(
-                        child: Container(
-                          margin: EdgeInsets.only(top: 5),
-                          child: ButtonTheme(
-                            minWidth: 150,
-                            height: 45,
-                            // shape: RoundedRectangleBorder(
-                            //     borderRadius: BorderRadius.circular(50.0),
-                            //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
-                            child: RaisedButton(
-                              onPressed: () {
-                                stopAudio();
-                                taskQuestionState.currentState
-                                    .stopAudioFromChild();
-                                Provider.of<TaskModel>(context, listen: false)
-                                    .answerTask(task.answerIdForApi, i);
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Flexible(
+                      child: Container(
+                        margin: EdgeInsets.only(top: 5),
+                        child: ButtonTheme(
+                          minWidth: 150,
+                          height: 45,
+                          // shape: RoundedRectangleBorder(
+                          //     borderRadius: BorderRadius.circular(50.0),
+                          //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
+                          child: RaisedButton(
+                            onPressed: () {
+                              stopAudio();
+                              taskQuestionState.currentState
+                                  .stopAudioFromChild();
+                              Provider.of<TaskModel>(context, listen: false)
+                                  .answerTask(task.answerIdForApi, i);
 
-                                i.toString() ==
-                                        task.rightAnswerListElementNumber
-                                    ? animatedStateKeyGreen.currentState
-                                        .getAnimationFromChild()
-                                    : animatedStateKeyRed.currentState
-                                        .getAnimationFromChild();
-                                i.toString() ==
-                                        task.rightAnswerListElementNumber
-                                    ? _showOyboyRightAnswerDialog(i)
-                                    : _showOyboyWrongAnswerDialog(i);
+                              i.toString() == task.rightAnswerListElementNumber
+                                  ? animatedStateKeyGreen.currentState
+                                      .getAnimationFromChild()
+                                  : animatedStateKeyRed.currentState
+                                      .getAnimationFromChild();
+                              i.toString() == task.rightAnswerListElementNumber
+                                  ? _showOyboyRightAnswerDialog(i)
+                                  : _showOyboyWrongAnswerDialog(i);
 
-                                // Provider.of<TaskModel>(context, listen: false)
-                                //     .nullAudio();
-                              },
-                              elevation: 3.0,
-                              highlightColor: Color(0xFF74bec9),
-                              highlightElevation: 5.0,
-                              child: Text(
-                                task.answerVariants[i] != null
-                                    ? task.answerVariants[i]
-                                    : '',
-                                style: TextStyle(
-                                    color: Color(0xFF74bec9),
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  side: BorderSide(
-                                      color: Color(0xFF74bec9), width: 2)),
+                              // Provider.of<TaskModel>(context, listen: false)
+                              //     .nullAudio();
+                            },
+                            elevation: 3.0,
+                            highlightColor: Color(0xFF74bec9),
+                            highlightElevation: 5.0,
+                            child: Text(
+                              task.answerVariants[i] != null
+                                  ? task.answerVariants[i]
+                                  : '',
+                              style: TextStyle(
+                                  color: Color(0xFF74bec9),
+                                  fontWeight: FontWeight.bold),
                             ),
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                side: BorderSide(
+                                    color: Color(0xFF74bec9), width: 2)),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Flexible(
-                        child: InkWell(
-                          onTap: () async {
-                            playAudio(task.audioAnswer[i], i);
-                          },
-                          child: Icon(
-                            playings[i] == false
-                                ? Icons.play_circle_outline
-                                : Icons.pause_circle_outline,
-                            color: Color(0xFF74bec9),
-                            size: 34,
-                          ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                      child: InkWell(
+                        onTap: () async {
+                          playAudio(task.audioAnswer[i], i);
+                        },
+                        child: Icon(
+                          playings[i] == false
+                              ? Icons.play_circle_outline
+                              : Icons.pause_circle_outline,
+                          color: Color(0xFF74bec9),
+                          size: 34,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
         });
   }
@@ -284,7 +280,7 @@ class _TaskItemState extends State<TaskItem> {
             }
             Provider.of<TaskModel>(context, listen: false).answerTaskWithForm(
                 task.answerIdForApi, _answerFieldController.text);
-
+            taskQuestionState.currentState.stopAudioFromChild();
             _answerFieldController.text == task.rightAnswerStringValue
                 ? animatedStateKeyGreen.currentState.getAnimationFromChild()
                 : animatedStateKeyRed.currentState.getAnimationFromChild();
@@ -353,7 +349,7 @@ class _TaskItemState extends State<TaskItem> {
               onPressed: () {
                 Provider.of<TaskModel>(context, listen: false)
                     .answerTask(task.answerIdForApi, i);
-
+                taskQuestionState.currentState.stopAudioFromChild();
                 i.toString() == task.rightAnswerListElementNumber
                     ? animatedStateKeyGreen.currentState.getAnimationFromChild()
                     : animatedStateKeyRed.currentState.getAnimationFromChild();
