@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
+import 'package:rozoom_app/widgets/app_drawer.dart';
 import 'package:rozoom_app/widgets/home_child.dart';
 
 enum FilterOptions {
@@ -38,6 +39,7 @@ class _IndexScreenState extends State<IndexScreen> {
     final certificates =
         Provider.of<Profile>(context, listen: false).certificates;
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 1,
@@ -61,6 +63,8 @@ class _IndexScreenState extends State<IndexScreen> {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                   // _showOnlyFavorites = true;
                 } else {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacementNamed('/');
                   Provider.of<Auth>(context, listen: false).logout();
                 }
               });
@@ -81,13 +85,17 @@ class _IndexScreenState extends State<IndexScreen> {
                   SizedBox(width: 35),
                   Image.asset('assets/images/stats/coin.png', scale: 0.55),
                   SizedBox(width: 5),
-                  Text(balance,
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                  balance != null
+                      ? Text(balance,
+                          style: TextStyle(color: Colors.black, fontSize: 16))
+                      : Text(''),
                   SizedBox(width: 10),
                   Image.asset('assets/images/stats/uah.png', height: 30),
                   SizedBox(width: 5),
-                  Text(certificates,
-                      style: TextStyle(color: Colors.black, fontSize: 16)),
+                  certificates != null
+                      ? Text(certificates,
+                          style: TextStyle(color: Colors.black, fontSize: 16))
+                      : Text(''),
                 ],
               ),
       ),

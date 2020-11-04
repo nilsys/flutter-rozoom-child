@@ -3,51 +3,17 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rozoom_app/widgets/button-animation.dart';
 
-class getjson extends StatelessWidget {
-  // accept the langname as a parameter
-
-  String langname;
-  getjson(this.langname);
-  String assettoload;
-
-  // a function
-  // sets the asset to a particular JSON file
-  // and opens the JSON
-  setasset() {
-    if (langname == "math") {
-      assettoload = "assets/json/math.json";
-    } else if (langname == "Java") {
-      assettoload = "assets/java.json";
-    } else if (langname == "Javascript") {
-      assettoload = "assets/js.json";
-    } else if (langname == "C++") {
-      assettoload = "assets/cpp.json";
-    } else {
-      assettoload = "assets/linux.json";
-    }
-    print('asset path $assettoload');
-  }
-
+class TrainingProcessScreen0 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // this function is called before the build so that
-    // the string assettoload is avialable to the DefaultAssetBuilder
-    setasset();
-    // and now we return the FutureBuilder to load and decode JSON
     return FutureBuilder(
       future: DefaultAssetBundle.of(context)
           .loadString('assets/json/math.json', cache: false),
       builder: (context, snapshot) {
-        print(snapshot);
-        print(snapshot.data);
-        print(snapshot.requireData);
-        print(snapshot.error);
-        List mydata = json.decode(snapshot.data.toString());
-        // print(mydata);
-        // print(mydata[0]);
-
-        if (mydata == null) {
+        List trainingData = json.decode(snapshot.data.toString());
+        if (trainingData == null) {
           return Scaffold(
             body: Center(
               child: Text(
@@ -56,26 +22,29 @@ class getjson extends StatelessWidget {
             ),
           );
         } else {
-          return quizpage(mydata: mydata);
+          return TrainingProcessItem(trainingData: trainingData);
         }
       },
     );
   }
 }
 
-class quizpage extends StatefulWidget {
-  final List mydata;
+class TrainingProcessItem extends StatefulWidget {
+  final List trainingData;
 
-  quizpage({Key key, @required this.mydata}) : super(key: key);
+  TrainingProcessItem({Key key, @required this.trainingData}) : super(key: key);
   @override
-  _quizpageState createState() => _quizpageState(mydata);
+  _TrainingProcessItemState createState() =>
+      _TrainingProcessItemState(trainingData);
 }
 
-class _quizpageState extends State<quizpage> {
-  final List mydata;
-  _quizpageState(this.mydata);
+class _TrainingProcessItemState extends State<TrainingProcessItem> {
+  final GlobalKey<ButtonAnimationState> animatedButton =
+      GlobalKey<ButtonAnimationState>();
+  final List trainingData;
+  _TrainingProcessItemState(this.trainingData);
 
-  Color colortoshow = Colors.indigoAccent;
+  Color colortoshow = Color(0xFF74bec9);
   Color right = Colors.green;
   Color wrong = Colors.red;
   int marks = 0;
@@ -88,10 +57,10 @@ class _quizpageState extends State<quizpage> {
   var random_array;
 
   Map<String, Color> btncolor = {
-    "a": Colors.indigoAccent,
-    "b": Colors.indigoAccent,
-    "c": Colors.indigoAccent,
-    "d": Colors.indigoAccent,
+    "a": Color(0xFF74bec9),
+    "b": Color(0xFF74bec9),
+    "c": Color(0xFF74bec9),
+    "d": Color(0xFF74bec9),
   };
 
   bool canceltimer = false;
@@ -137,7 +106,13 @@ class _quizpageState extends State<quizpage> {
   void initState() {
     starttimer();
     genrandomarray();
+
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   // overriding the setstate function to be called only if mounted
@@ -163,6 +138,11 @@ class _quizpageState extends State<quizpage> {
         showtimer = timer.toString();
       });
     });
+    Future.delayed(const Duration(milliseconds: 0), () {
+      setState(() {
+        animatedButton.currentState.getProgressBar();
+      });
+    });
   }
 
   void nextquestion() {
@@ -177,29 +157,30 @@ class _quizpageState extends State<quizpage> {
         //   builder: (context) => resultpage(marks: marks),
         // ));
       }
-      btncolor["a"] = Colors.indigoAccent;
-      btncolor["b"] = Colors.indigoAccent;
-      btncolor["c"] = Colors.indigoAccent;
-      btncolor["d"] = Colors.indigoAccent;
+      btncolor["a"] = Color(0xFF74bec9);
+      btncolor["b"] = Color(0xFF74bec9);
+      btncolor["c"] = Color(0xFF74bec9);
+      btncolor["d"] = Color(0xFF74bec9);
       disableAnswer = false;
     });
+    animatedButton.currentState.closeProgressBar();
     starttimer();
   }
 
   void checkanswer(String k) {
     // in the previous version this was
-    // mydata[2]["1"] == mydata[1]["1"][k]
+    // trainingData[2]["1"] == trainingData[1]["1"][k]
     // which i forgot to change
     // so nake sure that this is now corrected
-    if (mydata[2][i.toString()] == mydata[1][i.toString()][k]) {
+    if (trainingData[2][i.toString()] == trainingData[1][i.toString()][k]) {
       // just a print sattement to check the correct working
-      // debugPrint(mydata[2][i.toString()] + " is equal to " + mydata[1][i.toString()][k]);
+      // debugPrint(trainingData[2][i.toString()] + " is equal to " + trainingData[1][i.toString()][k]);
       marks = marks + 5;
       // changing the color variable to be green
       colortoshow = right;
     } else {
       // just a print sattement to check the correct working
-      // debugPrint(mydata[2]["1"] + " is equal to " + mydata[1]["1"][k]);
+      // debugPrint(trainingData[2]["1"] + " is equal to " + trainingData[1]["1"][k]);
       colortoshow = wrong;
     }
     setState(() {
@@ -213,6 +194,84 @@ class _quizpageState extends State<quizpage> {
     Timer(Duration(seconds: 2), nextquestion);
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          margin: EdgeInsets.only(top: 30),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.topCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          showtimer,
+                          style: TextStyle(
+                              fontSize: 35.0,
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).accentColor),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      ButtonAnimation(
+                          animatedButton,
+                          Theme.of(context).accentColor,
+                          Theme.of(context).accentColor),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 30.0),
+                    child: Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 300,
+                        height: 300,
+                        child: Text(
+                          trainingData[0][i.toString()],
+                          style:
+                              TextStyle(fontSize: 50, color: Colors.grey[800]),
+                        ),
+                      ),
+                    ),
+                  )),
+              Expanded(
+                flex: 6,
+                child: AbsorbPointer(
+                  absorbing: disableAnswer,
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        choicebutton('a'),
+                        choicebutton('b'),
+                        choicebutton('c'),
+                        choicebutton('d'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget choicebutton(String k) {
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -220,12 +279,14 @@ class _quizpageState extends State<quizpage> {
         horizontal: 20.0,
       ),
       child: MaterialButton(
-        onPressed: () => checkanswer(k),
+        elevation: 5,
+        onPressed: () {
+          checkanswer(k);
+        },
         child: Text(
-          mydata[1][i.toString()][k],
+          trainingData[1][i.toString()][k],
           style: TextStyle(
             color: Colors.white,
-            fontFamily: "Alike",
             fontSize: 16.0,
           ),
           maxLines: 1,
@@ -237,124 +298,6 @@ class _quizpageState extends State<quizpage> {
         height: 45.0,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
-    return WillPopScope(
-      onWillPop: () {
-        return showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text(
-                    "Quizstar",
-                  ),
-                  content: Text("You Can't Go Back At This Stage."),
-                  actions: <Widget>[
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Ok',
-                      ),
-                    )
-                  ],
-                ));
-      },
-      child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 3,
-              child: Container(
-                padding: EdgeInsets.all(15.0),
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  mydata[0][i.toString()],
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontFamily: "Quando",
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 6,
-              child: AbsorbPointer(
-                absorbing: disableAnswer,
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      choicebutton('a'),
-                      choicebutton('b'),
-                      choicebutton('c'),
-                      choicebutton('d'),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                alignment: Alignment.topCenter,
-                child: Center(
-                  child: Text(
-                    showtimer,
-                    style: TextStyle(
-                      fontSize: 35.0,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Times New Roman',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TrainingsOverviewScreen extends StatelessWidget {
-  const TrainingsOverviewScreen({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 1,
-          title: Text('Тренажер'),
-        ),
-        body: ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Material(
-                elevation: 5,
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 180,
-                  height: 180,
-                  child: Text(
-                    '2 + 2 = ?',
-                    style: TextStyle(fontSize: 50, color: Colors.grey[800]),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
       ),
     );
   }

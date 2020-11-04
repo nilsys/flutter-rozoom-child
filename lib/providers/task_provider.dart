@@ -12,10 +12,10 @@ class DisciplineModel {
   final String titleRu;
 
   DisciplineModel({
-    @required this.id,
-    @required this.title,
-    @required this.titleUa,
-    @required this.imageUrl,
+    this.id,
+    this.title,
+    this.titleUa,
+    this.imageUrl,
     this.label,
     this.titleRu,
   });
@@ -23,7 +23,7 @@ class DisciplineModel {
 
 class Disciplines with ChangeNotifier {
   String authToken;
-  Disciplines(this.authToken);
+  Disciplines(this.authToken, this._disciplineItems);
 
   List<DisciplineModel> _disciplineItems = [];
 
@@ -33,7 +33,7 @@ class Disciplines with ChangeNotifier {
 
   Future<void> fetchAndSetDisciplines() async {
     print('discipline auth token ---------------------------- $authToken');
-    final url = 'https://rozoom.com.ua/api/mobile/disciplines?api_token=';
+    final url = 'https://new.rozoom.co.ua/api/mobile/disciplines?api_token=';
     try {
       final response = await http.post(url + authToken);
       var extractedData = json.decode(response.body)['disciplines'];
@@ -79,7 +79,7 @@ class ThemeModel with ChangeNotifier {
 
 class Themes with ChangeNotifier {
   String authToken;
-  Themes(this.authToken);
+  Themes(this.authToken, this._themeItems);
   List<ThemeModel> _themeItems = [];
 
   List<ThemeModel> get themeItems {
@@ -92,9 +92,9 @@ class Themes with ChangeNotifier {
   }
 
   Future<void> fetchandSetThemes(disciplineId) async {
-    print('theme auth token ---------------------------- $authToken');
+    // print('theme auth token ---------------------------- $authToken');
     final url =
-        'https://rozoom.com.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
+        'https://new.rozoom.co.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
     try {
       final response = await http.post(url + authToken);
       // print(url + token);
@@ -198,18 +198,18 @@ class TaskModel with ChangeNotifier {
   // }
 
   Future<void> getFixTaskInfo() async {
-    final url = 'https://rozoom.com.ua/tasks/fix?api_token=';
+    final url = 'https://new.rozoom.co.ua/tasks/fix?api_token=';
     print(url);
 
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + authToken, headers: headers);
       final extractedData = json.decode(response.body);
-      print('fix data -------- $extractedData');
+      // print('fix data -------- $extractedData');
       fixCount = extractedData['fix_count'].toString();
-      print('fix count - $fixCount');
+      // print('fix count - $fixCount');
       fixedCount = extractedData['fixed_count'].toString();
-      print('fix count - $fixedCount');
+      // print('fix count - $fixedCount');
       notifyListeners();
     } catch (error) {
       throw error;
@@ -217,8 +217,8 @@ class TaskModel with ChangeNotifier {
   }
 
   Future<void> fixTasks() async {
-    print('start task auth token ---------------------------- $authToken');
-    final url = 'https://rozoom.com.ua/tasks/fix/start?api_token=';
+    // print('start task auth token ---------------------------- $authToken');
+    final url = 'https://new.rozoom.co.ua/tasks/fix/start?api_token=';
     print(url);
 
     try {
@@ -306,8 +306,8 @@ class TaskModel with ChangeNotifier {
         cardUrl = 'no cardUrl';
       }
 
-      print('cardTitle --------- $cardTitle');
-      print('cardUrl --------- $cardUrl');
+      // print('cardTitle --------- $cardTitle');
+      // print('cardUrl --------- $cardUrl');
 
       notifyListeners();
     } catch (error) {
@@ -316,9 +316,9 @@ class TaskModel with ChangeNotifier {
   }
 
   Future<void> startTask(themeId) async {
-    print('start task auth token ---------------------------- $authToken');
-    final url = 'https://rozoom.com.ua/task/start/$themeId?api_token=';
-    print(url);
+    // print('start task auth token ---------------------------- $authToken');
+    final url = 'https://new.rozoom.co.ua/task/start/$themeId?api_token=';
+    // print(url);
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + authToken, headers: headers);
@@ -404,8 +404,8 @@ class TaskModel with ChangeNotifier {
         cardUrl = 'no cardUrl';
       }
 
-      print('cardTitle --------- $cardTitle');
-      print('cardUrl --------- $cardUrl');
+      // print('cardTitle --------- $cardTitle');
+      // print('cardUrl --------- $cardUrl');
 
       notifyListeners();
     } catch (error) {
@@ -414,10 +414,10 @@ class TaskModel with ChangeNotifier {
   }
 
   Future<void> answerTask(answerId, answerListElementNumber) async {
-    print('answer task auth token ---------------------------- $authToken');
+    // print('answer task auth token ---------------------------- $authToken');
     final url =
-        'https://rozoom.com.ua/task/answer/$answerId/$answerListElementNumber?api_token=';
-    print(url);
+        'https://new.rozoom.co.ua/task/answer/$answerId/$answerListElementNumber?api_token=';
+    // print(url);
 
     try {
       final headers = {'Accept': 'text/json'};
@@ -431,9 +431,10 @@ class TaskModel with ChangeNotifier {
       final sessionId = extractedData['session']['id'];
       continueOrFinish = extractedData['result'];
       if (extractedData['result'] == false) {
-        print(
-            'result false auth token ---------------------------- $authToken');
-        final url = 'https://rozoom.com.ua/task/result/$sessionId?api_token=';
+        // print(
+        //     'result false auth token ---------------------------- $authToken');
+        final url =
+            'https://new.rozoom.co.ua/task/result/$sessionId?api_token=';
         print('url ---------- $url');
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
@@ -524,8 +525,8 @@ class TaskModel with ChangeNotifier {
         cardUrl = 'no cardUrl';
       }
 
-      print('cardTitle --------- $cardTitle');
-      print('cardUrl --------- $cardUrl');
+      // print('cardTitle --------- $cardTitle');
+      // print('cardUrl --------- $cardUrl');
 
       notifyListeners();
     } catch (error) {
@@ -534,16 +535,16 @@ class TaskModel with ChangeNotifier {
   }
 
   Future<void> answerTaskWithForm(answerId, answerText) async {
-    print(
-        'answer form task auth token ---------------------------- $authToken');
+    // print(
+    //     'answer form task auth token ---------------------------- $authToken');
     final url =
-        'https://rozoom.com.ua/task/answer/$answerId/text?text=$answerText&api_token=';
+        'https://new.rozoom.co.ua/task/answer/$answerId/text?text=$answerText&api_token=';
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + authToken, headers: headers);
 
       var extractedData = json.decode(response.body);
-      print(extractedData);
+      // print(extractedData);
       if (extractedData == null) {
         return;
       }
@@ -551,9 +552,10 @@ class TaskModel with ChangeNotifier {
       final sessionId = extractedData['session']['id'];
       continueOrFinish = extractedData['result'];
       if (extractedData['result'] == false) {
-        print(
-            'result false form auth token ---------------------------- $authToken');
-        final url = 'https://rozoom.com.ua/task/result/$sessionId?api_token=';
+        // print(
+        //     'result false form auth token ---------------------------- $authToken');
+        final url =
+            'https://new.rozoom.co.ua/task/result/$sessionId?api_token=';
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
         var extractedData = json.decode(response.body);
@@ -642,8 +644,8 @@ class TaskModel with ChangeNotifier {
         cardUrl = 'no cardUrl';
       }
 
-      print('cardTitle --------- $cardTitle');
-      print('cardUrl --------- $cardUrl');
+      // print('cardTitle --------- $cardTitle');
+      // print('cardUrl --------- $cardUrl');
 
       notifyListeners();
     } catch (error) {

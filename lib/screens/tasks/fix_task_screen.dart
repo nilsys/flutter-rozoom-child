@@ -36,6 +36,8 @@ class _FixTaskScreenState extends State<FixTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final disciplines =
+        Provider.of<Disciplines>(context, listen: false).disciplineItems;
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
@@ -56,7 +58,7 @@ class _FixTaskScreenState extends State<FixTaskScreen> {
                 if (selectedValue == FilterOptions.EditProfile) {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                 } else {
-                  Provider.of<Auth>(context, listen: false).logout();
+                  // Provider.of<Auth>(context, listen: false).logout();
                 }
               });
             },

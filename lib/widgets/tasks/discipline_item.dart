@@ -28,6 +28,14 @@ class DisciplineItem extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 2),
+                // child: Image.asset(
+                //   'imageUrl',
+                //   errorBuilder: (BuildContext context, Object exception,
+                //       StackTrace stackTrace) {
+                //     return Image.asset('assets/images/brand.png');
+                //   },
+                // ),
+
                 child: SvgPicture.network(imageUrl,
                     placeholderBuilder: (BuildContext context) =>
                         Image.asset('assets/images/brand.png')),

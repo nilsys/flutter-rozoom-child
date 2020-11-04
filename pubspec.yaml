@@ -48,6 +48,7 @@ dependencies:
   dio: ^3.0.10
   audioplayers: ^0.16.1
   simple_animations: ^2.2.3
+  slide_countdown_clock: ^1.0.3
   
 
 
@@ -94,7 +95,42 @@ flutter:
     - assets/images/tasks/right-answer-boy.png
     - assets/images/tasks/wrong-answer-boy.png
     - assets/images/tasks/task-result-points-bg.png
+    
+    - assets/images/disciplines/1.png
+    - assets/images/disciplines/2.png
+    - assets/images/disciplines/3.png
+    - assets/images/disciplines/4.png
+    - assets/images/disciplines/5.png
+    - assets/images/disciplines/6.png
+    - assets/images/disciplines/7.png
+    - assets/images/disciplines/11.png
+    - assets/images/disciplines/12.png
+    - assets/images/disciplines/13.png
+    - assets/images/disciplines/14.png
+    - assets/images/disciplines/15.png
+    - assets/images/disciplines/16.png
+    - assets/images/disciplines/17.png
+    - assets/images/disciplines/20.png
+    - assets/images/disciplines/21.png
+    - assets/images/disciplines/22.png
+    - assets/images/disciplines/24.png
+    - assets/images/disciplines/26.png
+    - assets/images/disciplines/27.png
+    - assets/images/disciplines/28.png
+    - assets/images/disciplines/30.png
+    - assets/images/disciplines/31.png
+    - assets/images/disciplines/32.png
+    - assets/images/disciplines/33.png
+    - assets/images/disciplines/35.png
+    - assets/images/disciplines/36.png
+    - assets/images/disciplines/37.png
+    - assets/images/disciplines/38.png
+    - assets/images/disciplines/39.png
+
     - assets/json/math.json
+    - assets/gifs/ripple.gif
+    - assets/gifs/spinner.gif
+
 
   #   - images/a_dot_ham.jpeg
 

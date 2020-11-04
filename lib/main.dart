@@ -5,6 +5,7 @@ import 'package:rozoom_app/providers/auth_provider.dart';
 import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/providers/pusher_provider.dart';
+import 'package:rozoom_app/providers/training_provider.dart';
 import 'package:rozoom_app/providers/video_chat_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
 import 'package:rozoom_app/screens/splash_screen.dart';
@@ -15,77 +16,106 @@ import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
 import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/index_screen.dart';
+import 'package:rozoom_app/screens/trainings/trainings_overview_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_process_screen.dart';
+import 'package:rozoom_app/screens/trainings/trainings_screen.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return MultiProvider(
+void main() {
+  Provider.debugCheckInvalidValueType = null;
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider<Auth>(create: (_) => Auth()),
         ChangeNotifierProxyProvider<Auth, Disciplines>(
-          create: (_) => Disciplines(''),
-          update: (ctx, auth, _) => Disciplines(auth.token),
+          create: (BuildContext context) =>
+              Disciplines(Provider.of<Auth>(context, listen: false).token, []),
+          update: (BuildContext context, auth, previous) => Disciplines(
+              auth.token, previous == null ? [] : previous.disciplineItems),
+        ),
+        ChangeNotifierProxyProvider<Auth, TrainingThemes>(
+          create: (BuildContext context) => TrainingThemes(
+              Provider.of<Auth>(context, listen: false).token, []),
+          update: (BuildContext context, auth, previous) => TrainingThemes(
+              auth.token, previous == null ? [] : previous.trainingThemesItems),
         ),
         ChangeNotifierProxyProvider<Auth, Themes>(
-          create: (_) => Themes(''),
-          update: (ctx, auth, _) => Themes(auth.token),
+          create: (BuildContext context) =>
+              Themes(Provider.of<Auth>(context, listen: false).token, []),
+          update: (BuildContext context, auth, previous) =>
+              Themes(auth.token, previous == null ? [] : previous.themeItems),
         ),
         ChangeNotifierProvider<ThemeModel>(create: (_) => ThemeModel()),
         ChangeNotifierProxyProvider<Auth, TaskModel>(
-          create: (_) => TaskModel(''),
-          update: (ctx, auth, _) => TaskModel(auth.token),
+          create: (BuildContext context) =>
+              TaskModel(Provider.of<Auth>(context, listen: false).token),
+          update: (BuildContext context, auth, _) => TaskModel(auth.token),
         ),
         ChangeNotifierProxyProvider<Auth, Profile>(
-          create: (_) => Profile(''),
-          update: (ctx, auth, _) => Profile(auth.token),
+          create: (BuildContext context) =>
+              Profile(Provider.of<Auth>(context, listen: false).token),
+          update: (BuildContext context, auth, _) => Profile(auth.token),
         ),
         ChangeNotifierProxyProvider<Auth, VideoChat>(
-          create: (_) => VideoChat(''),
-          update: (ctx, auth, _) => VideoChat(auth.token),
+          create: (BuildContext context) =>
+              VideoChat(Provider.of<Auth>(context, listen: false).token),
+          update: (BuildContext context, auth, _) => VideoChat(auth.token),
         ),
         ChangeNotifierProxyProvider<Auth, Pusher>(
-          create: (_) => Pusher(''),
-          update: (ctx, auth, _) => Pusher(auth.token),
+          create: (BuildContext context) =>
+              Pusher(Provider.of<Auth>(context, listen: false).token),
+          update: (BuildContext context, auth, _) => Pusher(auth.token),
         ),
         ChangeNotifierProvider<MessageCount>(
             create: (context) => MessageCount()),
         ChangeNotifierProvider<MyId>(create: (context) => MyId()),
       ],
-      child: Consumer<Auth>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: 'Rozoom',
-          home: auth.isAuth
-              ? IndexScreen()
-              : FutureBuilder(
-                  future: auth.tryAutoLogin(),
-                  builder: (ctx, authResultSnapshot) =>
-                      authResultSnapshot.connectionState ==
+      child: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Consumer<Auth>(
+      builder: (ctx, auth, _) => MaterialApp(
+        title: 'Rozoom',
+        home:
+            // TrainingsOverviewScreen(),
+
+            auth.isAuth
+                ? TrainingsOverviewScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authResultSnapshot) {
+                      return authResultSnapshot.connectionState ==
                               ConnectionState.waiting
                           ? SplashScreen()
-                          : AuthScreen(),
-                ),
-          theme: ThemeData(
+                          : AuthScreen();
+                    },
+                  ),
+        theme: ThemeData(
+            appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
             primaryColor: Color(0xFF74bec9),
             accentColor: Color(0xFFf06388),
             fontFamily: 'Robot Regular',
-            // accentColor: Color(0XFFFEF9EB),
-          ),
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: [GlobalMaterialLocalizations.delegate],
-          supportedLocales: [const Locale('uk'), const Locale('ru')],
-          routes: {
-            AuthScreen.routeName: (context) => AuthScreen(),
-            IndexScreen.routeName: (context) => IndexScreen(),
-            DisciplinesOverviewScreen.routeName: (context) =>
-                DisciplinesOverviewScreen(),
-            ThemesOverviewScreen.routeName: (context) => ThemesOverviewScreen(),
-            TaskOverviewScreen.routeName: (context) => TaskOverviewScreen(),
-            TaskResultScreen.routeName: (context) => TaskResultScreen(),
-            FixTaskScreen.routeName: (context) => FixTaskScreen(),
-            EditProfileScreen.routeName: (context) => EditProfileScreen(),
-          },
-        ),
+            scaffoldBackgroundColor: Colors.white,
+            visualDensity: VisualDensity.adaptivePlatformDensity),
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+        supportedLocales: [const Locale('uk'), const Locale('ru')],
+        routes: {
+          AuthScreen.routeName: (ctx) => AuthScreen(),
+          IndexScreen.routeName: (ctx) => IndexScreen(),
+          DisciplinesOverviewScreen.routeName: (ctx) =>
+              DisciplinesOverviewScreen(),
+          ThemesOverviewScreen.routeName: (ctx) => ThemesOverviewScreen(),
+          TaskOverviewScreen.routeName: (ctx) => TaskOverviewScreen(),
+          TaskResultScreen.routeName: (ctx) => TaskResultScreen(),
+          FixTaskScreen.routeName: (ctx) => FixTaskScreen(),
+          EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
+          TrainingsOverviewScreen.routeName: (ctx) => TrainingsOverviewScreen(),
+          TrainingProcessScreen.routeName: (ctx) => TrainingProcessScreen(),
+        },
       ),
     );
   }

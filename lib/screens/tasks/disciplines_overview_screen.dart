@@ -6,6 +6,7 @@ import 'package:rozoom_app/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
 import 'package:rozoom_app/screens/index_screen.dart';
+import 'package:rozoom_app/widgets/app_drawer.dart';
 import 'package:rozoom_app/widgets/tasks/discipline_item.dart';
 
 enum FilterOptions {
@@ -79,10 +80,14 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final balance = Provider.of<Profile>(context, listen: false).balance;
+    final certificates =
+        Provider.of<Profile>(context, listen: false).certificates;
     // isAuthTokenValid();
     final disciplines =
         Provider.of<Disciplines>(context, listen: false).disciplineItems;
     return Scaffold(
+      drawer: AppDrawer(),
       // backgroundColor: Colors.blue.withOpacity(0.2),
       // backgroundColor: Color(0XFFFEF9EB),
       appBar: AppBar(
@@ -126,22 +131,24 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
         ],
         title: _isLoading
             ? Text('')
-            : Consumer<Profile>(
-                builder: (ctx, profile, child) => Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    SizedBox(width: 35),
-                    Image.asset('assets/images/stats/coin.png', scale: 0.55),
-                    SizedBox(width: 5),
-                    Text(profile.getBalance,
-                        style: TextStyle(color: Colors.black, fontSize: 16)),
-                    SizedBox(width: 10),
-                    Image.asset('assets/images/stats/uah.png', height: 30),
-                    SizedBox(width: 5),
-                    Text(profile.getCertificates,
-                        style: TextStyle(color: Colors.black, fontSize: 16)),
-                  ],
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(width: 35),
+                  Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                  SizedBox(width: 5),
+                  balance != null
+                      ? Text(balance,
+                          style: TextStyle(color: Colors.black, fontSize: 16))
+                      : Text(''),
+                  SizedBox(width: 10),
+                  Image.asset('assets/images/stats/uah.png', height: 30),
+                  SizedBox(width: 5),
+                  certificates != null
+                      ? Text(certificates,
+                          style: TextStyle(color: Colors.black, fontSize: 16))
+                      : Text(''),
+                ],
               ),
       ),
       body: Column(
@@ -159,8 +166,7 @@ class _DisciplinesOverviewScreenState extends State<DisciplinesOverviewScreen> {
                       color: Color(0xFF74bec9),
                     ),
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(IndexScreen.routeName);
+                      Navigator.of(context).pushNamed(IndexScreen.routeName);
                     },
                   ),
                   Text(

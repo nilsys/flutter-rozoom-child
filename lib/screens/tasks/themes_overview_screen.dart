@@ -38,6 +38,10 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
         ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
     final String disciplineTitleUa = args['disciplineTitleUa'];
     final themes = Provider.of<Themes>(context).themeItems;
+    final balance = Provider.of<Profile>(context, listen: false).balance;
+    final certificates =
+        Provider.of<Profile>(context, listen: false).certificates;
+
     return Scaffold(
       // backgroundColor: Color(0XFFFEF9EB),
       // backgroundColor: Color(0Xf8f9fa),
@@ -63,7 +67,7 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
                 if (selectedValue == FilterOptions.EditProfile) {
                   Navigator.of(context).pushNamed(EditProfileScreen.routeName);
                 } else {
-                  Provider.of<Auth>(context, listen: false).logout();
+                  // Provider.of<Auth>(context, listen: false).logout();
                 }
               });
             },
@@ -85,22 +89,24 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
         ],
         title: _isLoading
             ? Text('')
-            : Consumer<Profile>(
-                builder: (ctx, profile, child) => Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    SizedBox(width: 35),
-                    Image.asset('assets/images/stats/coin.png', scale: 0.55),
-                    SizedBox(width: 5),
-                    Text(profile.getBalance,
-                        style: TextStyle(color: Colors.black, fontSize: 16)),
-                    SizedBox(width: 10),
-                    Image.asset('assets/images/stats/uah.png', height: 30),
-                    SizedBox(width: 5),
-                    Text(profile.getCertificates,
-                        style: TextStyle(color: Colors.black, fontSize: 16)),
-                  ],
-                ),
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(width: 35),
+                  Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                  SizedBox(width: 5),
+                  balance != null
+                      ? Text(balance,
+                          style: TextStyle(color: Colors.black, fontSize: 16))
+                      : Text(''),
+                  SizedBox(width: 10),
+                  Image.asset('assets/images/stats/uah.png', height: 30),
+                  SizedBox(width: 5),
+                  certificates != null
+                      ? Text(certificates,
+                          style: TextStyle(color: Colors.black, fontSize: 16))
+                      : Text(''),
+                ],
               ),
       ),
       body: Column(

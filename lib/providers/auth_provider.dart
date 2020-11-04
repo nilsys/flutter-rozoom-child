@@ -21,7 +21,9 @@ class Auth with ChangeNotifier {
   // DateTime _expiryDate;
 
   bool get isAuth {
-    print('isAuth ---------------------> $token');
+    // print('isAuth token  ---------------------> $token');
+    // print('isAuth -------------$isAuth');
+    // notifyListeners();
     return token != null;
   }
 
@@ -34,13 +36,13 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(email, password, username) async {
     final String url =
-        'https://rozoom.com.ua/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
-    print(url);
+        'https://new.rozoom.co.ua/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
+    // print(url);
     try {
       final response = await http.post(url);
-      print(response.statusCode);
+      // print(response.statusCode);
       final _apiData = json.decode(response.body) as Map<String, dynamic>;
-      print(_apiData);
+      // print(_apiData);
       if (_apiData == null) {
         throw HttpException('Щось пішло не так. Спробуйте ще');
       }
@@ -55,16 +57,16 @@ class Auth with ChangeNotifier {
       if (_apiData['exists'] == false &&
           _apiData['authenticated'] == true &&
           _apiData['user']['is_parent'] == 0) {
-        print('SIGNUP SUCCESSFUL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        // print('SIGNUP SUCCESSFUL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       }
-      print('01 --- ApiData --------------> $_apiData');
+      // print('01 --- ApiData --------------> $_apiData');
       _token = _apiData['api_token'];
 
       //Локализация
       final String urlLocal =
-          'https://rozoom.com.ua/api/mobile/me/update?preferred_lang=ua&api_token=$_token';
+          'https://new.rozoom.co.ua/api/mobile/me/update?preferred_lang=ua&api_token=$_token';
       final responseLocal = await http.post(urlLocal);
-      print('localization ${responseLocal.body}');
+      // print('localization ${responseLocal.body}');
       //
 
       notifyListeners();
@@ -82,9 +84,9 @@ class Auth with ChangeNotifier {
 
   Future<void> signin(email, password) async {
     final String url =
-        'https://rozoom.com.ua/api/mobile/auth?login=$email&password=$password';
+        'https://new.rozoom.co.ua/api/mobile/auth?login=$email&password=$password';
     try {
-      print(url);
+      // print(url);
       final response = await http.post(url);
       print(response.statusCode);
       final _apiData = json.decode(response.body) as Map<String, dynamic>;
@@ -109,17 +111,17 @@ class Auth with ChangeNotifier {
       if (_apiData['exists'] == true &&
           _apiData['authenticated'] == true &&
           _apiData['user']['is_parent'] == 0) {
-        print('LOGIN SUCCESSFUL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        // print('LOGIN SUCCESSFUL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       }
-      print('01 --- ApiData --------------> $_apiData');
+      // print('01 --- ApiData --------------> $_apiData');
       _token = _apiData['api_token'];
-      print('sign in token ----------------- $_token');
+      // print('sign in token ----------------- $_token');
 
       // Локализация
       final String urlLocal =
-          'https://rozoom.com.ua/api/mobile/me/update?preferred_lang=ua&api_token=$_token';
+          'https://new.rozoom.co.ua/api/mobile/me/update?preferred_lang=ua&api_token=$_token';
       final responseLocal = await http.post(urlLocal);
-      print('localization ${responseLocal.body}');
+      // print('localization ${responseLocal.body}');
       //
 
       notifyListeners();
@@ -137,7 +139,7 @@ class Auth with ChangeNotifier {
 
   Future<void> logout() async {
     _token = null;
-    print('logout token $_token');
+    // print('logout token $_token');
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     // prefs.remove('userData');

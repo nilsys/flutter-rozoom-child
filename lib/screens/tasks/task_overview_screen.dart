@@ -89,7 +89,7 @@ class _TaskOverviewScreenState extends State<TaskOverviewScreen> {
                     Navigator.of(context)
                         .pushNamed(EditProfileScreen.routeName);
                   } else {
-                    Provider.of<Auth>(context, listen: false).logout();
+                    // Provider.of<Auth>(context, listen: false).logout();
                   }
                 });
               },
