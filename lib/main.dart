@@ -16,9 +16,9 @@ import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
 import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/index_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_proces_screen.dart';
 import 'package:rozoom_app/screens/trainings/trainings_overview_screen.dart';
-import 'package:rozoom_app/screens/trainings/training_process_screen.dart';
-import 'package:rozoom_app/screens/trainings/trainings_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_preview_screen.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -114,6 +114,7 @@ class MyApp extends StatelessWidget {
           FixTaskScreen.routeName: (ctx) => FixTaskScreen(),
           EditProfileScreen.routeName: (ctx) => EditProfileScreen(),
           TrainingsOverviewScreen.routeName: (ctx) => TrainingsOverviewScreen(),
+          TrainingPreviewScreen.routeName: (ctx) => TrainingPreviewScreen(),
           TrainingProcessScreen.routeName: (ctx) => TrainingProcessScreen(),
         },
       ),

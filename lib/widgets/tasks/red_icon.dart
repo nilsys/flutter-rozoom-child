@@ -22,8 +22,9 @@ class RedAnimatedIconState extends State<RedAnimatedIcon>
       duration: Duration(milliseconds: 1200),
     );
     _curve = CurvedAnimation(parent: _controller, curve: Curves.slowMiddle);
-    _redColorAnimation = ColorTween(begin: Colors.black54, end: Colors.pink)
-        .animate(_controller);
+    _redColorAnimation =
+        ColorTween(begin: Colors.black54, end: Colors.redAccent)
+            .animate(_controller);
     _sizeAnimation = TweenSequence(<TweenSequenceItem<double>>[
       TweenSequenceItem<double>(
           tween: Tween<double>(begin: 24, end: 60), weight: 30),

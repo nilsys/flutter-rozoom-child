@@ -22,8 +22,9 @@ class GreenAnimatedIconState extends State<GreenAnimatedIcon>
       duration: Duration(milliseconds: 1200),
     );
     _curve = CurvedAnimation(parent: _controller, curve: Curves.slowMiddle);
-    _greenColorAnimation = ColorTween(begin: Colors.black54, end: Colors.green)
-        .animate(_controller);
+    _greenColorAnimation =
+        ColorTween(begin: Colors.black54, end: Colors.greenAccent)
+            .animate(_controller);
 
     _sizeAnimation = TweenSequence(<TweenSequenceItem<double>>[
       TweenSequenceItem<double>(

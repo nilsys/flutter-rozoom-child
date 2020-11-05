@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rozoom_app/constants.dart';
-import 'package:rozoom_app/screens/trainings/training_process_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_preview_screen.dart';
 import 'package:rozoom_app/size_config.dart';
 
 class TrainingsItem extends StatelessWidget {
@@ -15,7 +15,7 @@ class TrainingsItem extends StatelessWidget {
     double defaultSize = SizeConfig.defaultSize;
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(TrainingProcessScreen.routeName,
+        Navigator.of(context).pushNamed(TrainingPreviewScreen.routeName,
             arguments: {
               'trainingId': id,
               'trainingName': name,

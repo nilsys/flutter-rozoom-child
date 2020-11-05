@@ -22,45 +22,6 @@ class TrainingsOverviewScreen extends StatefulWidget {
 }
 
 class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
-  List<TrainingThemeModel> _trainingThemesItems = [
-    TrainingThemeModel(
-        id: '1',
-        name: 'Лічба в межах 30',
-        imageUrl: 'https://rozoom.com.ua/images/training/1.png'),
-    TrainingThemeModel(
-        id: '3',
-        name: 'Порівняння чисел в межах 100',
-        imageUrl: 'https://rozoom.com.ua/images/training/3.png'),
-    TrainingThemeModel(
-        id: '4',
-        name: 'Додавання і віднімання в межах 10 - 100',
-        imageUrl: 'https://rozoom.com.ua/images/training/4.png'),
-    TrainingThemeModel(
-        id: '5',
-        name: 'Лічба в межах 30',
-        imageUrl: 'https://rozoom.com.ua/images/training/1.png'),
-    TrainingThemeModel(
-        id: '6',
-        name: 'Порівняння чисел в межах 100',
-        imageUrl: 'https://rozoom.com.ua/images/training/3.png'),
-    TrainingThemeModel(
-        id: '7',
-        name: 'Додавання і віднімання в межах 10 - 100',
-        imageUrl: 'https://rozoom.com.ua/images/training/4.png'),
-    TrainingThemeModel(
-        id: '8',
-        name: 'Лічба в межах 30',
-        imageUrl: 'https://rozoom.com.ua/images/training/1.png'),
-    TrainingThemeModel(
-        id: '9',
-        name: 'Порівняння чисел в межах 100',
-        imageUrl: 'https://rozoom.com.ua/images/training/3.png'),
-    TrainingThemeModel(
-        id: '10',
-        name: 'Додавання і віднімання в межах 10 - 100',
-        imageUrl: 'https://rozoom.com.ua/images/training/4.png'),
-  ];
-
   var _isLoading = false;
 
   @override
@@ -85,7 +46,8 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
     // print('train themes ----- $trainThemes');
 
     return Scaffold(
-      appBar: myAppBar(context, 'Тренажери', '111', '5'),
+      appBar: myAppBar(context, 'TrainingsOverviewScreen.routeName',
+          'Тренажери', '111', '5', true, true),
       body: _isLoading
           ? Center(child: Image.asset("assets/gifs/ripple.gif"))
           : SingleChildScrollView(
@@ -96,7 +58,7 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   // just for demo
-                  itemCount: _trainingThemesItems.length,
+                  itemCount: trainThemes.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount:
                         SizeConfig.orientation == Orientation.portrait ? 2 : 4,
