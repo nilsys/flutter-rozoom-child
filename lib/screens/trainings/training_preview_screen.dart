@@ -10,7 +10,7 @@ import 'package:rozoom_app/providers/task_provider.dart';
 import 'package:rozoom_app/providers/training_provider.dart';
 import 'package:rozoom_app/screens/edit_profile_screen.dart';
 import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
-import 'package:rozoom_app/screens/trainings/training_proces_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_process_screen.dart';
 import 'package:rozoom_app/size_config.dart';
 import 'package:rozoom_app/widgets/components/app_bar.dart';
 import 'package:rozoom_app/widgets/tasks/task_item.dart';
@@ -22,17 +22,12 @@ class TrainingPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     double defaultSize = SizeConfig.defaultSize;
-    final data = Provider.of<TrainingThemes>(context, listen: false)
-        .extractedDataToString;
     // final task = Provider.of<Task>(context).taskItems;
     var args =
         ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
     final String trainingName = args['trainingName'];
-    print(trainingName);
     final String trainingId = args['trainingId'];
-    print(trainingId);
     final String trainingImageUrl = args['trainingImageUrl'];
-    print(trainingImageUrl);
 
     return Scaffold(
       appBar: myAppBar(context, 'TrainingPreviewScreen.routeName', '', '111',

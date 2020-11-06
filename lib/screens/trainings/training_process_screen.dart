@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/providers/time_provider.dart';
+import 'package:rozoom_app/providers/training_provider.dart';
 import 'package:rozoom_app/size_config.dart';
 import 'package:rozoom_app/widgets/components/app_bar.dart';
 import 'package:rozoom_app/widgets/trainings/training_answer_item.dart';
@@ -15,19 +16,22 @@ class TrainingProcessScreen extends StatefulWidget {
 }
 
 class _TrainingProcessScreenState extends State<TrainingProcessScreen> {
-  bool _isLoading = false;
+  bool isLoading = false;
 
   @override
   void initState() {
     setState(() {
-      _isLoading = true;
-      print('true');
+      isLoading = true;
     });
-    Future.delayed(Duration(seconds: 5)).then((value) {
-      setState(() {
-        _isLoading = false;
-        print('false');
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var args =
+          ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+      final String trainingId = args['trainingId'];
+      Provider.of<Training>(context, listen: false)
+          .startTraining(trainingId)
+          .then((value) => setState(() {
+                isLoading = false;
+              }));
     });
 
     super.initState();
@@ -42,8 +46,8 @@ class _TrainingProcessScreenState extends State<TrainingProcessScreen> {
       child: Scaffold(
         appBar: myAppBar(context, '/training-themes-overview', '', '111',
             '5.00', false, false),
-        body: _isLoading
-            ? Center(child: Image.asset("assets/gifs/countdown.gif"))
+        body: isLoading
+            ? Center(child: Image.asset("assets/gifs/ripple.gif"))
             : SingleChildScrollView(
                 child: ChangeNotifierProvider<TrainingTimer>(
                   create: (context) => TrainingTimer(),
@@ -53,7 +57,7 @@ class _TrainingProcessScreenState extends State<TrainingProcessScreen> {
                       children: <Widget>[
                         TrainingNavbarItem(),
                         TrainingQuestionItem(),
-                        TrainingAnswerItem(),
+                        TrainingAnswerItem(isLoading: isLoading),
                       ],
                     ),
                   ),

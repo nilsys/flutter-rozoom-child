@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/constants.dart';
 import 'package:rozoom_app/providers/time_provider.dart';
+import 'package:rozoom_app/providers/training_provider.dart';
+import 'package:rozoom_app/screens/trainings/training_result_screen.dart';
 import 'package:rozoom_app/size_config.dart';
 
 class TrainingNavbarItem extends StatefulWidget {
@@ -26,17 +28,63 @@ class _TrainingNavbarItemState extends State<TrainingNavbarItem> {
     var timeState = Provider.of<TrainingTimer>(context, listen: false);
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (timeState.timer == 0) {
-        // timer.cancel();
-        timeState.timer = 20;
+        Provider.of<Training>(context, listen: false)
+                .trainingItems['continueOrFinish']
+                .continueOrFinish
+            ? showAlert(context)
+            : Provider.of<Training>(context, listen: false)
+                .resultTraining(Provider.of<Training>(context, listen: false)
+                    .trainingItems['sessionId']
+                    .sessionId)
+                .then((value) => Navigator.of(context)
+                    .pushReplacementNamed(TrainingResultScreen.routeName));
+
+        Provider.of<Training>(context, listen: false)
+                .trainingItems['continueOrFinish']
+                .continueOrFinish
+            ? timeState.timer = 20
+            : timer.cancel();
+      } else if (timeState.timer == 22) {
+        timer.cancel();
+        print('timer canselled****************');
       } else {
         timeState.timer -= 1;
       }
     });
   }
 
+  showAlert(BuildContext context) {
+    Provider.of<Training>(context, listen: false)
+        .answerTraining(
+            Provider.of<Training>(context, listen: false)
+                .trainingItems['answerId']
+                .answerId,
+            'null')
+        .then((_) =>
+            Provider.of<TrainingTimer>(context, listen: false).timer = 20)
+        .then((_) => Navigator.of(context).pop(true));
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              backgroundColor: Colors.red[50],
+              child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Icon(
+                    Icons.cancel,
+                    color: Colors.redAccent,
+                    size: 250,
+                  )),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     var timeState = Provider.of<TrainingTimer>(context);
+    // var training = Provider.of<TrainingModel>(context, listen: false);
+    // var question = training.question;
+    // print('question --------------------- $question');
+
     SizeConfig().init(context);
     double defaultSize = SizeConfig.defaultSize;
     int value = timeState.timer;
@@ -63,21 +111,27 @@ class _TrainingNavbarItemState extends State<TrainingNavbarItem> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          '10',
-                          style: TextStyle(
-                              fontSize: defaultSize * 1.6,
-                              color: textRozoomColor),
+                        Consumer<Training>(
+                          builder: (ctx, item, _) => Text(
+                            item.trainingItems['rightAnswersCount']
+                                .rightAnswersCount,
+                            style: TextStyle(
+                                fontSize: defaultSize * 1.6,
+                                color: textRozoomColor),
+                          ),
                         ),
                         Icon(
                           Icons.check,
                           color: Colors.greenAccent,
                         ),
-                        Text(
-                          '11',
-                          style: TextStyle(
-                              fontSize: defaultSize * 1.6,
-                              color: textRozoomColor),
+                        Consumer<Training>(
+                          builder: (ctx, item, _) => Text(
+                            item.trainingItems['wrongAnswersCount']
+                                .wrongAnswersCount,
+                            style: TextStyle(
+                                fontSize: defaultSize * 1.6,
+                                color: textRozoomColor),
+                          ),
                         ),
                         Icon(
                           Icons.close,
@@ -90,11 +144,13 @@ class _TrainingNavbarItemState extends State<TrainingNavbarItem> {
                           Icons.attach_money,
                           color: blueRozoomColor,
                         ),
-                        Text(
-                          '5.75',
-                          style: TextStyle(
-                              fontSize: defaultSize * 1.6,
-                              color: textRozoomColor),
+                        Consumer<Training>(
+                          builder: (ctx, item, _) => Text(
+                            item.trainingItems['rewardAmount'].rewardAmount,
+                            style: TextStyle(
+                                fontSize: defaultSize * 1.6,
+                                color: textRozoomColor),
+                          ),
                         )
                       ],
                     ),
@@ -125,11 +181,13 @@ class _TrainingNavbarItemState extends State<TrainingNavbarItem> {
                               SizedBox(
                                 width: defaultSize * 0.3,
                               ),
-                              Text(
-                                '11/12',
-                                style: TextStyle(
-                                    fontSize: defaultSize * 1.6,
-                                    color: textRozoomColor),
+                              Consumer<Training>(
+                                builder: (ctx, item, _) => Text(
+                                  '${item.trainingItems['currentQuestionNumber'].currentQuestionNumber}/${item.trainingItems['totalQuestionCount'].totalQuestionCount}',
+                                  style: TextStyle(
+                                      fontSize: defaultSize * 1.6,
+                                      color: textRozoomColor),
+                                ),
                               ),
                             ],
                           ),

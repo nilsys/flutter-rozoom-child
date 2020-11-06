@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rozoom_app/providers/training_provider.dart';
 import 'package:rozoom_app/size_config.dart';
 
 class TrainingQuestionItem extends StatelessWidget {
@@ -20,9 +22,11 @@ class TrainingQuestionItem extends StatelessWidget {
           alignment: Alignment.center,
           width: defaultSize * 35,
           height: defaultSize * 15,
-          child: Text(
-            '2198 < 2189',
-            style: TextStyle(fontSize: 50, color: Colors.grey[800]),
+          child: Consumer<Training>(
+            builder: (ctx, item, _) => Text(
+              item.trainingItems['question'].question,
+              style: TextStyle(fontSize: 50, color: Colors.grey[800]),
+            ),
           ),
         ),
       ),

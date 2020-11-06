@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:rozoom_app/models/http_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rozoom_app/constants.dart';
 
 class AuthToken with ChangeNotifier {
   String authToken = 'No token..........';
@@ -36,7 +37,7 @@ class Auth with ChangeNotifier {
 
   Future<void> signup(email, password, username) async {
     final String url =
-        'https://new.rozoom.co.ua/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
+        '$rozoomUrlSegment/api/mobile/auth?login=$email&password=$password&name=$username&type_id=1';
     // print(url);
     try {
       final response = await http.post(url);
@@ -84,9 +85,9 @@ class Auth with ChangeNotifier {
 
   Future<void> signin(email, password) async {
     final String url =
-        'https://new.rozoom.co.ua/api/mobile/auth?login=$email&password=$password';
+        '$rozoomUrlSegment/api/mobile/auth?login=$email&password=$password';
     try {
-      // print(url);
+      print(url);
       final response = await http.post(url);
       print(response.statusCode);
       final _apiData = json.decode(response.body) as Map<String, dynamic>;

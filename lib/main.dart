@@ -16,9 +16,11 @@ import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
 import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
 import 'package:rozoom_app/screens/authentication_screen.dart';
 import 'package:rozoom_app/screens/index_screen.dart';
-import 'package:rozoom_app/screens/trainings/training_proces_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_process_screen.dart';
+import 'package:rozoom_app/screens/trainings/training_result_screen.dart';
 import 'package:rozoom_app/screens/trainings/trainings_overview_screen.dart';
 import 'package:rozoom_app/screens/trainings/training_preview_screen.dart';
+import 'package:rozoom_app/size_config.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -31,12 +33,6 @@ void main() {
               Disciplines(Provider.of<Auth>(context, listen: false).token, []),
           update: (BuildContext context, auth, previous) => Disciplines(
               auth.token, previous == null ? [] : previous.disciplineItems),
-        ),
-        ChangeNotifierProxyProvider<Auth, TrainingThemes>(
-          create: (BuildContext context) => TrainingThemes(
-              Provider.of<Auth>(context, listen: false).token, []),
-          update: (BuildContext context, auth, previous) => TrainingThemes(
-              auth.token, previous == null ? [] : previous.trainingThemesItems),
         ),
         ChangeNotifierProxyProvider<Auth, Themes>(
           create: (BuildContext context) =>
@@ -68,6 +64,20 @@ void main() {
         ChangeNotifierProvider<MessageCount>(
             create: (context) => MessageCount()),
         ChangeNotifierProvider<MyId>(create: (context) => MyId()),
+        //
+        ChangeNotifierProxyProvider<Auth, TrainingThemes>(
+          create: (BuildContext context) => TrainingThemes(
+              Provider.of<Auth>(context, listen: false).token, []),
+          update: (BuildContext context, auth, previous) => TrainingThemes(
+              auth.token, previous == null ? [] : previous.trainingThemesItems),
+        ),
+        ChangeNotifierProxyProvider<Auth, Training>(
+          create: (BuildContext context) =>
+              Training(Provider.of<Auth>(context, listen: false).token, {}),
+          update: (BuildContext context, auth, previous) => Training(
+              auth.token, previous == null ? {} : previous.trainingItems),
+        ),
+        ChangeNotifierProvider<TrainingModel>(create: (_) => TrainingModel()),
       ],
       child: MyApp(),
     ),
@@ -116,8 +126,44 @@ class MyApp extends StatelessWidget {
           TrainingsOverviewScreen.routeName: (ctx) => TrainingsOverviewScreen(),
           TrainingPreviewScreen.routeName: (ctx) => TrainingPreviewScreen(),
           TrainingProcessScreen.routeName: (ctx) => TrainingProcessScreen(),
+          TrainingResultScreen.routeName: (ctx) => TrainingResultScreen(),
         },
       ),
     );
+  }
+}
+
+class MyHome extends StatelessWidget {
+  // Wrapper Widget
+  @override
+  Widget build(BuildContext context) {
+    // print(screenHeight);
+    Future.delayed(Duration.zero, () => showAlert(context));
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          child: Text("Hello world"),
+        ),
+      ),
+    );
+  }
+
+  void showAlert(BuildContext context) {
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.of(context).pop(true);
+    });
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              backgroundColor: Colors.green[50],
+              child: Container(
+                  // height: MediaQuery.of(context).size.height,
+                  // width: MediaQuery.of(context).size.width,
+                  child: Icon(
+                Icons.check,
+                color: Colors.greenAccent,
+                size: 250,
+              )),
+            ));
   }
 }

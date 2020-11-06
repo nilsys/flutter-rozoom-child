@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rozoom_app/models/http_exception.dart';
+import 'package:rozoom_app/constants.dart';
 
 class DisciplineModel {
   final int id;
@@ -33,7 +34,7 @@ class Disciplines with ChangeNotifier {
 
   Future<void> fetchAndSetDisciplines() async {
     print('discipline auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/api/mobile/disciplines?api_token=';
+    final url = '$rozoomUrlSegment/api/mobile/disciplines?api_token=';
     try {
       final response = await http.post(url + authToken);
       var extractedData = json.decode(response.body)['disciplines'];
@@ -94,7 +95,7 @@ class Themes with ChangeNotifier {
   Future<void> fetchandSetThemes(disciplineId) async {
     // print('theme auth token ---------------------------- $authToken');
     final url =
-        'https://new.rozoom.co.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
+        '$rozoomUrlSegment/api/mobile/themes?discipline_id=$disciplineId&api_token=';
     try {
       final response = await http.post(url + authToken);
       // print(url + token);
@@ -198,7 +199,7 @@ class TaskModel with ChangeNotifier {
   // }
 
   Future<void> getFixTaskInfo() async {
-    final url = 'https://new.rozoom.co.ua/tasks/fix?api_token=';
+    final url = '$rozoomUrlSegment/tasks/fix?api_token=';
     print(url);
 
     try {
@@ -218,7 +219,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> fixTasks() async {
     // print('start task auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/tasks/fix/start?api_token=';
+    final url = '$rozoomUrlSegment/tasks/fix/start?api_token=';
     print(url);
 
     try {
@@ -317,7 +318,7 @@ class TaskModel with ChangeNotifier {
 
   Future<void> startTask(themeId) async {
     // print('start task auth token ---------------------------- $authToken');
-    final url = 'https://new.rozoom.co.ua/task/start/$themeId?api_token=';
+    final url = '$rozoomUrlSegment/task/start/$themeId?api_token=';
     // print(url);
     try {
       final headers = {'Accept': 'text/json'};
@@ -416,7 +417,7 @@ class TaskModel with ChangeNotifier {
   Future<void> answerTask(answerId, answerListElementNumber) async {
     // print('answer task auth token ---------------------------- $authToken');
     final url =
-        'https://new.rozoom.co.ua/task/answer/$answerId/$answerListElementNumber?api_token=';
+        '$rozoomUrlSegment/task/answer/$answerId/$answerListElementNumber?api_token=';
     // print(url);
 
     try {
@@ -433,8 +434,7 @@ class TaskModel with ChangeNotifier {
       if (extractedData['result'] == false) {
         // print(
         //     'result false auth token ---------------------------- $authToken');
-        final url =
-            'https://new.rozoom.co.ua/task/result/$sessionId?api_token=';
+        final url = '$rozoomUrlSegment/task/result/$sessionId?api_token=';
         print('url ---------- $url');
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
@@ -538,7 +538,7 @@ class TaskModel with ChangeNotifier {
     // print(
     //     'answer form task auth token ---------------------------- $authToken');
     final url =
-        'https://new.rozoom.co.ua/task/answer/$answerId/text?text=$answerText&api_token=';
+        '$rozoomUrlSegment/task/answer/$answerId/text?text=$answerText&api_token=';
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + authToken, headers: headers);
@@ -554,8 +554,7 @@ class TaskModel with ChangeNotifier {
       if (extractedData['result'] == false) {
         // print(
         //     'result false form auth token ---------------------------- $authToken');
-        final url =
-            'https://new.rozoom.co.ua/task/result/$sessionId?api_token=';
+        final url = '$rozoomUrlSegment/task/result/$sessionId?api_token=';
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
         var extractedData = json.decode(response.body);

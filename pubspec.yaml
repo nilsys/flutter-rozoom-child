@@ -130,7 +130,6 @@ flutter:
     - assets/json/math.json
     - assets/gifs/ripple.gif
     - assets/gifs/spinner.gif
-    - assets/gifs/countdown.gif
 
 
   #   - images/a_dot_ham.jpeg

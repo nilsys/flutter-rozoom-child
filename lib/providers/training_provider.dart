@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rozoom_app/constants.dart';
 import 'package:rozoom_app/models/http_exception.dart';
 
 class TrainingThemeModel {
@@ -18,10 +19,11 @@ class TrainingThemeModel {
 }
 
 class TrainingThemes with ChangeNotifier {
-  String extractedDataToString;
   String authToken;
-  TrainingThemes(this.authToken, this._trainingThemesItems,
-      {this.extractedDataToString});
+  TrainingThemes(
+    this.authToken,
+    this._trainingThemesItems,
+  );
 
   List<TrainingThemeModel> _trainingThemesItems = [];
 
@@ -30,47 +32,9 @@ class TrainingThemes with ChangeNotifier {
   }
 
   Future<void> fetchAndSetTrainingThemes() async {
-    final url = 'https://new.rozoom.co.ua/trainings';
-    final headers = {
-      'Accept': 'text/json',
-      'Authorization': 'Bearer $authToken'
-    };
-    print('trainings auth token ---------------------------- $authToken');
-
-    try {
-      final response = await http.get(url, headers: headers);
-      final extractedData = json.decode(response.body);
-
-      if (extractedData['error'] != null) {
-        throw HttpException('Щось пішло не так. Спробуйте ще');
-      }
-      List<TrainingThemeModel> loadedTrainingThemes = [];
-      final trainingData = extractedData['trainings'];
-      print('trainings extracted data ------- $trainingData');
-      print('extractedData.runtimeType ${trainingData.runtimeType}');
-      print('extractedData.length ${trainingData.length}');
-      for (int i = 0; i < trainingData.length; i++) {
-        print('id $i --- ${trainingData[i]['id'].toString()}');
-        print('name $i --- ${trainingData[i]['name']}');
-
-        loadedTrainingThemes.add(TrainingThemeModel(
-            id: trainingData[i]['id'].toString(),
-            name: trainingData[i]['name'],
-            imageUrl:
-                'https://rozoom.com.ua/images/training/${trainingData[i]['id'].toString()}.png'));
-      }
-
-      _trainingThemesItems = loadedTrainingThemes;
-      print('_trainingThemesItems $_trainingThemesItems');
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<void> trainingPreview() async {
-    final url =
-        'https://new.rozoom.co.ua/training/1/preview?api_token=$authToken';
+    // print('training auth token ---------------------------- $authToken');
+    final url = '$rozoomUrlSegment/trainings';
+    // print('training url ---------------------------- $url');
     final headers = {
       'Accept': 'text/json',
       'Authorization': 'Bearer $authToken'
@@ -79,24 +43,22 @@ class TrainingThemes with ChangeNotifier {
     try {
       final response = await http.get(url, headers: headers);
       // print(response.statusCode);
-      var extractedData = json.decode(response.body);
-      print('trainings extracted data ------- $extractedData');
-      extractedDataToString = json.decode(response.body).toString();
-      // print('trainings data to string ------- $extractedData');
-      // final List<TrainingDisciplineModel> loadedDisciplines = [];
+      final extractedData = json.decode(response.body);
+      // print(extractedData);
+      if (extractedData['error'] != null) {
+        throw HttpException('Щось пішло не так. Спробуйте ще');
+      }
+      List<TrainingThemeModel> loadedTrainingThemes = [];
+      final trainingData = extractedData['trainings'];
+      for (int i = 0; i < trainingData.length; i++) {
+        loadedTrainingThemes.add(TrainingThemeModel(
+            id: trainingData[i]['id'].toString(),
+            name: trainingData[i]['name'],
+            imageUrl:
+                'https://rozoom.com.ua/images/training/${trainingData[i]['id'].toString()}.png'));
+      }
 
-      // for (var i = 0; i < extractedData.length; i++) {
-      //   loadedDisciplines.add(
-      //     TrainingDisciplineModel(
-      //       id: extractedData[i]['id'],
-      //       title: extractedData[i]['title'],
-      //       titleUa: extractedData[i]['label'],
-      //       imageUrl: 'assets/images/disciplines/${extractedData[i]['id']}.png',
-      //     ),
-      //   );
-      // }
-
-      // _trainingDisciplineItems = loadedDisciplines;
+      _trainingThemesItems = loadedTrainingThemes;
       notifyListeners();
     } catch (error) {
       throw error;
@@ -104,125 +66,224 @@ class TrainingThemes with ChangeNotifier {
   }
 }
 
-// class TrainingDisciplineModel {
-//   final int id;
-//   final String title;
-//   final String titleUa;
-//   final String imageUrl;
-//   final String label;
-//   final String titleRu;
+class TrainingModel extends ChangeNotifier {
+  final String sessionId;
+  final bool continueOrFinish;
+  final String rightAnswersCount;
+  final String wrongAnswersCount;
+  final String rewardAmount;
+  final String currentQuestionNumber;
+  final String totalQuestionCount;
+  final String question;
+  final List answerVariants;
+  final String rightAnswer;
+  final String answerId;
+  final String points;
+  TrainingModel(
+      {this.sessionId,
+      this.continueOrFinish,
+      this.rightAnswersCount,
+      this.wrongAnswersCount,
+      this.rewardAmount,
+      this.currentQuestionNumber,
+      this.totalQuestionCount,
+      this.question,
+      this.answerVariants,
+      this.rightAnswer,
+      this.answerId,
+      this.points});
+}
 
-//   TrainingDisciplineModel({
-//     this.id,
-//     this.title,
-//     this.titleUa,
-//     this.imageUrl,
-//     this.label,
-//     this.titleRu,
-//   });
-// }
+class Training extends ChangeNotifier {
+  String authToken;
+  Training(this.authToken, this._trainingItems);
 
-// class TrainingDisciplines with ChangeNotifier {
-//   String extractedDataToString;
-//   String authToken;
-//   TrainingDisciplines(this.authToken, this._trainingDisciplineItems,
-//       {this.extractedDataToString});
+  Map<String, TrainingModel> _trainingItems = {};
+  Map<String, TrainingModel> get trainingItems {
+    return {..._trainingItems};
+  }
 
-//   List<TrainingDisciplineModel> _trainingDisciplineItems = [];
+  Future<void> startTraining(trainingId) async {
+    print('training auth token ---------------------------- $authToken');
+    final url = '$rozoomUrlSegment/training/start?training_id=$trainingId';
+    print('training url ---------------------------- $url');
+    final headers = {
+      'Accept': 'text/json',
+      'Authorization': 'Bearer $authToken'
+    };
+    try {
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body);
+      if (extractedData['error'] != null) {
+        throw HttpException('Щось пішло не так. Спробуйте ще');
+      }
+      print(extractedData);
+      parseExtractedData(extractedData);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-//   List<TrainingDisciplineModel> get trainingDisciplineItems {
-//     return [..._trainingDisciplineItems];
-//   }
+  Future<void> answerTraining(answerId, answerIndex) async {
+    print('training auth token ---------------------------- $authToken');
+    final url =
+        '$rozoomUrlSegment/training/answer/$answerId?answer=$answerIndex';
+    print('training url ---------------------------- $url');
+    final headers = {
+      'Accept': 'text/json',
+      'Authorization': 'Bearer $authToken'
+    };
+    try {
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body);
+      if (extractedData['error'] != null) {
+        throw HttpException('Щось пішло не так. Спробуйте ще');
+      }
+      print(extractedData);
+      // if (extractedData['result'] == false) {
+      //   print(
+      //       'result false----------------------------------------------------------------------');
+      //   final resultUrl =
+      //       '$rozoomUrlSegment/training/result/${extractedData['session']['id']}';
+      //   print('result url ---------------------------- $resultUrl');
+      //   final headers = {
+      //     'Accept': 'text/json',
+      //     'Authorization': 'Bearer $authToken'
+      //   };
+      //   try {
+      //     final response = await http.get(url, headers: headers);
+      //     final extractedResultData = json.decode(response.body);
+      //     print(extractedResultData);
+      //   } catch (error) {
+      //     throw error;
+      //   }
+      //   parseResult(extractedData);
+      // }
+      parseExtractedData(extractedData);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-//   Future<void> fetchAndSetTrainingDisciplines() async {
-//     print('discipline auth token ---------------------------- $authToken');
-//     final url = 'https://new.rozoom.co.ua/api/mobile/disciplines?api_token=';
-//     try {
-//       final response = await http.post(url + authToken);
-//       var extractedData = json.decode(response.body)['disciplines'];
-//       extractedDataToString = json.decode(response.body).toString();
-//       print('extracted disc ------- $extractedData');
-//       final List<TrainingDisciplineModel> loadedDisciplines = [];
+  Future<void> answerTrainingNoListen(answerId, answerIndex) async {
+    print('no listen token ---------------------------- $authToken');
+    final url =
+        '$rozoomUrlSegment/training/answer/$answerId?answer=$answerIndex';
+    print('no listen url ---------------------------- $url');
+    final headers = {
+      'Accept': 'text/json',
+      'Authorization': 'Bearer $authToken'
+    };
+    try {
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body);
+      if (extractedData['error'] != null) {
+        throw HttpException('Щось пішло не так. Спробуйте ще');
+      }
+      print(extractedData);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-//       for (var i = 0; i < extractedData.length; i++) {
-//         loadedDisciplines.add(
-//           TrainingDisciplineModel(
-//             id: extractedData[i]['id'],
-//             title: extractedData[i]['title'],
-//             titleUa: extractedData[i]['label'],
-//             imageUrl: 'assets/images/disciplines/${extractedData[i]['id']}.png',
-//           ),
-//         );
-//       }
+  Future<void> resultTraining(sessionId) async {
+    print('resultTraining auth token ---------------------------- $authToken');
+    final url = '$rozoomUrlSegment/training/result/$sessionId';
+    print('resultTraining url ---------------------------- $url');
+    final headers = {
+      'Accept': 'text/json',
+      'Authorization': 'Bearer $authToken'
+    };
+    try {
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body);
+      if (extractedData['error'] != null) {
+        throw HttpException('Щось пішло не так. Спробуйте ще');
+      }
+      print(extractedData);
+      parseResult(extractedData);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-//       _trainingDisciplineItems = loadedDisciplines;
-//       notifyListeners();
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
-// }
+  void parseExtractedData(Map data) {
+    // print(data);
+    final String sessionId = data['session']['id'].toString();
 
-// class ThemeModel with ChangeNotifier {
-//   final int disciplineId;
-//   final int id;
-//   final String name;
-//   final String imageUrl;
-//   final String klass;
-//   final String tasksCount;
+    bool continueOrFinish = data['result'];
 
-//   ThemeModel(
-//       {this.disciplineId,
-//       this.id,
-//       this.name,
-//       this.imageUrl,
-//       this.klass,
-//       this.tasksCount});
-// }
+    final String rightAnswersCount = data['session']['rights'].toString();
 
-// class Themes with ChangeNotifier {
-//   String authToken;
-//   Themes(this.authToken, this._themeItems);
-//   List<ThemeModel> _themeItems = [];
+    final String wrongAnswersCount =
+        (int.tryParse(data['session']['completed'].toString()) -
+                int.tryParse(data['session']['rights'].toString()))
+            .toString();
 
-//   List<ThemeModel> get themeItems {
-//     return [..._themeItems];
-//   }
+    final String rewardAmount = data['session']['reward'].toString();
+    final String currentQuestionNumber =
+        (int.tryParse(data['session']['completed'].toString()) + 1).toString();
 
-//   Future<void> nullThemeImages() async {
-//     _themeItems = [];
-//     return _themeItems;
-//   }
+    final String totalQuestionCount = data['session']['limit'].toString();
+    if (currentQuestionNumber == totalQuestionCount) {
+      continueOrFinish = false;
+    }
+    final String question = data['question']['question'];
+    final List answerVariants = data['question']['variants'];
+    var answerIndex = data['question']['answer_idx'];
+    print(answerIndex.runtimeType);
+    final String rightAnswer = answerVariants[answerIndex];
+    print(rightAnswer);
+    final String answerId = data['answer_id'].toString();
 
-//   Future<void> fetchandSetThemes(disciplineId) async {
-//     // print('theme auth token ---------------------------- $authToken');
-//     final url =
-//         'https://rozoom.com.ua/api/mobile/themes?discipline_id=$disciplineId&api_token=';
-//     try {
-//       final response = await http.post(url + authToken);
-//       // print(url + token);
-//       var extractedData = json.decode(response.body)['themes'];
-//       // print(extractedData);
-//       final List<ThemeModel> loadedTasks = [];
-//       for (var i = 0; i < extractedData.length; i++) {
-//         loadedTasks.add(ThemeModel(
-//             id: extractedData[i]['id'],
-//             name: extractedData[i]['name'],
-//             imageUrl: extractedData[i]['image'] != null
-//                 ? 'https://rozoom.com.ua/uploads/' + extractedData[i]['image']
-//                 : '',
-//             klass: extractedData[i]['class'] != null
-//                 ? extractedData[i]['class']
-//                 : 'ထ',
-//             tasksCount: extractedData[i]['tasks_count']));
-//       }
-//       _themeItems = loadedTasks;
-//       notifyListeners();
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
-// }
+    Map<String, TrainingModel> loadedTraining = {
+      'sessionId': TrainingModel(sessionId: sessionId),
+      'continueOrFinish': TrainingModel(continueOrFinish: continueOrFinish),
+      'rightAnswersCount': TrainingModel(rightAnswersCount: rightAnswersCount),
+      'wrongAnswersCount': TrainingModel(wrongAnswersCount: wrongAnswersCount),
+      'rewardAmount': TrainingModel(rewardAmount: rewardAmount),
+      'currentQuestionNumber':
+          TrainingModel(currentQuestionNumber: currentQuestionNumber),
+      'totalQuestionCount':
+          TrainingModel(totalQuestionCount: totalQuestionCount),
+      'question': TrainingModel(question: question),
+      'answerVariants': TrainingModel(answerVariants: answerVariants),
+      'rightAnswer': TrainingModel(rightAnswer: rightAnswer),
+      'answerId': TrainingModel(answerId: answerId),
+    };
+    _trainingItems = loadedTraining;
+
+    notifyListeners();
+  }
+
+  void parseResult(Map data) {
+    final String rightAnswersCount = data['session']['rights'].toString();
+    final String wrongAnswersCount =
+        (int.tryParse(data['session']['completed'].toString()) -
+                int.tryParse(data['session']['rights'].toString()))
+            .toString();
+    final String rewardAmount = data['session']['reward'].toString();
+    final String points = data['trainings_points'].toString();
+
+    Map<String, TrainingModel> loadedTraining = {
+      'rightAnswersCount': TrainingModel(rightAnswersCount: rightAnswersCount),
+      'wrongAnswersCount': TrainingModel(wrongAnswersCount: wrongAnswersCount),
+      'rewardAmount': TrainingModel(rewardAmount: rewardAmount),
+      'points': TrainingModel(points: points),
+      'sessionId': TrainingModel(sessionId: ''),
+      'continueOrFinish': TrainingModel(continueOrFinish: false),
+      'currentQuestionNumber': TrainingModel(currentQuestionNumber: '12'),
+      'totalQuestionCount': TrainingModel(totalQuestionCount: '12'),
+      'question': TrainingModel(question: ''),
+      'answerVariants': TrainingModel(answerVariants: ['', '', '', '']),
+      'rightAnswer': TrainingModel(rightAnswer: ''),
+      'answerId': TrainingModel(answerId: ''),
+    };
+    _trainingItems = loadedTraining;
+
+    notifyListeners();
+  }
+}
 
 // class TaskModel with ChangeNotifier {
 //   String authToken;
@@ -236,7 +297,7 @@ class TrainingThemes with ChangeNotifier {
 //   String question;
 //   String answerIdForApi;
 //   List answerVariants;
-//   String rightAnswerListElementNumber;
+//   String rightAnswer;
 //   String rightAnswerStringValue;
 //   String answerType;
 //   String resultPoints;
@@ -263,7 +324,7 @@ class TrainingThemes with ChangeNotifier {
 //       this.question,
 //       this.answerIdForApi,
 //       this.answerVariants,
-//       this.rightAnswerListElementNumber,
+//       this.rightAnswer,
 //       this.rightAnswerStringValue,
 //       this.answerType,
 //       this.resultPoints,
@@ -289,7 +350,7 @@ class TrainingThemes with ChangeNotifier {
 //   get getQuestion => question;
 //   get getAnswerIdForApi => answerIdForApi;
 //   get getAnswerVariants => answerVariants;
-//   get getRightAnswerListElementNumber => rightAnswerListElementNumber;
+//   get getrightAnswer => rightAnswer;
 //   get getRightAnswerStringValue => rightAnswerStringValue;
 //   get getAnswerType => answerType;
 //   get getResultPoints => resultPoints;
@@ -352,7 +413,7 @@ class TrainingThemes with ChangeNotifier {
 //       question = extractedData['task']['question'].toString();
 //       answerIdForApi = extractedData['answer']['id'].toString();
 //       answerVariants = extractedData['answer']['variants'];
-//       rightAnswerListElementNumber =
+//       rightAnswer =
 //           extractedData['answer']['right_idx'].toString();
 //       rightAnswerStringValue = extractedData['task']['answer'].toString();
 //       answerType = extractedData['task']['type_id'].toString();
@@ -450,7 +511,7 @@ class TrainingThemes with ChangeNotifier {
 //       question = extractedData['task']['question'].toString();
 //       answerIdForApi = extractedData['answer']['id'].toString();
 //       answerVariants = extractedData['answer']['variants'];
-//       rightAnswerListElementNumber =
+//       rightAnswer =
 //           extractedData['answer']['right_idx'].toString();
 //       rightAnswerStringValue = extractedData['task']['answer'].toString();
 //       answerType = extractedData['task']['type_id'].toString();
@@ -570,7 +631,7 @@ class TrainingThemes with ChangeNotifier {
 //       question = extractedData['task']['question'].toString();
 //       answerIdForApi = extractedData['answer']['id'].toString();
 //       answerVariants = extractedData['answer']['variants'];
-//       rightAnswerListElementNumber =
+//       rightAnswer =
 //           extractedData['answer']['right_idx'].toString();
 //       rightAnswerStringValue = extractedData['task']['answer'].toString();
 //       answerType = extractedData['task']['type_id'].toString();
@@ -688,7 +749,7 @@ class TrainingThemes with ChangeNotifier {
 //       question = extractedData['task']['question'].toString();
 //       answerIdForApi = extractedData['answer']['id'].toString();
 //       answerVariants = extractedData['answer']['variants'];
-//       rightAnswerListElementNumber =
+//       rightAnswer =
 //           extractedData['answer']['right_idx'].toString();
 //       rightAnswerStringValue = extractedData['task']['answer'].toString();
 //       answerType = extractedData['task']['type_id'].toString();
