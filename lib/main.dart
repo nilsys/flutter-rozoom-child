@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/providers/auth_provider.dart';
-import 'package:rozoom_app/providers/edit_profile_provider.dart';
-import 'package:rozoom_app/providers/task_provider.dart';
-import 'package:rozoom_app/providers/pusher_provider.dart';
-import 'package:rozoom_app/providers/training_provider.dart';
-import 'package:rozoom_app/providers/video_chat_provider.dart';
-import 'package:rozoom_app/screens/edit_profile_screen.dart';
-import 'package:rozoom_app/screens/splash_screen.dart';
-import 'package:rozoom_app/screens/tasks/disciplines_overview_screen.dart';
-import 'package:rozoom_app/screens/tasks/fix_task_screen.dart';
-import 'package:rozoom_app/screens/tasks/task_overview_screen.dart';
-import 'package:rozoom_app/screens/tasks/task_result_screen.dart';
-import 'package:rozoom_app/screens/tasks/themes_overview_screen.dart';
-import 'package:rozoom_app/screens/authentication_screen.dart';
-import 'package:rozoom_app/screens/index_screen.dart';
-import 'package:rozoom_app/screens/trainings/training_process_screen.dart';
-import 'package:rozoom_app/screens/trainings/training_result_screen.dart';
-import 'package:rozoom_app/screens/trainings/trainings_overview_screen.dart';
-import 'package:rozoom_app/screens/trainings/training_preview_screen.dart';
-import 'package:rozoom_app/size_config.dart';
+import 'package:rozoom_app/core/providers/auth_provider.dart';
+import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
+import 'package:rozoom_app/core/providers/pusher_provider.dart';
+import 'package:rozoom_app/core/providers/task_provider.dart';
+import 'package:rozoom_app/core/providers/training_provider.dart';
+import 'package:rozoom_app/core/providers/video_chat_provider.dart';
+import 'package:rozoom_app/ui/home_screens/index_screen.dart';
+import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
+import 'package:rozoom_app/ui/auth_screen/authentication_screen.dart';
+import 'package:rozoom_app/ui/tasks_screens/disciplines_overview_screen.dart';
+import 'package:rozoom_app/ui/tasks_screens/fix_task_screen.dart';
+import 'package:rozoom_app/ui/tasks_screens/task_overview_screen.dart';
+import 'package:rozoom_app/ui/tasks_screens/task_result_screen.dart';
+import 'package:rozoom_app/ui/tasks_screens/themes_overview_screen.dart';
+import 'package:rozoom_app/ui/training_screens/training_process_screen.dart';
+import 'package:rozoom_app/ui/training_screens/training_result_screen.dart';
+import 'package:rozoom_app/ui/training_screens/trainings_overview_screen.dart';
+import 'package:rozoom_app/ui/training_screens/training_preview_screen.dart';
+import 'package:rozoom_app/shared/widgets/loader_screen.dart';
 
 void main() {
   Provider.debugCheckInvalidValueType = null;
@@ -93,7 +92,7 @@ class MyApp extends StatelessWidget {
             // TrainingsOverviewScreen(),
 
             auth.isAuth
-                ? TrainingsOverviewScreen()
+                ? IndexScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (ctx, authResultSnapshot) {
@@ -104,7 +103,7 @@ class MyApp extends StatelessWidget {
                     },
                   ),
         theme: ThemeData(
-            appBarTheme: AppBarTheme(color: Colors.transparent, elevation: 0),
+            appBarTheme: AppBarTheme(color: Colors.white, elevation: 0),
             primaryColor: Color(0xFF74bec9),
             accentColor: Color(0xFFf06388),
             fontFamily: 'Robot Regular',
@@ -130,40 +129,5 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class MyHome extends StatelessWidget {
-  // Wrapper Widget
-  @override
-  Widget build(BuildContext context) {
-    // print(screenHeight);
-    Future.delayed(Duration.zero, () => showAlert(context));
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Text("Hello world"),
-        ),
-      ),
-    );
-  }
-
-  void showAlert(BuildContext context) {
-    Future.delayed(Duration(seconds: 1), () {
-      Navigator.of(context).pop(true);
-    });
-    showDialog(
-        context: context,
-        builder: (context) => Dialog(
-              backgroundColor: Colors.green[50],
-              child: Container(
-                  // height: MediaQuery.of(context).size.height,
-                  // width: MediaQuery.of(context).size.width,
-                  child: Icon(
-                Icons.check,
-                color: Colors.greenAccent,
-                size: 250,
-              )),
-            ));
   }
 }

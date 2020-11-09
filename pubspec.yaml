@@ -38,7 +38,7 @@ dependencies:
   shared_preferences:
   http:
   provider: ^4.3.1
-  flutter_svg: ^0.17.4
+  flutter_svg: ^0.19.1
   jitsi_meet: ^0.2.5
   path_provider: ^1.6.11
   flutter_pusher_client: ^0.3.1
@@ -48,7 +48,7 @@ dependencies:
   dio: ^3.0.10
   audioplayers: ^0.16.1
   simple_animations: ^2.2.3
-  slide_countdown_clock: ^1.0.3
+
   
 
 
