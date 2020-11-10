@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:rozoom_app/core/providers/achivments_provider.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/core/providers/pusher_provider.dart';
 import 'package:rozoom_app/core/providers/task_provider.dart';
 import 'package:rozoom_app/core/providers/training_provider.dart';
 import 'package:rozoom_app/core/providers/video_chat_provider.dart';
+import 'package:rozoom_app/ui/achievments_screen/achievments_screen.dart';
 import 'package:rozoom_app/ui/home_screens/index_screen.dart';
 import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
 import 'package:rozoom_app/ui/auth_screen/authentication_screen.dart';
@@ -77,6 +79,11 @@ void main() {
               auth.token, previous == null ? {} : previous.trainingItems),
         ),
         ChangeNotifierProvider<TrainingModel>(create: (_) => TrainingModel()),
+        ChangeNotifierProxyProvider<Auth, Achievments>(
+          create: (BuildContext context) =>
+              Achievments(Provider.of<Auth>(context, listen: false).token),
+          update: (BuildContext context, auth, _) => Achievments(auth.token),
+        ),
       ],
       child: MyApp(),
     ),
@@ -92,13 +99,13 @@ class MyApp extends StatelessWidget {
             // TrainingsOverviewScreen(),
 
             auth.isAuth
-                ? IndexScreen()
+                ? AchievmentsScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (ctx, authResultSnapshot) {
                       return authResultSnapshot.connectionState ==
                               ConnectionState.waiting
-                          ? SplashScreen()
+                          ? MyLoaderScreen()
                           : AuthScreen();
                     },
                   ),

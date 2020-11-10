@@ -126,6 +126,15 @@ flutter:
     - assets/images/disciplines/37.png
     - assets/images/disciplines/38.png
     - assets/images/disciplines/39.png
+    - assets/images/achievements/1.png
+    - assets/images/achievements/2.png
+    - assets/images/achievements/3.png
+    - assets/images/achievements/4.png
+    - assets/images/achievements/5.png
+    - assets/images/achievements/6.png
+    - assets/images/achievements/7.png
+    - assets/images/achievements/8.png
+    - assets/images/achievements/9.png
 
     - assets/json/math.json
     - assets/gifs/ripple.gif
