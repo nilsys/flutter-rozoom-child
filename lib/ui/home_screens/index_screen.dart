@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
+import 'package:rozoom_app/shared/size_config.dart';
+import 'package:rozoom_app/shared/widgets/loader_screen.dart';
+import 'package:rozoom_app/ui/home_screens/home_screen.dart';
 import 'package:rozoom_app/ui/home_screens/widgets/home_child.dart';
 import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
 import 'package:rozoom_app/shared/widgets/app_drawer.dart';
@@ -19,7 +22,7 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  bool _isLoading = false;
+  bool _isLoading;
   int _currentIndex = 1;
 
   @override
@@ -35,75 +38,16 @@ class _IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final balance = Provider.of<Profile>(context, listen: false).balance;
-    final certificates =
-        Provider.of<Profile>(context, listen: false).certificates;
-    return Scaffold(
+    return _isLoading 
+    ? MyLoaderScreen() 
+    : Scaffold(
       drawer: AppDrawer(),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 1,
-        backgroundColor: Colors.white,
-        // leading: IconButton(
-        //   icon: Icon(
-        //     Icons.arrow_back,
-        //     color: Colors.grey,
-        //   ),
-        //   onPressed: () {
-        //     Navigator.of(context).pushReplacementNamed(IndexScreen.routeName);
-        //   },
-        // ),
-        actions: <Widget>[
-          PopupMenuButton(
-            padding: EdgeInsets.all(8),
-            elevation: 1,
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.EditProfile) {
-                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
-                  // _showOnlyFavorites = true;
-                } else {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacementNamed('/');
-                  Provider.of<Auth>(context, listen: false).logout();
-                }
-              });
-            },
-            icon: Icon(Icons.more_vert, color: Colors.grey),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                  child: Text('Профайл'), value: FilterOptions.EditProfile),
-              PopupMenuItem(child: Text('Вийти'), value: FilterOptions.Logout),
-            ],
-          ),
-        ],
-        title: _isLoading
-            ? Text('')
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SizedBox(width: 35),
-                  Image.asset('assets/images/stats/coin.png', scale: 0.55),
-                  SizedBox(width: 5),
-                  balance != null
-                      ? Text(balance,
-                          style: TextStyle(color: Colors.black, fontSize: 16))
-                      : Text(''),
-                  SizedBox(width: 10),
-                  Image.asset('assets/images/stats/uah.png', height: 30),
-                  SizedBox(width: 5),
-                  certificates != null
-                      ? Text(certificates,
-                          style: TextStyle(color: Colors.black, fontSize: 16))
-                      : Text(''),
-                ],
-              ),
-      ),
+      
       body: IndexedStack(
         index: _currentIndex,
         children: <Widget>[
           Text('chat screen'),
-          HomeChild(),
+          MyHome(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -128,11 +72,11 @@ class _IndexScreenState extends State<IndexScreen> {
             //       badgeCount: count.getTotalUnreadMessages),
             // ),
             icon: Icon(Icons.people_outline, size: 25),
-            title: Text('Друзі'),
+            label: 'Друзі',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
-            title: Text('Навчання'),
+            label: 'Навчання',
           ),
         ],
       ),

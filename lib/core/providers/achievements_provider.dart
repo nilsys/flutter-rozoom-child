@@ -8,7 +8,6 @@ class AchievmentCategoryModel {
   final String name;
   AchievmentCategoryModel({this.id, this.name});
 }
-
 class AchievmentModel {
   final String id;
   final String categoryId;
@@ -26,12 +25,34 @@ class AchievmentModel {
       this.status});
 }
 
+class CardModel {
+  final String id;
+  final String categoryId;
+  final String description;
+  final String price;
+  final String imageUrl;
+  final String status;
+
+  CardModel(
+      {this.id,
+      this.categoryId,
+      this.description,
+      this.price,
+      this.imageUrl,
+      this.status});
+}
+
 class Achievments extends ChangeNotifier {
   final String authToken;
   Achievments(this.authToken);
 
-  bool _isLoading = true;
-  bool get isLoading => _isLoading;
+  String _apiToString;
+  String get apiToString => _apiToString;
+
+  bool _isLoadingScreen = true;
+  bool get isLoadingScreen => _isLoadingScreen;
+  bool _isLoadingWidget = false;
+  bool get isLoadingWidget => _isLoadingWidget;
 
   List<AchievmentCategoryModel> _achievCategoriesItems = [];
   List<AchievmentCategoryModel> get achievCategoriesItems =>
@@ -45,6 +66,9 @@ class Achievments extends ChangeNotifier {
         .where((item) => item.categoryId == _achievCategoriesItems[index].id)
         .toList();
   }
+
+  String _dialogMessage;
+  String get dialogMessage => _dialogMessage;
 
   static const baseUrl = 'https://new.rozoom.co.ua';
 
@@ -60,13 +84,37 @@ class Achievments extends ChangeNotifier {
       final extractedData = json.decode(response.body);
       parseAchievmentCategories(extractedData['categories']);
       parseAchievments(extractedData);
-      _isLoading = false;
+      _isLoadingScreen = false;
       notifyListeners();
     } on HttpException catch (error) {
       throw HttpException(error.toString());
     } catch (error) {
       throw HttpException('Час сессії закінчився!');
     }
+  }
+
+  Future<void> apiGetReward(id) async {
+    final urlSegment = '/achievements/reward/$id';
+    final url = baseUrl + urlSegment;
+    print('url --------------- $url');
+
+    try {
+      _isLoadingWidget = true;
+      notifyListeners();
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body);
+      print(extractedData);
+      //{result: false, flash: {message: Ви отримали винагороду, type: success}}
+      _dialogMessage = extractedData['flash']['message'];
+      await apiGetAchievments();
+      _isLoadingWidget = false;
+      notifyListeners();
+    } on HttpException catch (error) {
+      throw HttpException(error.toString());
+    } catch (error) {
+      throw HttpException('Час сессії закінчився!');
+    }
+    
   }
 
   void parseAchievmentCategories(List data) {
@@ -119,7 +167,7 @@ class Achievments extends ChangeNotifier {
               status: achievementStatusData[value['id'].toString()]),
         );
       });
-      print(loadedAchievments.last.id);
+
       _achievmentItems = loadedAchievments;
       notifyListeners();
     } catch (error) {
@@ -127,4 +175,24 @@ class Achievments extends ChangeNotifier {
       throw HttpException('Нагороди тимчасово недоступні');
     }
   }
+
+  Future<void> apiGetCards() async {
+    const urlSegment = '/cards';
+    final url = baseUrl + urlSegment;
+
+    try {
+      final response = await http.get(url, headers: headers);
+      final extractedData = json.decode(response.body)['cards'];
+      _apiToString = extractedData.toString();
+      print(extractedData);
+      _isLoadingScreen = false;
+      notifyListeners();
+    } on HttpException catch (error) {
+      throw HttpException(error.toString());
+    } catch (error) {
+      throw HttpException('Час сессії закінчився!');
+    }
+  }
 }
+
+

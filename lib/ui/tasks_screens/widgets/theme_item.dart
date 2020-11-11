@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rozoom_app/ui/tasks_screens/task_overview_screen.dart';
 
 class ThemeItem extends StatelessWidget {
-  final int id;
+  final String id;
   final String name;
   final String imageUrl;
   final String klass;

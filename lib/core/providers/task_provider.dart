@@ -5,7 +5,7 @@ import 'package:rozoom_app/core/models/http_exception.dart';
 import 'package:rozoom_app/shared/constants.dart';
 
 class DisciplineModel {
-  final int id;
+  final String id;
   final String title;
   final String titleUa;
   final String imageUrl;
@@ -33,18 +33,18 @@ class Disciplines with ChangeNotifier {
   }
 
   Future<void> fetchAndSetDisciplines() async {
-    print('discipline auth token ---------------------------- $authToken');
+    // print('discipline auth token ---------------------------- $authToken');
     final url = '$rozoomBaseUrl/api/mobile/disciplines?api_token=';
     try {
       final response = await http.post(url + authToken);
       var extractedData = json.decode(response.body)['disciplines'];
-      print('extracted disc ------- $extractedData');
+      // print('extracted disc ------- $extractedData');
       final List<DisciplineModel> loadedDisciplines = [];
 
       for (var i = 0; i < extractedData.length; i++) {
         loadedDisciplines.add(
           DisciplineModel(
-            id: extractedData[i]['id'],
+            id: extractedData[i]['id'].toString(),
             title: extractedData[i]['title'],
             titleUa: extractedData[i]['label'],
             imageUrl: extractedData[i]['image_url'] != null
@@ -62,8 +62,8 @@ class Disciplines with ChangeNotifier {
 }
 
 class ThemeModel with ChangeNotifier {
-  final int disciplineId;
-  final int id;
+  final String disciplineId;
+  final String id;
   final String name;
   final String imageUrl;
   final String klass;
@@ -100,11 +100,11 @@ class Themes with ChangeNotifier {
       final response = await http.post(url + authToken);
       // print(url + token);
       var extractedData = json.decode(response.body)['themes'];
-      // print(extractedData);
+      print(extractedData);
       final List<ThemeModel> loadedTasks = [];
       for (var i = 0; i < extractedData.length; i++) {
         loadedTasks.add(ThemeModel(
-            id: extractedData[i]['id'],
+            id: extractedData[i]['id'].toString(),
             name: extractedData[i]['name'],
             imageUrl: extractedData[i]['image'] != null
                 ? 'https://rozoom.com.ua/uploads/' + extractedData[i]['image']

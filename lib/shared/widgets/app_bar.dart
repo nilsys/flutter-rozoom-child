@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rozoom_app/shared/size_config.dart';
 
-AppBar myAppBar(BuildContext context, String route, String title,
-    String balance, String certificates, bool popOnBack, bool showLeading) {
+AppBar myAppBar(BuildContext context, {String route, String title,
+    String balance, String certificates, bool popOnBack, bool showLeading}) {
   return AppBar(
     automaticallyImplyLeading: showLeading,
     elevation: 1,

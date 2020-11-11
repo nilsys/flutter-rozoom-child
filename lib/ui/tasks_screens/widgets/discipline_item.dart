@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:rozoom_app/ui/tasks_screens/themes_overview_screen.dart';
 
 class DisciplineItem extends StatelessWidget {
-  final int id;
+  final String id;
   final String titleUa;
   final String imageUrl;
   DisciplineItem(this.id, this.titleUa, this.imageUrl);

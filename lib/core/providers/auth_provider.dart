@@ -91,6 +91,7 @@ class Auth with ChangeNotifier {
       final response = await http.post(url);
       print(response.statusCode);
       final _apiData = json.decode(response.body) as Map<String, dynamic>;
+      print(_apiData);
       if (_apiData == null) {
         throw HttpException('Щось пішло не так. Спробуйте ще');
       }

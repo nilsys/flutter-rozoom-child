@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/core/providers/achivments_provider.dart';
+import 'package:rozoom_app/core/providers/achievements_provider.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/core/providers/pusher_provider.dart';
 import 'package:rozoom_app/core/providers/task_provider.dart';
 import 'package:rozoom_app/core/providers/training_provider.dart';
 import 'package:rozoom_app/core/providers/video_chat_provider.dart';
-import 'package:rozoom_app/ui/achievments_screen/achievments_screen.dart';
+import 'package:rozoom_app/ui/achievments_screens/achievments_screen.dart';
+import 'package:rozoom_app/ui/achievments_screens/cards_screen.dart';
 import 'package:rozoom_app/ui/home_screens/index_screen.dart';
 import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
 import 'package:rozoom_app/ui/auth_screen/authentication_screen.dart';
@@ -99,7 +100,7 @@ class MyApp extends StatelessWidget {
             // TrainingsOverviewScreen(),
 
             auth.isAuth
-                ? AchievmentsScreen()
+                ? IndexScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (ctx, authResultSnapshot) {
@@ -133,6 +134,8 @@ class MyApp extends StatelessWidget {
           TrainingPreviewScreen.routeName: (ctx) => TrainingPreviewScreen(),
           TrainingProcessScreen.routeName: (ctx) => TrainingProcessScreen(),
           TrainingResultScreen.routeName: (ctx) => TrainingResultScreen(),
+          AchievmentsScreen.routeName: (ctx) => AchievmentsScreen(),
+          CardsScreen.routeName: (ctx) => CardsScreen(),
         },
       ),
     );

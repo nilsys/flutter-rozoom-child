@@ -140,7 +140,7 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
             child: ListView.builder(
               itemBuilder: (ctx, i) {
                 return ThemeItem(
-                  themes[i].id,
+                  themes[i].id.toString(),
                   themes[i].name,
                   themes[i].imageUrl,
                   themes[i].klass,
