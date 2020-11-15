@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
+import 'package:rozoom_app/shared/size_config.dart';
 
 class MyDialogs {
-  // final String message;
-  // MyDialogs({this.message});
-
   showApiErrorDialog(BuildContext context, message) {
     return showDialog(
       barrierDismissible: false,
@@ -84,6 +82,8 @@ class MyDialogs {
   }
 
   showOkDialog(BuildContext context, String message) {
+    SizeConfig().init(context);
+    double defaultSize = SizeConfig.defaultSize;
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -96,9 +96,20 @@ class MyDialogs {
           '',
           style: TextStyle(color: Colors.white),
         ),
-        content: Text(
-          message,
-          style: TextStyle(color: Colors.white),
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Ви отримали',
+              style: TextStyle(color: Colors.white, fontSize: defaultSize * 2),
+            ),
+            SizedBox(width: defaultSize * 0.5),
+            Text(message,
+                style:
+                    TextStyle(color: Colors.white, fontSize: defaultSize * 2)),
+            SizedBox(width: defaultSize * 0.5),
+            Image.asset('assets/images/stats/coin.png', scale: 0.55),
+          ],
         ),
         actions: <Widget>[
           FlatButton(

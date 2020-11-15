@@ -8,6 +8,7 @@ class AchievmentCategoryModel {
   final String name;
   AchievmentCategoryModel({this.id, this.name});
 }
+
 class AchievmentModel {
   final String id;
   final String categoryId;
@@ -27,19 +28,18 @@ class AchievmentModel {
 
 class CardModel {
   final String id;
-  final String categoryId;
+  final String count;
+  final String title;
   final String description;
-  final String price;
   final String imageUrl;
-  final String status;
 
-  CardModel(
-      {this.id,
-      this.categoryId,
-      this.description,
-      this.price,
-      this.imageUrl,
-      this.status});
+  CardModel({
+    this.id,
+    this.count,
+    this.title,
+    this.description,
+    this.imageUrl,
+  });
 }
 
 class Achievments extends ChangeNotifier {
@@ -66,6 +66,9 @@ class Achievments extends ChangeNotifier {
         .where((item) => item.categoryId == _achievCategoriesItems[index].id)
         .toList();
   }
+
+  List<CardModel> _cardItems = [];
+  List<CardModel> get cardItems => _cardItems;
 
   String _dialogMessage;
   String get dialogMessage => _dialogMessage;
@@ -114,7 +117,6 @@ class Achievments extends ChangeNotifier {
     } catch (error) {
       throw HttpException('Час сессії закінчився!');
     }
-    
   }
 
   void parseAchievmentCategories(List data) {
@@ -182,9 +184,8 @@ class Achievments extends ChangeNotifier {
 
     try {
       final response = await http.get(url, headers: headers);
-      final extractedData = json.decode(response.body)['cards'];
-      _apiToString = extractedData.toString();
-      print(extractedData);
+      final extractedData = json.decode(response.body);
+      parseCards(extractedData);
       _isLoadingScreen = false;
       notifyListeners();
     } on HttpException catch (error) {
@@ -193,6 +194,41 @@ class Achievments extends ChangeNotifier {
       throw HttpException('Час сессії закінчився!');
     }
   }
+
+  void parseCards(Map data) {
+    try {
+      List<CardModel> loadedCards = [];
+      List<dynamic> cardsData = data['cards'];
+      print(cardsData.length);
+      for (var i = 0; i < cardsData.length; i++) {
+        if (cardsData[i]['card'] != null) {
+          loadedCards.add(CardModel(
+            id: cardsData[i]['card_id'] != null
+                ? cardsData[i]['card_id'].toString()
+                : '',
+            count: cardsData[i]['count'] != null
+                ? cardsData[i]['count'].toString()
+                : '',
+            title: cardsData[i]['card']['translate']['title'] != null
+                ? cardsData[i]['card']['translate']['title']
+                : '',
+            description:
+                cardsData[i]['card']['translate']['description'] != null
+                    ? cardsData[i]['card']['translate']['description']
+                    : '',
+            imageUrl: cardsData[i]['card']['image'] != null
+                ? 'https://rozoom.com.ua/uploads/' +
+                    cardsData[i]['card']['image']
+                : '',
+          ));
+        }
+      }
+
+      _cardItems = loadedCards;
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      throw HttpException('Картки тимчасово недоступні');
+    }
+  }
 }
-
-

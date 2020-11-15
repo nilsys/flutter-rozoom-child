@@ -46,7 +46,13 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
     // print('train themes ----- $trainThemes');
 
     return Scaffold(
-      appBar: myAppBar(context),
+      appBar: myAppBar(context,
+          popOnBack: false,
+          showLeading: false,
+          route: '',
+          title: '',
+          balance: '',
+          certificates: ''),
       body: _isLoading
           ? Center(child: Image.asset("assets/gifs/ripple.gif"))
           : SingleChildScrollView(

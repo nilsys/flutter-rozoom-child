@@ -45,7 +45,13 @@ class _TrainingProcessScreenState extends State<TrainingProcessScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: myAppBar(context),
+        appBar: myAppBar(context,
+            popOnBack: false,
+            showLeading: false,
+            route: '',
+            title: '',
+            balance: '',
+            certificates: ''),
         body: isLoading
             ? Center(child: Image.asset("assets/gifs/ripple.gif"))
             : SingleChildScrollView(

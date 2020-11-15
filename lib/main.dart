@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
             // TrainingsOverviewScreen(),
 
             auth.isAuth
-                ? IndexScreen()
+                ? CardsScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (ctx, authResultSnapshot) {

@@ -8,7 +8,6 @@ import 'package:rozoom_app/ui/home_screens/widgets/home_block_3.dart';
 import 'package:rozoom_app/ui/home_screens/widgets/sliver_app_bar_bg.dart';
 import 'package:rozoom_app/ui/home_screens/widgets/sliver_app_bar_title.dart';
 
-
 class MyHome extends StatefulWidget {
   @override
   _MyHomeState createState() => _MyHomeState();
@@ -43,69 +42,89 @@ class _MyHomeState extends State<MyHome> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(bottom: defaultSize * 4, top: defaultSize * 3,),
+                  padding: EdgeInsets.only(
+                    bottom: defaultSize * 4,
+                    top: defaultSize * 3,
+                  ),
                   child: Column(
-                      children: [ 
-                        Center(
+                    children: [
+                      Center(
                         child: Text(
                           'НАВЧАННЯ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: pinkRozoomColor,
                               fontSize: 16),
-                        ),                        
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: defaultSize * 5, right: defaultSize * 5, top: defaultSize),
-                      child: Divider(height: 2, color: blueRozoomColor),
-                    ),   
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: defaultSize * 5,
+                            right: defaultSize * 5,
+                            top: defaultSize),
+                        child: Divider(height: 2, color: blueRozoomColor),
+                      ),
                     ],
                   ),
                 ),
                 HomeBlock1(),
                 Padding(
-                  padding: EdgeInsets.only(bottom: defaultSize * 4, top: defaultSize * 4,),
+                  padding: EdgeInsets.only(
+                    bottom: defaultSize * 4,
+                    top: defaultSize * 4,
+                  ),
                   child: Column(
-                      children: [ 
-                        Center(
+                    children: [
+                      Center(
                         child: Text(
                           'КОШИК',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: pinkRozoomColor,
                               fontSize: 16),
-                        ),                        
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: defaultSize * 5, right: defaultSize * 5, top: defaultSize),
-                      child: Divider(height: 2, color: blueRozoomColor),
-                    ),   
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: defaultSize * 5,
+                            right: defaultSize * 5,
+                            top: defaultSize),
+                        child: Divider(height: 2, color: blueRozoomColor),
+                      ),
                     ],
                   ),
                 ),
                 HomeBlock2(),
                 Padding(
-                  padding:  EdgeInsets.only(bottom: defaultSize * 4, top: defaultSize * 4,),
+                  padding: EdgeInsets.only(
+                    bottom: defaultSize * 4,
+                    top: defaultSize * 4,
+                  ),
                   child: Column(
-                      children: [ 
-                        Center(
+                    children: [
+                      Center(
                         child: Text(
                           'ДОДАТКИ',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: pinkRozoomColor,
                               fontSize: 16),
-                        ),                        
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: defaultSize * 5, right: defaultSize * 5, top: defaultSize),
-                      child: Divider(height: 2, color: blueRozoomColor),
-                    ),   
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: defaultSize * 5,
+                            right: defaultSize * 5,
+                            top: defaultSize),
+                        child: Divider(
+                          height: 2,
+                          color: blueRozoomColor,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 HomeBlock3(),
-
               ],
             ),
           ),
@@ -114,8 +133,3 @@ class _MyHomeState extends State<MyHome> {
     );
   }
 }
-
-
-
-
-

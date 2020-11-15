@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/core/providers/auth_provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
-import 'package:rozoom_app/shared/size_config.dart';
 import 'package:rozoom_app/shared/widgets/loader_screen.dart';
 import 'package:rozoom_app/ui/home_screens/home_screen.dart';
-import 'package:rozoom_app/ui/home_screens/widgets/home_child.dart';
-import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
 import 'package:rozoom_app/shared/widgets/app_drawer.dart';
 
 enum FilterOptions {
@@ -38,49 +34,48 @@ class _IndexScreenState extends State<IndexScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading 
-    ? MyLoaderScreen() 
-    : Scaffold(
-      drawer: AppDrawer(),
-      
-      body: IndexedStack(
-        index: _currentIndex,
-        children: <Widget>[
-          Text('chat screen'),
-          MyHome(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        // type: BottomNavigationBarType.shifting,
-        selectedItemColor: Theme.of(context).accentColor,
-        unselectedItemColor: Theme.of(context).primaryColor,
-        currentIndex: _currentIndex,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            // icon: Icon(Icons.people_outline, size: 25),
-            // icon: Consumer<Pusher>(
-            //   builder: (_, count, icon) => BadgeIcon(
-            //       icon: Icon(Icons.people_outline, size: 25),
-            //       badgeCount: count.getTotalUnreadMessages),
-            // ),
-            icon: Icon(Icons.people_outline, size: 25),
-            label: 'Друзі',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Навчання',
-          ),
-        ],
-      ),
-    );
+    return _isLoading
+        ? MyLoaderScreen()
+        : Scaffold(
+            drawer: AppDrawer(),
+            body: IndexedStack(
+              index: _currentIndex,
+              children: <Widget>[
+                Text('chat screen'),
+                MyHome(),
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.white,
+              // type: BottomNavigationBarType.shifting,
+              selectedItemColor: Theme.of(context).accentColor,
+              unselectedItemColor: Theme.of(context).primaryColor,
+              currentIndex: _currentIndex,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                  // icon: Icon(Icons.people_outline, size: 25),
+                  // icon: Consumer<Pusher>(
+                  //   builder: (_, count, icon) => BadgeIcon(
+                  //       icon: Icon(Icons.people_outline, size: 25),
+                  //       badgeCount: count.getTotalUnreadMessages),
+                  // ),
+                  icon: Icon(Icons.people_outline, size: 25),
+                  label: 'Друзі',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.school),
+                  label: 'Навчання',
+                ),
+              ],
+            ),
+          );
   }
 
   // final notifications = FlutterLocalNotificationsPlugin();

@@ -19,7 +19,13 @@ class TrainingPreviewScreen extends StatelessWidget {
     final String trainingImageUrl = args['trainingImageUrl'];
 
     return Scaffold(
-      appBar: myAppBar(context),
+      appBar: myAppBar(context,
+          popOnBack: false,
+          showLeading: false,
+          route: '',
+          title: '',
+          balance: '',
+          certificates: ''),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
