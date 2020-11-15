@@ -44,7 +44,7 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
     final trainThemes =
         Provider.of<TrainingThemes>(context).trainingThemesItems;
     // print('train themes ----- $trainThemes');
-
+//
     return Scaffold(
       appBar: myAppBar(context,
           popOnBack: false,
