@@ -176,13 +176,16 @@ class _TaskItemState extends State<TaskItem> {
                       elevation: 3.0,
                       highlightColor: Color(0xFF74bec9),
                       highlightElevation: 5.0,
-                      child: Text(
-                        task.answerVariants[i] != null
-                            ? task.answerVariants[i]
-                            : '',
-                        style: TextStyle(
-                            color: Color(0xFF74bec9),
-                            fontWeight: FontWeight.bold),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Text(
+                          task.answerVariants[i] != null
+                              ? task.answerVariants[i]
+                              : '',
+                          style: TextStyle(
+                              color: Color(0xFF74bec9),
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -226,13 +229,16 @@ class _TaskItemState extends State<TaskItem> {
                             elevation: 3.0,
                             highlightColor: Color(0xFF74bec9),
                             highlightElevation: 5.0,
-                            child: Text(
-                              task.answerVariants[i] != null
-                                  ? task.answerVariants[i]
-                                  : '',
-                              style: TextStyle(
-                                  color: Color(0xFF74bec9),
-                                  fontWeight: FontWeight.bold),
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Text(
+                                task.answerVariants[i] != null
+                                    ? task.answerVariants[i]
+                                    : '',
+                                style: TextStyle(
+                                    color: Color(0xFF74bec9),
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                             color: Colors.white,
                             shape: RoundedRectangleBorder(

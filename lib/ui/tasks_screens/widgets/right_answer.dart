@@ -146,7 +146,7 @@ class _AnimatedRightAnswerDialogState extends State<AnimatedRightAnswerDialog>
                                   ?
                                   // onOk();
                                   Navigator.pop(context)
-                                  : Navigator.of(context).pushNamed(
+                                  : Navigator.of(context).pushReplacementNamed(
                                       TaskResultScreen.routeName,
                                     );
                               // });

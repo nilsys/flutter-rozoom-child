@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/shared/constants.dart';
 import 'package:rozoom_app/shared/size_config.dart';
-
 
 class HomeSliverAppBar extends StatelessWidget {
   final double defaultSize = SizeConfig.defaultSize;
@@ -33,21 +34,23 @@ class HomeSliverAppBar extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                      height: defaultSize * 14,
-                      width: defaultSize * 14,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: Colors.white, width: defaultSize * 0.8),
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  'https://www.cbc.ca/parents/content/imgs/CultureNotYourHalloweenCostume_DavidRobertson_lead.jpg'))),
+                    Consumer<Profile>(
+                      builder: (context, profile, child) => Container(
+                        height: defaultSize * 14,
+                        width: defaultSize * 14,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Colors.white, width: defaultSize * 0.8),
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(profile
+                                    .profileItems['avatarUrl'].avatarUrl))),
+                      ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -55,7 +58,6 @@ class HomeSliverAppBar extends StatelessWidget {
     );
   }
 }
-
 
 class CustomShape extends CustomClipper<Path> {
   @override

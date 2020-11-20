@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'package:rozoom_app/ui/tasks_screens/themes_overview_screen.dart';
 
@@ -36,9 +35,9 @@ class DisciplineItem extends StatelessWidget {
                 //   },
                 // ),
 
-                child: SvgPicture.network(imageUrl,
-                    placeholderBuilder: (BuildContext context) =>
-                        Image.asset('assets/images/brand.png')),
+                child: Image.asset(
+                  imageUrl,
+                ),
               ),
             ),
             Padding(

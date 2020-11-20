@@ -17,11 +17,13 @@ class _UserImagePickerState extends State<UserImagePicker> {
   File _pickedImage;
 
   void _pickImageFromCamera() async {
-    final pickedImageFile = await ImagePicker.pickImage(
+    final picker = ImagePicker();
+    final pickedImage = await picker.getImage(
       source: ImageSource.camera,
       // imageQuality: 50,
       // maxWidth: 150,
     );
+    final pickedImageFile = File(pickedImage.path);
 
     setState(() {
       _pickedImage = pickedImageFile;
@@ -34,11 +36,13 @@ class _UserImagePickerState extends State<UserImagePicker> {
   }
 
   void _pickImageFromGallery() async {
-    final pickedImageFile = await ImagePicker.pickImage(
+    final picker = ImagePicker();
+    final pickedImage = await picker.getImage(
       source: ImageSource.gallery,
       // imageQuality: 50,
       // maxWidth: 150,
     );
+    final pickedImageFile = File(pickedImage.path);
 
     setState(() {
       _pickedImage = pickedImageFile;
@@ -52,7 +56,8 @@ class _UserImagePickerState extends State<UserImagePicker> {
 
   @override
   Widget build(BuildContext context) {
-    final userInfo = Provider.of<Profile>(context).getAvatarUrl;
+    final avatarUrl =
+        Provider.of<Profile>(context).profileItems['avatarUrl'].avatarUrl;
     return Container(
       child: Column(
         children: <Widget>[
@@ -62,7 +67,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
                 // NetworkImage(userInfo)
                 _pickedImage != null
                     ? FileImage(_pickedImage)
-                    : NetworkImage(userInfo),
+                    : NetworkImage(avatarUrl),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

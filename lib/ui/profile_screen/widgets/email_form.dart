@@ -75,7 +75,7 @@ class _EmailFormState extends State<EmailForm> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  hintText: profile.email,
+                  hintText: profile.profileItems['email'].email,
                   suffixIcon: _isLoading
                       ? Center(
                           child: CircularProgressIndicator(),

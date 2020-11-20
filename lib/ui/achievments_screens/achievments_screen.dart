@@ -2,8 +2,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/core/providers/achievements_provider.dart';
+import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/shared/constants.dart';
 import 'package:rozoom_app/shared/size_config.dart';
 import 'package:rozoom_app/shared/widgets/dialogs.dart';
@@ -45,6 +46,49 @@ class AchievmentsScreen extends StatelessWidget {
       builder: (context, achiev, child) => achiev.isLoadingScreen
           ? MyLoaderScreen()
           : Scaffold(
+              appBar: AppBar(
+                elevation: 1,
+                backgroundColor: Colors.white,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                actions: <Widget>[],
+                title: Consumer<Profile>(
+                  builder: (ctx, profile, child) => Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(width: 35),
+                      Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                      SizedBox(width: 5),
+                      profile.isLoadingScreen
+                          ? SizedBox(
+                              child: myLoaderWidget(),
+                              width: defaultSize * 5,
+                            )
+                          : Text(profile.profileItems['uom'].uom,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16)),
+                      SizedBox(width: 10),
+                      Image.asset('assets/images/stats/uah.png', height: 30),
+                      SizedBox(width: 5),
+                      profile.isLoadingScreen
+                          ? SizedBox(
+                              child: myLoaderWidget(),
+                              width: defaultSize * 5,
+                            )
+                          : Text(profile.profileItems['balance'].balance,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 16)),
+                    ],
+                  ),
+                ),
+              ),
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(

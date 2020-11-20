@@ -78,7 +78,7 @@ class _PhoneFormState extends State<PhoneForm> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  hintText: profile.phone,
+                  hintText: profile.profileItems['phone'].phone,
                   suffixIcon: _isLoading
                       ? Center(
                           child: CircularProgressIndicator(),

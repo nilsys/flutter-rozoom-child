@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
 
 import 'package:rozoom_app/shared/widgets/fade-animation.dart';

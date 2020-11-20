@@ -305,7 +305,7 @@ class _TaskResultScreenState extends State<TaskResultScreen> {
                           //     side: BorderSide(color: Color(0xFF74bec9), width: 2)),
                           child: RaisedButton(
                             onPressed: () {
-                              Navigator.of(context).pushNamed(
+                              Navigator.of(context).pushReplacementNamed(
                                 DisciplinesOverviewScreen.routeName,
                               );
                               // Provider.of<Task>(context, listen: false)

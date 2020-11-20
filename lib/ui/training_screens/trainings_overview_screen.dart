@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/core/providers/training_provider.dart';
 import 'package:rozoom_app/shared/size_config.dart';
-import 'package:rozoom_app/shared/widgets/app_bar.dart';
+import 'package:rozoom_app/shared/widgets/loader_widget.dart';
 import 'package:rozoom_app/ui/training_screens/widgets/trainings_item.dart';
 
 enum FilterOptions {
@@ -46,13 +46,47 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
     // print('train themes ----- $trainThemes');
 //
     return Scaffold(
-      appBar: myAppBar(context,
-          popOnBack: false,
-          showLeading: false,
-          route: '',
-          title: '',
-          balance: '',
-          certificates: ''),
+      appBar: AppBar(
+        elevation: 1,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.grey,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: <Widget>[],
+        title: Consumer<Profile>(
+          builder: (ctx, profile, child) => Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(width: 35),
+              Image.asset('assets/images/stats/coin.png', scale: 0.55),
+              SizedBox(width: 5),
+              profile.isLoadingScreen
+                  ? SizedBox(
+                      child: myLoaderWidget(),
+                      width: defaultSize * 5,
+                    )
+                  : Text(profile.profileItems['uom'].uom,
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+              SizedBox(width: 10),
+              Image.asset('assets/images/stats/uah.png', height: 30),
+              SizedBox(width: 5),
+              profile.isLoadingScreen
+                  ? SizedBox(
+                      child: myLoaderWidget(),
+                      width: defaultSize * 5,
+                    )
+                  : Text(profile.profileItems['balance'].balance,
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+            ],
+          ),
+        ),
+      ),
       body: _isLoading
           ? Center(child: Image.asset("assets/gifs/ripple.gif"))
           : SingleChildScrollView(
@@ -65,12 +99,13 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
                   // just for demo
                   itemCount: trainThemes.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        SizeConfig.orientation == Orientation.portrait ? 2 : 4,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 1,
-                  ),
+                      crossAxisCount:
+                          SizeConfig.orientation == Orientation.portrait
+                              ? 2
+                              : 4,
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 20,
+                      childAspectRatio: 1),
                   itemBuilder: (context, index) => TrainingsItem(
                       trainThemes[index].id,
                       trainThemes[index].name,
@@ -83,7 +118,7 @@ class _TrainingsOverviewScreenState extends State<TrainingsOverviewScreen> {
 
   getUserProfile() async {
     try {
-      await Provider.of<Profile>(context, listen: false).getProfileInfo();
+      await Provider.of<Profile>(context, listen: false).apiGetProfileInfo();
     } on HttpException catch (error) {
       var errorMessage = error.toString();
 

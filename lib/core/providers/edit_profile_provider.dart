@@ -3,94 +3,127 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/shared/constants.dart';
 
-class Profile with ChangeNotifier {
-  String authToken;
+class ProfileModel {
+  String id;
   String name;
+  String login;
   String email;
   String phone;
   String birthday;
+  String uom;
   String balance;
-  String certificates;
   String avatarUrl;
 
-  Profile(this.authToken,
-      {this.name,
+  ProfileModel(
+      {this.id,
+      this.name,
+      this.login,
       this.email,
       this.phone,
       this.birthday,
-      this.certificates,
+      this.uom,
+      this.balance,
       this.avatarUrl});
+}
 
-  get getName => name;
-  get getEmail => email;
-  get getPhone => phone;
-  get getBirthday => birthday;
-  get getBalance => balance;
-  get getCertificates => certificates;
-  get getAvatarUrl => avatarUrl;
+class Profile with ChangeNotifier {
+  String authToken;
+  String id;
 
-  Future<void> getProfileInfo() async {
-    print('get profile auth token ---------------------------- $authToken');
-    final url = '$rozoomBaseUrl/api/mobile/me';
+  Profile(this.authToken, this._profileItems);
+
+  Map<String, ProfileModel> _profileItems = {};
+  Map<String, ProfileModel> get profileItems => _profileItems;
+
+  bool _isLoadingScreen = false;
+  bool get isLoadingScreen => _isLoadingScreen;
+  bool _isLoadingWidget = false;
+  bool get isLoadingWidget => _isLoadingWidget;
+
+  Map<String, String> get headers =>
+      {'Accept': 'text/json', 'Authorization': 'Bearer $authToken'};
+
+  Future<void> apiGetProfileInfo() async {
+    const urlSegment = '/api/mobile/me';
+    final url = rozoomBaseUrl + urlSegment;
+
     try {
-      final data = {'api_token': authToken};
-      final response = await http.post(url, body: data);
-
+      _isLoadingScreen = true;
+      final response = await http.post(url, headers: headers);
       final extractedData = json.decode(response.body);
-      print('user info --------> $extractedData');
+      // print('user info --------> $extractedData');
       if (extractedData['error'] != null) {
-        throw HttpException('Час сессіЇ вичерпано');
+        throw TokenException();
       }
+      parseProfile(extractedData);
 
-      print('user info --------> $extractedData');
-      name = extractedData['user']['name'] != null
-          ? extractedData['user']['name']
-          : "Ім'я не встановлено.";
-      email = extractedData['user']['email'] != null
-          ? extractedData['user']['email']
-          : "Email не встановлено.";
-      phone = extractedData['user']['phone'] != null
-          ? extractedData['user']['phone']
-          : "Телефон не встановлено.";
+      _isLoadingScreen = false;
+      notifyListeners();
+    } on TokenException catch (error) {
+      throw TokenException();
+    } on HttpException catch (error) {
+      throw HttpException(error.toString());
+    } catch (error) {
+      throw HttpException('Час сессії закінчився!');
+    }
+  }
 
-      birthday = extractedData['user']['birthday'] != null
-          ? extractedData['user']['birthday']
-          : "1900-01-01";
-      balance = extractedData['user']['uom'] != null
-          ? extractedData['user']['uom']
-          : "0";
-      certificates = extractedData['user']['balance'] != null
-          ? extractedData['user']['balance']
-          : "0";
-      avatarUrl = extractedData['user']['avatar_url'] != null
-          ? extractedData['user']['avatar_url']
-          : "https://rozoom.com.ua/images/design/brand.svg";
+  void parseProfile(Map data) {
+    try {
+      final String id =
+          data['user']['id'] = data['user']['id'].toString() ?? '';
+      final String name = data['user']['name'] ??= 'Ім\'я не встановлено.';
+      final String login = data['user']['login'] ??= '';
+      final String email = data['user']['email'] ??= "Email не встановлено.";
+      final String phone = data['user']['phone'] ??= "Телефон не встановлено.";
+      final String birthday = data['user']['birthday'] ??= "1900-01-01";
+      final String uom =
+          data['user']['uom'] = data['user']['uom'].toString() ?? "0";
+      final String balance =
+          data['user']['balance'] = data['user']['balance'].toString() ?? "0";
+      final String avatarUrl = data['user']['avatar_url'] ??=
+          "https://rozoom.com.ua/uploads/avatars/eUTzppo49KB3LfOkovsCNcCQk4LBmxCTsMShFlmZ.jpeg";
+      Map<String, ProfileModel> loadedProfile = {
+        'id': ProfileModel(id: id),
+        'name': ProfileModel(name: name),
+        'login': ProfileModel(login: login),
+        'email': ProfileModel(email: email),
+        'phone': ProfileModel(phone: phone),
+        'birthday': ProfileModel(birthday: birthday),
+        'uom': ProfileModel(uom: uom),
+        'balance': ProfileModel(balance: balance),
+        'avatarUrl': ProfileModel(avatarUrl: avatarUrl),
+      };
+      _profileItems = loadedProfile;
       notifyListeners();
     } catch (error) {
-      throw (error);
+      print(error);
+      throw HttpException('Профайл тимчасово недоступний');
     }
   }
 
   Future<void> updateUserInfo(param) async {
-    print('update profile auth token ---------------------------- $authToken');
-    final url = '$rozoomBaseUrl/api/mobile/me/update?$param';
+    final urlSegment = '/api/mobile/me/update?$param';
+    final url = rozoomBaseUrl + urlSegment;
     try {
-      final data = {'api_token': authToken};
-      await http.post(url, body: data);
-      await getProfileInfo();
+      await http.post(url, headers: headers);
+      await apiGetProfileInfo();
+    } on HttpException catch (error) {
+      throw HttpException(error.toString());
     } catch (error) {
-      throw error;
+      throw HttpException('Час сессії закінчився!');
     }
   }
 
   Future<void> sendAvatar(filepath) async {
     Response response;
     Dio dio = new Dio();
-    print('send avatar auth token ---------------------------- $authToken');
-    final url = '$rozoomBaseUrl/api/mobile/me/update';
+    final urlSegment = '/api/mobile/me/update';
+    final url = rozoomBaseUrl + urlSegment;
+    print(url);
     try {
       FormData formData = new FormData.fromMap({
         "api_token": authToken,
@@ -99,9 +132,14 @@ class Profile with ChangeNotifier {
       });
       response = await dio.post(url, data: formData);
       print(response);
-      await getProfileInfo();
+      await apiGetProfileInfo();
+    } on HttpException catch (error) {
+      print(error);
+
+      throw HttpException(error.toString());
     } catch (error) {
-      throw error;
+      print(error);
+      throw HttpException('Час сессії закінчився!');
     }
   }
 }

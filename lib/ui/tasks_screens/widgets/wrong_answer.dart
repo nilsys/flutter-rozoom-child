@@ -145,7 +145,7 @@ class _AnimatedWrongAnswerDialogState extends State<AnimatedWrongAnswerDialog>
                             onPressed: () {
                               task.continueOrFinish
                                   ? Navigator.pop(context)
-                                  : Navigator.of(context).pushNamed(
+                                  : Navigator.of(context).pushReplacementNamed(
                                       TaskResultScreen.routeName,
                                     );
                             },

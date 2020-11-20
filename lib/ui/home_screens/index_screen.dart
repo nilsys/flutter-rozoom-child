@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
+import 'package:rozoom_app/shared/widgets/dialogs.dart';
 import 'package:rozoom_app/shared/widgets/loader_screen.dart';
 import 'package:rozoom_app/ui/home_screens/home_screen.dart';
 import 'package:rozoom_app/shared/widgets/app_drawer.dart';
+import 'package:rozoom_app/ui/friends_screens/friends_overview_screen.dart';
 
 enum FilterOptions {
   EditProfile,
@@ -18,64 +21,74 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  bool _isLoading;
   int _currentIndex = 1;
 
   @override
   void initState() {
-    _isLoading = true;
-    Provider.of<Profile>(context, listen: false).getProfileInfo().then((_) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _getProfile(context);
     super.initState();
+  }
+
+  Future<void> _getProfile(context) async {
+    try {
+      await Provider.of<Profile>(context, listen: false).apiGetProfileInfo();
+    } on TokenException catch (error) {
+      print('Token Error');
+      MyDialogs().showTokenErrorDialog(context);
+    } on HttpException catch (error) {
+      print(error);
+      MyDialogs().showApiErrorDialog(context, error.toString());
+    } catch (error) {
+      MyDialogs().showUnknownErrorDialog(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? MyLoaderScreen()
-        : Scaffold(
-            drawer: AppDrawer(),
-            body: IndexedStack(
-              index: _currentIndex,
-              children: <Widget>[
-                Text('chat screen'),
-                MyHome(),
-              ],
+    return Consumer<Profile>(
+      builder: (context, profile, child) => profile.isLoadingScreen
+          ? MyLoaderScreen()
+          : Scaffold(
+              drawer: AppDrawer(),
+              body: IndexedStack(
+                index: _currentIndex,
+                children: <Widget>[
+                  FriendsOverviewScreen(id: profile.profileItems['id'].id),
+                  MyHome(),
+                ],
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                backgroundColor: Colors.white,
+                // type: BottomNavigationBarType.shifting,
+                selectedItemColor: Theme.of(context).accentColor,
+                unselectedItemColor: Theme.of(context).primaryColor,
+                currentIndex: _currentIndex,
+                showSelectedLabels: true,
+                showUnselectedLabels: true,
+                onTap: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    // icon: Icon(Icons.people_outline, size: 25),
+                    // icon: Consumer<Pusher>(
+                    // builder: (_, count, icon) => BadgeIcon(
+                    //       icon: Icon(Icons.people_outline, size: 25),
+                    //       badgeCount: count.getTotalUnreadMessages),
+                    // ),
+                    icon: Icon(Icons.people_outline, size: 25),
+                    label: 'Друзі',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.school),
+                    label: 'Навчання',
+                  ),
+                ],
+              ),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              // type: BottomNavigationBarType.shifting,
-              selectedItemColor: Theme.of(context).accentColor,
-              unselectedItemColor: Theme.of(context).primaryColor,
-              currentIndex: _currentIndex,
-              showSelectedLabels: true,
-              showUnselectedLabels: true,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              items: [
-                BottomNavigationBarItem(
-                  // icon: Icon(Icons.people_outline, size: 25),
-                  // icon: Consumer<Pusher>(
-                  //   builder: (_, count, icon) => BadgeIcon(
-                  //       icon: Icon(Icons.people_outline, size: 25),
-                  //       badgeCount: count.getTotalUnreadMessages),
-                  // ),
-                  icon: Icon(Icons.people_outline, size: 25),
-                  label: 'Друзі',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.school),
-                  label: 'Навчання',
-                ),
-              ],
-            ),
-          );
+    );
   }
 
   // final notifications = FlutterLocalNotificationsPlugin();

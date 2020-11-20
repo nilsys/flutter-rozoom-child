@@ -17,7 +17,9 @@ class _BirthdayFormState extends State<BirthdayForm> {
 
   @override
   void initState() {
-    final birthday = Provider.of<Profile>(context, listen: false).birthday;
+    final birthday = Provider.of<Profile>(context, listen: false)
+        .profileItems['birthday']
+        .birthday;
     final parsedBirhday = DateTime.parse(birthday);
     selectedDate = parsedBirhday;
     print('selectedDate -----------> $selectedDate');

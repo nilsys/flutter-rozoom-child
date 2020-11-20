@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rozoom_app/shared/constants.dart';
+import 'package:rozoom_app/shared/size_config.dart';
 import 'package:rozoom_app/ui/tasks_screens/task_overview_screen.dart';
 
 class ThemeItem extends StatelessWidget {
@@ -11,6 +13,8 @@ class ThemeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    double defaultSize = SizeConfig.defaultSize;
     return Container(
       margin: EdgeInsets.all(1),
       child: Card(
@@ -65,60 +69,63 @@ class ThemeItem extends StatelessWidget {
                 ),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Icon(
-                        Icons.school,
-                        color: Color(0xFF74bec9),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'клас: $klass ',
-                        style: TextStyle(
-                          color: Color(0xFFf06388),
-                        ),
-                      ),
-                    ],
+                  Icon(
+                    Icons.school,
+                    color: Color(0xFF74bec9),
                   ),
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(
-                          TaskOverviewScreen.routeName,
-                          arguments: {'themeId': id, 'themeName': name});
-                    },
-                    elevation: 2.0,
-                    highlightColor: Color(0xFF74bec9),
-                    highlightElevation: 5.0,
-                    child: Text(
-                      ' Розпочати ',
-                      style: TextStyle(color: Color(0xFF74bec9)),
+                  SizedBox(
+                    width: defaultSize * 0.3,
+                  ),
+                  Text(
+                    'клас: $klass ',
+                    style: TextStyle(
+                      color: Color(0xFFf06388),
                     ),
-                    color: Colors.white,
-                    // padding: EdgeInsets.all(15.0),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        side: BorderSide(color: Color(0xFF74bec9), width: 1)),
                   ),
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'завдань: $tasksCount',
-                        style: TextStyle(
-                          color: Color(0xFFf06388),
+                  SizedBox(
+                    width: defaultSize * 0.6,
+                  ),
+                  Expanded(
+                    child: ButtonTheme(
+                      height: defaultSize * 4.5,
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(
+                              TaskOverviewScreen.routeName,
+                              arguments: {'themeId': id, 'themeName': name});
+                        },
+                        elevation: 2.0,
+                        highlightColor: Color(0xFF74bec9),
+                        highlightElevation: 5.0,
+                        child: Text(
+                          ' Розпочати ',
+                          style: TextStyle(color: Colors.white),
                         ),
+
+                        color: blueRozoomColor,
+                        // padding: EdgeInsets.all(15.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side:
+                                BorderSide(color: Color(0xFF74bec9), width: 1)),
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(Icons.school, color: Color(0xFF74bec9)),
-                    ],
+                    ),
                   ),
+                  SizedBox(
+                    width: defaultSize * 0.6,
+                  ),
+                  Text(
+                    'завдань: $tasksCount',
+                    style: TextStyle(
+                      color: Color(0xFFf06388),
+                    ),
+                  ),
+                  SizedBox(
+                    width: defaultSize * 0.3,
+                  ),
+                  Icon(Icons.school, color: Color(0xFF74bec9)),
                 ],
               ),
             ),

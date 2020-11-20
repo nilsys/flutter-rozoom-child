@@ -71,7 +71,7 @@ class _UsernameFormState extends State<UsernameForm> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  hintText: profile.name,
+                  hintText: profile.profileItems['name'].name,
                   suffixIcon: _isLoading
                       ? Center(
                           child: CircularProgressIndicator(),

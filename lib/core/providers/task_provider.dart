@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/shared/constants.dart';
 
 class DisciplineModel {
@@ -32,13 +32,22 @@ class Disciplines with ChangeNotifier {
     return [..._disciplineItems];
   }
 
+  bool _isLoadingScreen = false;
+  bool get isLoadingScreen => _isLoadingScreen;
+  bool _isLoadingWidget = false;
+  bool get isLoadingWidget => _isLoadingWidget;
+
+  Map<String, String> get headers =>
+      {'Accept': 'text/json', 'Authorization': 'Bearer $authToken'};
+
   Future<void> fetchAndSetDisciplines() async {
-    // print('discipline auth token ---------------------------- $authToken');
-    final url = '$rozoomBaseUrl/api/mobile/disciplines?api_token=';
+    const urlSegment = '/api/mobile/disciplines';
+    final url = rozoomBaseUrl + urlSegment;
     try {
-      final response = await http.post(url + authToken);
+      _isLoadingScreen = true;
+      final response = await http.post(url, headers: headers);
       var extractedData = json.decode(response.body)['disciplines'];
-      // print('extracted disc ------- $extractedData');
+
       final List<DisciplineModel> loadedDisciplines = [];
 
       for (var i = 0; i < extractedData.length; i++) {
@@ -47,13 +56,13 @@ class Disciplines with ChangeNotifier {
             id: extractedData[i]['id'].toString(),
             title: extractedData[i]['title'],
             titleUa: extractedData[i]['label'],
-            imageUrl: extractedData[i]['image_url'] != null
-                ? extractedData[i]['image_url']
-                : 'https://rozoom.com.ua/images/design/brand.svg',
+            imageUrl:
+                'assets/images/disciplines/${extractedData[i]['id'].toString()}.png',
           ),
         );
       }
       _disciplineItems = loadedDisciplines;
+      _isLoadingScreen = false;
       notifyListeners();
     } catch (error) {
       throw error;
@@ -100,7 +109,7 @@ class Themes with ChangeNotifier {
       final response = await http.post(url + authToken);
       // print(url + token);
       var extractedData = json.decode(response.body)['themes'];
-      print(extractedData);
+      // print(extractedData);
       final List<ThemeModel> loadedTasks = [];
       for (var i = 0; i < extractedData.length; i++) {
         loadedTasks.add(ThemeModel(
@@ -110,9 +119,9 @@ class Themes with ChangeNotifier {
                 ? 'https://rozoom.com.ua/uploads/' + extractedData[i]['image']
                 : '',
             klass: extractedData[i]['class'] != null
-                ? extractedData[i]['class']
+                ? extractedData[i]['class'].toString()
                 : 'ထ',
-            tasksCount: extractedData[i]['tasks_count']));
+            tasksCount: extractedData[i]['tasks_count'].toString()));
       }
       _themeItems = loadedTasks;
       notifyListeners();
@@ -198,6 +207,11 @@ class TaskModel with ChangeNotifier {
   //   return audioAnswer;
   // }
 
+  bool _isLoadingScreen = true;
+  bool get isLoadingScreen => _isLoadingScreen;
+  bool _isLoadingWidget = false;
+  bool get isLoadingWidget => _isLoadingWidget;
+
   Future<void> getFixTaskInfo() async {
     final url = '$rozoomBaseUrl/tasks/fix?api_token=';
     print(url);
@@ -236,12 +250,12 @@ class TaskModel with ChangeNotifier {
 
       continueOrFinish = extractedData['result'];
       rightAnswersCount = extractedData['session']['rights'].toString();
-      wrongAnswersCount = (int.tryParse(extractedData['session']['completed']) -
-              int.tryParse(extractedData['session']['rights']))
+      wrongAnswersCount = (extractedData['session']['completed'] -
+              extractedData['session']['rights'])
           .toString();
       rewardAmount = extractedData['session']['reward'].toString();
       currentQuestionNumber =
-          (int.tryParse(extractedData['session']['completed']) + 1).toString();
+          (extractedData['session']['completed'] + 1).toString();
       totalQuestionCount = extractedData['session']['limit'].toString();
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
@@ -309,7 +323,7 @@ class TaskModel with ChangeNotifier {
 
       // print('cardTitle --------- $cardTitle');
       // print('cardUrl --------- $cardUrl');
-
+      _isLoadingScreen = false;
       notifyListeners();
     } catch (error) {
       throw error;
@@ -319,112 +333,111 @@ class TaskModel with ChangeNotifier {
   Future<void> startTask(themeId) async {
     // print('start task auth token ---------------------------- $authToken');
     final url = '$rozoomBaseUrl/task/start/$themeId?api_token=';
-    // print(url);
-    try {
-      final headers = {'Accept': 'text/json'};
-      final response = await http.get(url + authToken, headers: headers);
-      final extractedData = json.decode(response.body);
-      print(extractedData);
-      if (extractedData == null) {
-        return;
-      }
-      if (extractedData['flash'] != null) {
-        throw HttpException(extractedData['flash']['message']);
-      }
+    print(url);
 
-      continueOrFinish = extractedData['result'];
-      rightAnswersCount = extractedData['session']['rights'].toString();
-      wrongAnswersCount = (int.tryParse(extractedData['session']['completed']) -
-              int.tryParse(extractedData['session']['rights']))
-          .toString();
-      rewardAmount = extractedData['session']['reward'].toString();
-      currentQuestionNumber =
-          (int.tryParse(extractedData['session']['completed']) + 1).toString();
-      totalQuestionCount = extractedData['session']['limit'].toString();
-      imageUrl = extractedData['task']['image'] != null
-          ? 'https://rozoom.com.ua/uploads/' +
-              extractedData['task']['image'].toString()
-          : '';
-      question = extractedData['task']['question'].toString();
-      answerIdForApi = extractedData['answer']['id'].toString();
-      answerVariants = extractedData['answer']['variants'];
-      rightAnswerListElementNumber =
-          extractedData['answer']['right_idx'].toString();
-      rightAnswerStringValue = extractedData['task']['answer'].toString();
-      answerType = extractedData['task']['type_id'].toString();
-      extractedData['task']['explain_text'] == null
-          ? explainText = ''
-          : explainText = extractedData['task']['explain_text'].toString();
-      if (extractedData['audios'] is List) {
-        audioQuestion = 'no audio';
-        audioAnswer_0 = 'no audio';
-        audioAnswer_1 = 'no audio';
-        audioAnswer_2 = 'no audio';
-        audioAnswer_3 = 'no audio';
-        audioAnswer = [
-          audioAnswer_0,
-          audioAnswer_1,
-          audioAnswer_2,
-          audioAnswer_3
-        ];
-      } else {
-        extractedData['audios']['question'] == null
-            ? audioQuestion = 'no audio'
-            : audioQuestion = 'https://rozoom.com.ua/uploads/' +
-                extractedData['audios']['question'].toString();
-        extractedData['audios']['answer_0'] == null
-            ? audioAnswer_0 = 'no audio'
-            : audioAnswer_0 = 'https://rozoom.com.ua/uploads/' +
-                extractedData['audios']['answer_0'].toString();
-        extractedData['audios']['answer_1'] == null
-            ? audioAnswer_1 = 'no audio'
-            : audioAnswer_1 = 'https://rozoom.com.ua/uploads/' +
-                extractedData['audios']['answer_1'].toString();
-        extractedData['audios']['answer_2'] == null
-            ? audioAnswer_2 = 'no audio'
-            : audioAnswer_2 = 'https://rozoom.com.ua/uploads/' +
-                extractedData['audios']['answer_2'].toString();
-        extractedData['audios']['answer_3'] == null
-            ? audioAnswer_3 = 'no audio'
-            : audioAnswer_3 = 'https://rozoom.com.ua/uploads/' +
-                extractedData['audios']['answer_3'].toString();
-        audioAnswer = [
-          audioAnswer_0,
-          audioAnswer_1,
-          audioAnswer_2,
-          audioAnswer_3
-        ];
-      }
-
-      if (extractedData['card_title'] != false) {
-        cardTitle = extractedData['card_title'];
-        cardUrl =
-            'https://rozoom.com.ua/uploads/' + extractedData['card']['image'];
-      } else {
-        cardTitle = 'no card';
-        cardUrl = 'no cardUrl';
-      }
-
-      // print('cardTitle --------- $cardTitle');
-      // print('cardUrl --------- $cardUrl');
-
-      notifyListeners();
-    } catch (error) {
-      throw error;
+    _isLoadingScreen = true;
+    final headers = {'Accept': 'text/json'};
+    final response = await http.get(url + authToken, headers: headers);
+    final extractedData = json.decode(response.body);
+    print('start task ---------- $extractedData');
+    if (extractedData == null) {
+      return;
     }
+    if (extractedData['flash'] != null) {
+      throw HttpException(extractedData['flash']['message']);
+    }
+
+    continueOrFinish = extractedData['result'];
+    rightAnswersCount = extractedData['session']['rights'].toString();
+    wrongAnswersCount = (extractedData['session']['completed'] -
+            extractedData['session']['rights'])
+        .toString();
+    rewardAmount = extractedData['session']['reward'].toString();
+    currentQuestionNumber =
+        (extractedData['session']['completed'] + 1).toString();
+    totalQuestionCount = extractedData['session']['limit'].toString();
+    imageUrl = extractedData['task']['image'] != null
+        ? 'https://rozoom.com.ua/uploads/' +
+            extractedData['task']['image'].toString()
+        : '';
+    question = extractedData['task']['question'].toString();
+    answerIdForApi = extractedData['answer']['id'].toString();
+    answerVariants = extractedData['answer']['variants'];
+    rightAnswerListElementNumber =
+        extractedData['answer']['right_idx'].toString();
+    rightAnswerStringValue = extractedData['task']['answer'].toString();
+    answerType = extractedData['task']['type_id'].toString();
+    extractedData['task']['explain_text'] == null
+        ? explainText = ''
+        : explainText = extractedData['task']['explain_text'].toString();
+    if (extractedData['audios'] is List) {
+      audioQuestion = 'no audio';
+      audioAnswer_0 = 'no audio';
+      audioAnswer_1 = 'no audio';
+      audioAnswer_2 = 'no audio';
+      audioAnswer_3 = 'no audio';
+      audioAnswer = [
+        audioAnswer_0,
+        audioAnswer_1,
+        audioAnswer_2,
+        audioAnswer_3
+      ];
+    } else {
+      extractedData['audios']['question'] == null
+          ? audioQuestion = 'no audio'
+          : audioQuestion = 'https://rozoom.com.ua/uploads/' +
+              extractedData['audios']['question'].toString();
+      extractedData['audios']['answer_0'] == null
+          ? audioAnswer_0 = 'no audio'
+          : audioAnswer_0 = 'https://rozoom.com.ua/uploads/' +
+              extractedData['audios']['answer_0'].toString();
+      extractedData['audios']['answer_1'] == null
+          ? audioAnswer_1 = 'no audio'
+          : audioAnswer_1 = 'https://rozoom.com.ua/uploads/' +
+              extractedData['audios']['answer_1'].toString();
+      extractedData['audios']['answer_2'] == null
+          ? audioAnswer_2 = 'no audio'
+          : audioAnswer_2 = 'https://rozoom.com.ua/uploads/' +
+              extractedData['audios']['answer_2'].toString();
+      extractedData['audios']['answer_3'] == null
+          ? audioAnswer_3 = 'no audio'
+          : audioAnswer_3 = 'https://rozoom.com.ua/uploads/' +
+              extractedData['audios']['answer_3'].toString();
+      audioAnswer = [
+        audioAnswer_0,
+        audioAnswer_1,
+        audioAnswer_2,
+        audioAnswer_3
+      ];
+    }
+
+    if (extractedData['card_title'] != false) {
+      cardTitle = extractedData['card_title'];
+      cardUrl =
+          'https://rozoom.com.ua/uploads/' + extractedData['card']['image'];
+    } else {
+      cardTitle = 'no card';
+      cardUrl = 'no cardUrl';
+    }
+
+    // print('cardTitle --------- $cardTitle');
+    // print('cardUrl --------- $cardUrl');
+    _isLoadingScreen = false;
+
+    notifyListeners();
   }
 
   Future<void> answerTask(answerId, answerListElementNumber) async {
     // print('answer task auth token ---------------------------- $authToken');
     final url =
         '$rozoomBaseUrl/task/answer/$answerId/$answerListElementNumber?api_token=';
-    // print(url);
+    print(url);
 
     try {
       final headers = {'Accept': 'text/json'};
       final response = await http.get(url + authToken, headers: headers);
       var extractedData = json.decode(response.body);
-      print(extractedData);
+      // print(extractedData);
       if (extractedData == null) {
         return;
       }
@@ -435,16 +448,15 @@ class TaskModel with ChangeNotifier {
         // print(
         //     'result false auth token ---------------------------- $authToken');
         final url = '$rozoomBaseUrl/task/result/$sessionId?api_token=';
-        print('url ---------- $url');
+        print('result ------------------------- url ---------- $url');
         final headers = {'Accept': 'text/json'};
         final response = await http.get(url + authToken, headers: headers);
         var extractedData = json.decode(response.body);
         print('result data $extractedData');
         rightAnswersCount = extractedData['session']['rights'].toString();
-        wrongAnswersCount =
-            (int.tryParse(extractedData['session']['completed']) -
-                    int.tryParse(extractedData['session']['rights']))
-                .toString();
+        wrongAnswersCount = (extractedData['session']['completed'] -
+                extractedData['session']['rights'])
+            .toString();
         rewardAmount = extractedData['session']['reward'].toString();
         resultPoints = extractedData['points'].toString();
 
@@ -453,12 +465,12 @@ class TaskModel with ChangeNotifier {
       }
       continueOrFinish = extractedData['result'];
       rightAnswersCount = extractedData['session']['rights'].toString();
-      wrongAnswersCount = (int.tryParse(extractedData['session']['completed']) -
-              int.tryParse(extractedData['session']['rights']))
+      wrongAnswersCount = (extractedData['session']['completed'] -
+              extractedData['session']['rights'])
           .toString();
       rewardAmount = extractedData['session']['reward'].toString();
       currentQuestionNumber =
-          (int.tryParse(extractedData['session']['completed']) + 1).toString();
+          (extractedData['session']['completed'] + 1).toString();
       totalQuestionCount = extractedData['session']['limit'].toString();
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +
@@ -559,10 +571,9 @@ class TaskModel with ChangeNotifier {
         final response = await http.get(url + authToken, headers: headers);
         var extractedData = json.decode(response.body);
         rightAnswersCount = extractedData['session']['rights'].toString();
-        wrongAnswersCount =
-            (int.tryParse(extractedData['session']['completed']) -
-                    int.tryParse(extractedData['session']['rights']))
-                .toString();
+        wrongAnswersCount = (extractedData['session']['completed'] -
+                extractedData['session']['rights'])
+            .toString();
         rewardAmount = extractedData['session']['reward'].toString();
         resultPoints = extractedData['points'].toString();
 
@@ -571,12 +582,12 @@ class TaskModel with ChangeNotifier {
       }
       continueOrFinish = extractedData['result'];
       rightAnswersCount = extractedData['session']['rights'].toString();
-      wrongAnswersCount = (int.tryParse(extractedData['session']['completed']) -
-              int.tryParse(extractedData['session']['rights']))
+      wrongAnswersCount = (extractedData['session']['completed'] -
+              extractedData['session']['rights'])
           .toString();
       rewardAmount = extractedData['session']['reward'].toString();
       currentQuestionNumber =
-          (int.tryParse(extractedData['session']['completed']) + 1).toString();
+          (extractedData['session']['completed'] + 1).toString();
       totalQuestionCount = extractedData['session']['limit'].toString();
       imageUrl = extractedData['task']['image'] != null
           ? 'https://rozoom.com.ua/uploads/' +

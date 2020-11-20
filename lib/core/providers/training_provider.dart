@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:rozoom_app/shared/constants.dart';
 
 class TrainingThemeModel {
@@ -229,7 +229,7 @@ class Training extends ChangeNotifier {
                 int.tryParse(data['session']['rights'].toString()))
             .toString();
     final String rewardAmount = data['session']['reward'].toString();
-    final String points = data['trainings_points'].toString();
+    final String points = data['session']['points'].toString();
     Map<String, TrainingModel> loadedTraining = {
       'rightAnswersCount': TrainingModel(rightAnswersCount: rightAnswersCount),
       'wrongAnswersCount': TrainingModel(wrongAnswersCount: wrongAnswersCount),

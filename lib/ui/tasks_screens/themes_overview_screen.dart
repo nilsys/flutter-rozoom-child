@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/core/providers/task_provider.dart';
+import 'package:rozoom_app/shared/size_config.dart';
+import 'package:rozoom_app/shared/widgets/loader_widget.dart';
 import 'package:rozoom_app/ui/home_screens/index_screen.dart';
 
-import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
 import 'package:rozoom_app/ui/tasks_screens/widgets/theme_item.dart';
 
 class ThemesOverviewScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
     Future.delayed(Duration.zero).then((_) {
       final args =
           ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
-      final int disciplineId = args['disciplineId'];
+      final String disciplineId = args['disciplineId'];
       Provider.of<Themes>(context, listen: false)
           .fetchandSetThemes(disciplineId);
     }).then((_) => setState(() {
@@ -34,13 +35,15 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    double defaultSize = SizeConfig.defaultSize;
     final args =
         ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
     final String disciplineTitleUa = args['disciplineTitleUa'];
     final themes = Provider.of<Themes>(context).themeItems;
-    final balance = Provider.of<Profile>(context, listen: false).balance;
-    final certificates =
-        Provider.of<Profile>(context, listen: false).certificates;
+    // final balance = Provider.of<Profile>(context, listen: false).balance;
+    // final certificates =
+    //     Provider.of<Profile>(context, listen: false).certificates;
 
     return Scaffold(
       // backgroundColor: Color(0XFFFEF9EB),
@@ -55,59 +58,37 @@ class _ThemesOverviewScreenState extends State<ThemesOverviewScreen> {
           ),
           onPressed: () {
             Provider.of<Themes>(context, listen: false).nullThemeImages();
-            print('pop of theme screen');
-
             Navigator.of(context).pop();
           },
         ),
-        actions: <Widget>[
-          PopupMenuButton(
-            onSelected: (FilterOptions selectedValue) {
-              setState(() {
-                if (selectedValue == FilterOptions.EditProfile) {
-                  Navigator.of(context).pushNamed(EditProfileScreen.routeName);
-                } else {
-                  // Provider.of<Auth>(context, listen: false).logout();
-                }
-              });
-            },
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.grey,
-            ),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text('Профайл'),
-                value: FilterOptions.EditProfile,
-              ),
-              PopupMenuItem(
-                child: Text('Вийти'),
-                value: FilterOptions.Logout,
-              ),
+        actions: <Widget>[],
+        title: Consumer<Profile>(
+          builder: (ctx, profile, child) => Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(width: 35),
+              Image.asset('assets/images/stats/coin.png', scale: 0.55),
+              SizedBox(width: 5),
+              profile.isLoadingScreen
+                  ? SizedBox(
+                      child: myLoaderWidget(),
+                      width: defaultSize * 5,
+                    )
+                  : Text(profile.profileItems['uom'].uom,
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
+              SizedBox(width: 10),
+              Image.asset('assets/images/stats/uah.png', height: 30),
+              SizedBox(width: 5),
+              profile.isLoadingScreen
+                  ? SizedBox(
+                      child: myLoaderWidget(),
+                      width: defaultSize * 5,
+                    )
+                  : Text(profile.profileItems['balance'].balance,
+                      style: TextStyle(color: Colors.black, fontSize: 16)),
             ],
           ),
-        ],
-        title: _isLoading
-            ? Text('')
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SizedBox(width: 35),
-                  Image.asset('assets/images/stats/coin.png', scale: 0.55),
-                  SizedBox(width: 5),
-                  balance != null
-                      ? Text(balance,
-                          style: TextStyle(color: Colors.black, fontSize: 16))
-                      : Text(''),
-                  SizedBox(width: 10),
-                  Image.asset('assets/images/stats/uah.png', height: 30),
-                  SizedBox(width: 5),
-                  certificates != null
-                      ? Text(certificates,
-                          style: TextStyle(color: Colors.black, fontSize: 16))
-                      : Text(''),
-                ],
-              ),
+        ),
       ),
       body: Column(
         children: <Widget>[

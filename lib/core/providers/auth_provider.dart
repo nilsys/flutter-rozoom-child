@@ -1,21 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rozoom_app/shared/constants.dart';
-
-class AuthToken with ChangeNotifier {
-  String authToken = 'No token..........';
-
-  String get getAuthToken => authToken;
-
-  void changeAuthToken(String newAuthToken) {
-    authToken = newAuthToken;
-
-    notifyListeners();
-  }
-}
 
 class Auth with ChangeNotifier {
   String _token;
@@ -161,3 +149,15 @@ class Auth with ChangeNotifier {
     return true;
   }
 }
+
+// class AuthToken with ChangeNotifier {
+//   String authToken = 'No token..........';
+
+//   String get getAuthToken => authToken;
+
+//   void changeAuthToken(String newAuthToken) {
+//     authToken = newAuthToken;
+
+//     notifyListeners();
+//   }
+// }

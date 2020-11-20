@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rozoom_app/core/models/api.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
-import 'package:rozoom_app/core/providers/friend_provider.dart';
+import 'package:rozoom_app/core/providers/friends_provider.dart';
 import 'package:rozoom_app/core/providers/pusher_provider.dart';
 import 'package:rozoom_app/ui/messenger_screens/widgets/chat/conference_alert.dart';
 

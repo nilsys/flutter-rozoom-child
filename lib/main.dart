@@ -4,12 +4,15 @@ import 'package:provider/provider.dart';
 import 'package:rozoom_app/core/providers/achievements_provider.dart';
 import 'package:rozoom_app/core/providers/auth_provider.dart';
 import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
+import 'package:rozoom_app/core/providers/friends_provider.dart';
 import 'package:rozoom_app/core/providers/pusher_provider.dart';
 import 'package:rozoom_app/core/providers/task_provider.dart';
 import 'package:rozoom_app/core/providers/training_provider.dart';
 import 'package:rozoom_app/core/providers/video_chat_provider.dart';
 import 'package:rozoom_app/ui/achievments_screens/achievments_screen.dart';
 import 'package:rozoom_app/ui/achievments_screens/cards_screen.dart';
+import 'package:rozoom_app/ui/friends_screens/chat_screen.dart';
+import 'package:rozoom_app/ui/friends_screens/friends_overview_screen.dart';
 import 'package:rozoom_app/ui/home_screens/index_screen.dart';
 import 'package:rozoom_app/ui/profile_screen/edit_profile_screen.dart';
 import 'package:rozoom_app/ui/auth_screen/authentication_screen.dart';
@@ -50,8 +53,9 @@ void main() {
         ),
         ChangeNotifierProxyProvider<Auth, Profile>(
           create: (BuildContext context) =>
-              Profile(Provider.of<Auth>(context, listen: false).token),
-          update: (BuildContext context, auth, _) => Profile(auth.token),
+              Profile(Provider.of<Auth>(context, listen: false).token, {}),
+          update: (BuildContext context, auth, previous) => Profile(
+              auth.token, previous == null ? {} : previous.profileItems),
         ),
         ChangeNotifierProxyProvider<Auth, VideoChat>(
           create: (BuildContext context) =>
@@ -85,6 +89,15 @@ void main() {
               Achievments(Provider.of<Auth>(context, listen: false).token),
           update: (BuildContext context, auth, _) => Achievments(auth.token),
         ),
+        ChangeNotifierProxyProvider<Auth, Friends>(
+          create: (BuildContext context) => Friends(
+              Provider.of<Auth>(context, listen: false).token, [], [], []),
+          update: (BuildContext context, auth, previous) => Friends(
+              auth.token,
+              previous == null ? [] : previous.friendList,
+              previous == null ? [] : previous.rssMessageList,
+              previous == null ? [] : previous.friendChatList),
+        ),
       ],
       child: MyApp(),
     ),
@@ -100,7 +113,7 @@ class MyApp extends StatelessWidget {
             // TrainingsOverviewScreen(),
 
             auth.isAuth
-                ? CardsScreen()
+                ? IndexScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (ctx, authResultSnapshot) {
@@ -136,6 +149,7 @@ class MyApp extends StatelessWidget {
           TrainingResultScreen.routeName: (ctx) => TrainingResultScreen(),
           AchievmentsScreen.routeName: (ctx) => AchievmentsScreen(),
           CardsScreen.routeName: (ctx) => CardsScreen(),
+          ChatScreen.routeName: (ctx) => ChatScreen(),
         },
       ),
     );

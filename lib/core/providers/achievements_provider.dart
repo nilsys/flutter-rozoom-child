@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
-import 'package:rozoom_app/core/models/http_exception.dart';
+import 'package:rozoom_app/core/models/exceptions.dart';
+import 'package:rozoom_app/shared/constants.dart';
 
 class AchievmentCategoryModel {
   final String id;
@@ -73,14 +74,14 @@ class Achievments extends ChangeNotifier {
   String _dialogMessage;
   String get dialogMessage => _dialogMessage;
 
-  static const baseUrl = 'https://new.rozoom.co.ua';
+  // static const baseUrl = 'https://new.rozoom.co.ua';
 
   Map<String, String> get headers =>
       {'Accept': 'text/json', 'Authorization': 'Bearer $authToken'};
 
   Future<void> apiGetAchievments() async {
     const urlSegment = '/achievements';
-    final url = baseUrl + urlSegment;
+    final url = rozoomBaseUrl + urlSegment;
 
     try {
       final response = await http.get(url, headers: headers);
@@ -98,7 +99,7 @@ class Achievments extends ChangeNotifier {
 
   Future<void> apiGetReward(id) async {
     final urlSegment = '/achievements/reward/$id';
-    final url = baseUrl + urlSegment;
+    final url = rozoomBaseUrl + urlSegment;
     print('url --------------- $url');
 
     try {
@@ -180,7 +181,7 @@ class Achievments extends ChangeNotifier {
 
   Future<void> apiGetCards() async {
     const urlSegment = '/cards';
-    final url = baseUrl + urlSegment;
+    final url = rozoomBaseUrl + urlSegment;
 
     try {
       final response = await http.get(url, headers: headers);
@@ -202,6 +203,12 @@ class Achievments extends ChangeNotifier {
       print(cardsData.length);
       for (var i = 0; i < cardsData.length; i++) {
         if (cardsData[i]['card'] != null) {
+          String dirtyDescription =
+              cardsData[i]['card']['translate']['description'] != null
+                  ? cardsData[i]['card']['translate']['description']
+                  : '';
+          print(dirtyDescription);
+          final String description = removeAllHtmlTags(dirtyDescription);
           loadedCards.add(CardModel(
             id: cardsData[i]['card_id'] != null
                 ? cardsData[i]['card_id'].toString()
@@ -212,10 +219,7 @@ class Achievments extends ChangeNotifier {
             title: cardsData[i]['card']['translate']['title'] != null
                 ? cardsData[i]['card']['translate']['title']
                 : '',
-            description:
-                cardsData[i]['card']['translate']['description'] != null
-                    ? cardsData[i]['card']['translate']['description']
-                    : '',
+            description: description,
             imageUrl: cardsData[i]['card']['image'] != null
                 ? 'https://rozoom.com.ua/uploads/' +
                     cardsData[i]['card']['image']
@@ -230,5 +234,11 @@ class Achievments extends ChangeNotifier {
       print(error);
       throw HttpException('Картки тимчасово недоступні');
     }
+  }
+
+  String removeAllHtmlTags(String htmlText) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+
+    return htmlText.replaceAll(exp, '');
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rozoom_app/core/providers/edit_profile_provider.dart';
 import 'package:rozoom_app/core/providers/time_provider.dart';
 import 'package:rozoom_app/core/providers/training_provider.dart';
-
 import 'package:rozoom_app/shared/size_config.dart';
-import 'package:rozoom_app/shared/widgets/app_bar.dart';
+import 'package:rozoom_app/shared/widgets/loader_widget.dart';
 import 'package:rozoom_app/ui/training_screens/widgets/training_answer_item.dart';
 import 'package:rozoom_app/ui/training_screens/widgets/training_navbar_item.dart';
 import 'package:rozoom_app/ui/training_screens/widgets/training_question_item.dart';
@@ -45,13 +45,48 @@ class _TrainingProcessScreenState extends State<TrainingProcessScreen> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: myAppBar(context,
-            popOnBack: false,
-            showLeading: false,
-            route: '',
-            title: '',
-            balance: '',
-            certificates: ''),
+        appBar: AppBar(
+          elevation: 1,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          // leading: IconButton(
+          //   icon: Icon(
+          //     Icons.arrow_back,
+          //     color: Colors.grey,
+          //   ),
+          //   onPressed: () {
+          //     Navigator.of(context).pop();
+          //   },
+          // ),
+          actions: <Widget>[],
+          title: Consumer<Profile>(
+            builder: (ctx, profile, child) => Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(width: 35),
+                Image.asset('assets/images/stats/coin.png', scale: 0.55),
+                SizedBox(width: 5),
+                profile.isLoadingScreen
+                    ? SizedBox(
+                        child: myLoaderWidget(),
+                        width: defaultSize * 5,
+                      )
+                    : Text(profile.profileItems['uom'].uom,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+                SizedBox(width: 10),
+                Image.asset('assets/images/stats/uah.png', height: 30),
+                SizedBox(width: 5),
+                profile.isLoadingScreen
+                    ? SizedBox(
+                        child: myLoaderWidget(),
+                        width: defaultSize * 5,
+                      )
+                    : Text(profile.profileItems['balance'].balance,
+                        style: TextStyle(color: Colors.black, fontSize: 16)),
+              ],
+            ),
+          ),
+        ),
         body: isLoading
             ? Center(child: Image.asset("assets/gifs/ripple.gif"))
             : SingleChildScrollView(
